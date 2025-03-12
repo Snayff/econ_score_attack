@@ -49,7 +49,7 @@ func _create_people() -> void:
 	var job_allocation: Dictionary = {
 		"farmer": 1,
 		"water collector": 1,
-		"gold miner": 1,
+		"woodcutter": 1,
 	}
 	var starting_goods: Dictionary = {
 		"money": 100,
@@ -100,12 +100,10 @@ func resolve_turn() -> void:
 				"money_made": 0
 			}
 			
-			
 			# update supply for logging
 			if person.f_name not in supply:
 				supply[person.f_name] = {}
 			supply[person.f_name][good] = goods_to_sell[good]
-			
 
 		# get goods people want to buy
 		var goods_to_buy: Dictionary = person.get_goods_to_buy()
@@ -124,7 +122,7 @@ func resolve_turn() -> void:
 	print(str(
 		"Supply: ",
 		supply,
-		"\nDemand", 
+		"\nDemand: ", 
 		demand
 	))
 
@@ -163,6 +161,10 @@ func resolve_turn() -> void:
 				buyer.stockpile["money"] -= cost
 				seller.stockpile["money"] += cost
 				
+				# buyer doesnt want anything, move to next buyer
+				if amount_to_buy == 0:
+					continue
+				
 				# add to buyers stockpile
 				if good not in buyer.stockpile:
 					buyer.stockpile[good] = 0
@@ -187,11 +189,11 @@ func resolve_turn() -> void:
 					good,
 					" to ",
 					buyer.f_name,
-					" for 🪙", 
+					" for ", 
 					cost, 
-					" (",
+					"🪙 (",
 					good_prices[good], 
-					" each).",
+					"🪙 each).",
 				)
 				print(log_message)
 				
@@ -202,9 +204,7 @@ func resolve_turn() -> void:
 				# sellers stock is empty, find new seller
 				elif goods_left == 0:
 					break
-					
-		
-		
+				
 	print(">>> Market Closes")
 	var results: Dictionary = {}
 	# var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
@@ -214,16 +214,10 @@ func resolve_turn() -> void:
 				results[seller.f_name] = 0
 			results[seller.f_name] += saleable_goods[good][seller]["money_made"]
 	print(str(
-		"Sales:",
+		"Sales: ",
 		results
 	))
 
 	print(">>> Turn Resolved >>>>>>>>>>>>>>>>>>>>")
-
-
-
-
-
-
 
 #endregion

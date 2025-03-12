@@ -41,12 +41,13 @@ func _process(delta: float) -> void:
 			person.job, " | ",
 			alive_text, " | ",
 			"❤️ ", person.health, " | ",
+			"🙂 ", person.happiness, " | ",
 			"🪙 ", person.stockpile["money"], " | ",
 			"🥪 ", person.stockpile["grain"], " | ",
 			"💧 ", person.stockpile["water"], " | ",
 			"🪵 ", person.stockpile["wood"], " | ",
 			"\n"
-		) #"🪵❤️💧🥪"
+		) #"🙂🪵❤️💧🥪"
 
 
 
