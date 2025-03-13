@@ -189,9 +189,9 @@ func resolve_turn() -> void:
 					good,
 					" to ",
 					buyer.f_name,
-					" for ", 
+					" for 🪙", 
 					cost, 
-					"🪙 (",
+					" (",
 					good_prices[good], 
 					"🪙 each).",
 				)

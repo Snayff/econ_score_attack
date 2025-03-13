@@ -1,6 +1,6 @@
-## class desc
+## good, resource, or other item of trade.
 #@icon("")
-#class_name XXX
+class_name Good
 extends Node
 
 
@@ -16,14 +16,15 @@ extends Node
 
 #region EXPORTS
 # @export_group("Component Links")
-# @export var
+# @export var 
 #
 # @export_group("Details")
 #endregion
 
 
 #region VARS
-
+var id: String = ""
+var amount: int = 0
 #endregion
 
 

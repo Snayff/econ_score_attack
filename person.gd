@@ -30,21 +30,8 @@ var happiness: int = 5
 var job: String = ""
 ## goods held
 var stockpile: Dictionary = {}
-var goods_considered_sellable: Array = ["grain", "water"]
-## goods to try and buy
-var desired_goods: Array = ["grain", "water"]
-## max grain desired to hold in stockpile
-var max_desired_grain: int = 10
-## max water desired to hold in stockpile
-var max_desired_water: int = 20
-## amount of grain needed each turn to survive
-var required_grain: int = 1
-## amount of water needed each turn to survive
-var required_water: int = 2
-## reduction to health when grain need not met
-var no_grain_damage: int = 1
-## reduction to health when water need not met
-var no_water_damage: int = 1
+var thoughts: Dictionary[String, GoodThoughts] = {}
+
 #endregion
 
 
@@ -53,9 +40,33 @@ func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
 	f_name = f_name_
 	job = job_
 
+	establish_initial_thoughts()
+	
 	# add values from starting goods
 	for good in starting_goods:
 		stockpile[good] = starting_goods[good]
+
+func establish_initial_thoughts():
+	var grain: GoodThoughts = GoodThoughts.new()
+	grain.good_id = "grain"
+	grain.consumption_required = 1
+	grain.consumption_desired = 2
+	grain.requirement_not_met_damage = 1
+	grain.min_level_to_hold = 3
+	grain.desire_threshold = 10
+	
+	thoughts[grain.good_id] = grain
+	
+	var water: GoodThoughts = GoodThoughts.new()
+	water.good_id = "water"
+	water.consumption_required = 2
+	water.consumption_desired = 4
+	water.requirement_not_met_damage = 1
+	water.min_level_to_hold = 10
+	water.desire_threshold = 20
+	
+	thoughts[water.good_id] = water
+	
 
 func produce() -> void:
 	match job:
@@ -91,144 +102,104 @@ func produce() -> void:
 			pass
 
 func consume() -> void:
-	if stockpile["grain"] >= required_grain:
-		if stockpile["grain"] >= required_grain + 4:
-			stockpile["grain"] -= required_grain + 2
+	for thought in thoughts.values():
+		# FIXME: this is bad as query a static value many times. 
+		#	move to some sort of good info and pull from there.
+		var icon: String = ""
+		match thought.good_id:
+			"grain":
+				icon = "🥪"
+			"water": 
+				icon = "💧"
+		
+		# consume desired amount
+		if stockpile[thought.good_id] > thought.desire_threshold:
+			stockpile[thought.good_id] -= thought.consumption_desired
 			happiness += 2
 			
 			print(str(
 				f_name,
-				" ate heartily.",
-				" ⬇️",
-				required_grain + 2, 
-				"🥪, ⬆️2🙂"
+				" consumed ",
+				thought.good_id,
+				" to their heart's desire. ⬇️",
+				thought.consumption_desired, 
+				icon,
+				", ⬆️2🙂"
 			))
-			
-		elif stockpile["grain"] >= required_grain + 2:
-			stockpile["grain"] -= required_grain + 1
+		
+		# consume required amount
+		elif stockpile[thought.good_id] >= thought.consumption_required:
+			stockpile[thought.good_id] -= thought.consumption_required
 			happiness += 1
 			
 			print(str(
 				f_name,
-				" ate a good meal.",
-				" ⬇️",
-				required_grain + 1,
-				"🥪, ⬆️1🙂"
+				" consumed what they needed of ",
+				thought.good_id,
+				". ⬇️",
+				thought.consumption_required, 
+				icon,
+				", ⬆️1🙂"
 			))
-			
+		# handle lack of good
 		else:
-			stockpile["grain"] -= required_grain
-			
-			print(str(
-				f_name,
-				" ate a normal meal.",
-				" ⬇️",
-				required_grain,
-				"🥪."
-			))
-			
-	else:
-		stockpile["grain"] = 0
-		health -= no_grain_damage
-		happiness -= 1
+			health -= thought.requirement_not_met_damage
+			happiness -= 1
 		
-		print(str(
-			f_name,
-			" went hungry. ⬇️",
-			no_grain_damage,
-			"❤️, ⬇️1🙂"
-		))
-
-		if health <= 0:
-			is_alive = false
 			print(str(
 				f_name,
-				" died. "
-			))
-			return
-
-	if stockpile["water"] >= required_water:
-		if stockpile["water"] >= required_water + 10:
-			stockpile["water"] -= required_water + 5
-			happiness += 2
-			
-			print(str(
-				f_name,
-				" drank greedily.",
-				" ⬇️",
-				required_water + 5, 
-				"💧, ⬆️2🙂"
+				" lacked ",
+				thought.consumption_required,
+				icon, 
+				". ⬇️",
+				thought.requirement_not_met_damage,
+				"❤️, ⬇️1🙂"
 			))
 			
-		elif stockpile["water"] >= required_water + 5:
-			stockpile["water"] -= required_water + 2
-			happiness += 1
-			
-			print(str(
-				f_name,
-				" slaked their thirst.",
-				" ⬇️",
-				required_water + 2,
-				"💧, ⬆️1🙂"
-			))
-			
-		else:
-			stockpile["water"] -= required_water
-			
-			print(str(
-				f_name,
-				" wet their whistle.",
-				" ⬇️",
-				required_water,
-				"💧."
-			))
-			
-	else:
-		stockpile["water"] = 0
-		health -= no_water_damage
-		happiness -= 1
-		
-		print(str(
-			f_name,
-			" remained thirsty. ⬇️",
-			no_water_damage,
-			"❤️, ⬇️1🙂"
-		))
-		
-		if health <= 0:
-			is_alive = false
-			print(str(
-				f_name,
-				" died. "
-			))
-			return
+			# check if dead and update
+			if health <= 0:
+				is_alive = false
+				print(str(
+					f_name,
+					" died. "
+				))
+				return
 
 func get_goods_for_sale() -> Dictionary:
 	var goods_to_sell: Dictionary = {}
+	
+	# TODO: this will need to be changed so that the person only sells down to required-level
+	#	*if* they cannot afford to get all required goods up to requirement-level.
+	
 	# determine all goods above threshold
-	for good in goods_considered_sellable:
-		if stockpile[good] > Constants.NEED_TO_BUY_FLOOR:
-			goods_to_sell[good] = stockpile[good] - Constants.NEED_TO_BUY_FLOOR
+	for thought in thoughts.values():
+		
+		if stockpile[thought.good_id] > thought.min_level_to_hold:
+			goods_to_sell[thought.good_id] = stockpile[thought.good_id] - thought.min_level_to_hold
 
 	return goods_to_sell
 
 func get_goods_to_buy() -> Dictionary:
 	var goods_to_buy: Dictionary = {}
 	
-	for good in desired_goods:
-		# if we have 0, buy up to the buy-floor
-		if good not in stockpile:
-			goods_to_buy[good] = Constants.NEED_TO_BUY_FLOOR
+	# determine all goods above threshold
+	for thought in thoughts.values():
 		
+		# we already have enough, dont buy more
+		if stockpile[thought.good_id] > thought.desire_threshold:
+			continue
+			
 		else:
-			var amount_to_buy = max(0, Constants.NEED_TO_BUY_FLOOR - stockpile[good])
+			
+			# TODO: need to prevent spanking all money on 1 required good, leading to abundance, 
+			# 	when that leaves another required good short
+			
+			var amount_to_buy = max(0, thought.desire_threshold - stockpile[thought.good_id])
 			if amount_to_buy != 0:
-				goods_to_buy[good] = amount_to_buy
+				goods_to_buy[thought.good_id] = amount_to_buy
 		
 	return goods_to_buy
 			
-	
-
 
 
 
