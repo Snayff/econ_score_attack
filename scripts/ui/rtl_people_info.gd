@@ -12,21 +12,30 @@ extends RichTextLabel
 
 
 #region VARS
-
+var goods_config: Dictionary
 #endregion
 
 
 #region FUNCS
 func _ready() -> void:
-	Logger.info("PeopleInfo: _ready called", "PeopleInfo")
+	Logger.debug("PeopleInfo: _ready called", "PeopleInfo")
 	EventBus.turn_complete.connect(update_info)
 	if sim:
 		sim.sim_initialized.connect(update_info)
+	_load_goods_config()
 	update_info()
+
+func _load_goods_config() -> void:
+	var config_file = FileAccess.open("res://data/goods_config.json", FileAccess.READ)
+	if config_file:
+		var json = JSON.parse_string(config_file.get_as_text())
+		goods_config = json.get("goods", {})
+	else:
+		Logger.error("Failed to load goods config", "PeopleInfo")
 
 ## Updates the displayed information
 func update_info() -> void:
-	Logger.info("PeopleInfo: update_info called", "PeopleInfo")
+	Logger.debug("PeopleInfo: update_info called", "PeopleInfo")
 
 	if not sim:
 		Logger.error("PeopleInfo: sim is null", "PeopleInfo")
@@ -52,7 +61,8 @@ func update_info() -> void:
 		)
 
 		for good in person.stockpile:
-			info_text += str("  - ", good, ": ", person.stockpile[good], "\n")
+			var icon = Library.get_good_icon(good)
+			info_text += str("  - ", icon, " ", good, ": ", person.stockpile[good], "\n")
 
 		info_text += "\n"
 

@@ -30,13 +30,13 @@ var laws: Dictionary = {}
 
 #region FUNCS
 func _init(demesne_name_: String) -> void:
-	Logger.info("Demesne: Initializing with name " + demesne_name_, "Demesne")
+	Logger.debug("Demesne: Initializing with name " + demesne_name_, "Demesne")
 	demesne_name = demesne_name_
 	_initialise_stockpile()
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
-	Logger.info("Demesne: Initializing stockpile", "Demesne")
+	Logger.debug("Demesne: Initializing stockpile", "Demesne")
 	stockpile = {
 		"money": 0,
 		"grain": 0,
@@ -47,7 +47,7 @@ func _initialise_stockpile() -> void:
 
 ## Processes production for all people in the demesne
 func process_production() -> void:
-	Logger.info("Demesne: Processing production for " + str(people.size()) + " people", "Demesne")
+	Logger.debug("Demesne: Processing production for " + str(people.size()) + " people", "Demesne")
 	for person in people:
 		if not person.is_alive:
 			continue
@@ -58,7 +58,7 @@ func process_production() -> void:
 		# Special handling for bureaucrats
 		if person.job == "bureaucrat":
 			add_resource("bureaucracy", 5)
-			Logger.info(str(
+			Logger.debug(str(
 				"Demesne received 5 bureaucracy from ", 
 				person.f_name, 
 				". Total: ", 
@@ -68,7 +68,7 @@ func process_production() -> void:
 
 ## Processes consumption for all people in the demesne
 func process_consumption() -> void:
-	Logger.info("Demesne: Processing consumption for " + str(people.size()) + " people", "Demesne")
+	Logger.debug("Demesne: Processing consumption for " + str(people.size()) + " people", "Demesne")
 	for person in people:
 		if not person.is_alive:
 			continue
@@ -78,20 +78,20 @@ func process_consumption() -> void:
 ## Adds a person to the demesne
 ## @param person: The person to add
 func add_person(person: Person) -> void:
-	Logger.info("Demesne: Adding person " + person.f_name, "Demesne")
+	Logger.debug("Demesne: Adding person " + person.f_name, "Demesne")
 	if not people.has(person):
 		people.append(person)
 		emit_signal("person_added", person)
-		Logger.info("Demesne: Now has " + str(people.size()) + " people", "Demesne")
+		Logger.debug("Demesne: Now has " + str(people.size()) + " people", "Demesne")
 
 ## Removes a person from the demesne
 ## @param person: The person to remove
 func remove_person(person: Person) -> void:
-	Logger.info("Demesne: Removing person " + person.f_name, "Demesne")
+	Logger.debug("Demesne: Removing person " + person.f_name, "Demesne")
 	if people.has(person):
 		people.erase(person)
 		emit_signal("person_removed", person)
-		Logger.info("Demesne: Now has " + str(people.size()) + " people", "Demesne")
+		Logger.debug("Demesne: Now has " + str(people.size()) + " people", "Demesne")
 
 ## Adds resources to the demesne's stockpile
 ## @param good_id: The ID of the good to add
@@ -100,7 +100,7 @@ func add_resource(good_id: String, amount: int) -> void:
 	if not stockpile.has(good_id):
 		stockpile[good_id] = 0
 	stockpile[good_id] += amount
-	Logger.info("Demesne: Added " + str(amount) + " " + good_id + ". Total: " + str(stockpile[good_id]), "Demesne")
+	Logger.debug("Demesne: Added " + str(amount) + " " + good_id + ". Total: " + str(stockpile[good_id]), "Demesne")
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 
 ## Removes resources from the demesne's stockpile

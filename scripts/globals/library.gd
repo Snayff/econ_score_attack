@@ -12,6 +12,8 @@ signal cache_cleared
 
 
 #region ON READY
+func _ready() -> void:
+	_load_config("goods")
 #endregion
 
 
@@ -67,11 +69,27 @@ const _DEFAULT_CONFIGS: Dictionary = {
 		}
 	},
 	"goods": {
-		"good_prices": {
-			"grain": 10,
-			"water": 10,
-			"wood": 20,
-			"bureaucracy": 0
+		"goods": {
+			"grain": {
+				"base_price": 10,
+				"category": "food",
+				"icon": "🌾"
+			},
+			"water": {
+				"base_price": 10,
+				"category": "resource",
+				"icon": "💧"
+			},
+			"wood": {
+				"base_price": 20,
+				"category": "material",
+				"icon": "🪵"
+			},
+			"bureaucracy": {
+				"base_price": 0,
+				"category": "service",
+				"icon": "📜"
+			}
 		}
 	}
 }
@@ -134,4 +152,25 @@ func _set_default_config(config_type: String) -> void:
 func clear_cache() -> void:
 	_config_cache.clear()
 	emit_signal("cache_cleared")
+
+## Get a good's icon
+## @param good_name: Name of the good
+## @return: The good's icon or a fallback icon if not found
+func get_good_icon(good_name: String) -> String:
+	var goods_data = get_config("goods").get("goods", {})
+	return goods_data.get(good_name, {}).get("icon", "❓")
+
+## Get a good's base price
+## @param good_name: Name of the good
+## @return: The good's base price or 0 if not found
+func get_good_base_price(good_name: String) -> int:
+	var goods_data = get_config("goods").get("goods", {})
+	return goods_data.get(good_name, {}).get("base_price", 0)
+
+## Get a good's category
+## @param good_name: Name of the good
+## @return: The good's category or empty string if not found
+func get_good_category(good_name: String) -> String:
+	var goods_data = get_config("goods").get("goods", {})
+	return goods_data.get(good_name, {}).get("category", "")
 #endregion

@@ -9,7 +9,6 @@ extends Node
 const Demesne = preload("res://scripts/core/demesne.gd")
 const DataDemesne = preload("res://scripts/core/demesne_data.gd")
 const DataPeople = preload("res://scripts/core/people_data.gd")
-const DataGoods = preload("res://scripts/core/goods_data.gd")
 
 
 #region SIGNALS
@@ -36,38 +35,35 @@ var demesne: Demesne
 
 ## Dictionary of good prices in the market
 var good_prices: Dictionary = {}
-
-## Data class for goods configuration
-var goods_data: DataGoods
-
 #endregion
 
 
 #region FUNCS
 ## Initialises the simulation and connects to the turn_complete signal
 func _ready() -> void:
-	Logger.info("Sim: _ready called", "Sim")
+	Logger.debug("Sim: _ready called", "Sim")
 	EventBus.turn_complete.connect(resolve_turn)
 
 	# Create the demesne
 	var demesne_data = DataDemesne.new()
-	Logger.info("Sim: Created demesne_data", "Sim")
+	Logger.debug("Sim: Created demesne_data", "Sim")
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
-	Logger.info("Sim: Created demesne: " + demesne.demesne_name, "Sim")
+	Logger.debug("Sim: Created demesne: " + demesne.demesne_name, "Sim")
 
 	# Initialise demesne stockpile with starting resources from config
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
 		demesne.add_resource(resource, starting_resources[resource])
-	Logger.info("Sim: Initialized demesne stockpile with starting resources", "Sim")
+	Logger.debug("Sim: Initialized demesne stockpile with starting resources", "Sim")
 
-	# Initialize goods data
-	goods_data = DataGoods.new()
-	good_prices = goods_data.get_good_prices()
-	Logger.info("Sim: Initialized good prices", "Sim")
+	# Initialize good prices from Library
+	var goods_data = Library.get_config("goods").get("goods", {})
+	for good in goods_data:
+		good_prices[good] = goods_data[good].get("base_price", 0)
+	Logger.debug("Sim: Initialized good prices", "Sim")
 
 	_create_people()
-	Logger.info("Sim: Created people", "Sim")
+	Logger.debug("Sim: Created people", "Sim")
 
 	emit_signal("sim_initialized")
 
@@ -78,7 +74,7 @@ func _create_people() -> void:
 	var demesne_data: DataDemesne = DataDemesne.new()
 
 	var num_people: int = people_data.get_num_people()
-	Logger.info("Sim: Creating " + str(num_people) + " people", "Sim")
+	Logger.debug("Sim: Creating " + str(num_people) + " people", "Sim")
 	var names: Array = people_data.get_names()
 	var job_allocation: Dictionary = demesne_data.get_job_allocation()
 	var starting_goods: Dictionary = people_data.get_starting_goods()
@@ -94,7 +90,7 @@ func _create_people() -> void:
 	for i in range(num_people):
 		var person = Person.new(names[i], jobs[i], starting_goods.duplicate())
 		demesne.add_person(person)
-		Logger.info("Sim: Added person " + person.f_name + " with job " + person.job, "Sim")
+		Logger.debug("Sim: Added person " + person.f_name + " with job " + person.job, "Sim")
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
@@ -225,7 +221,7 @@ func resolve_turn() -> void:
 					good_prices[good],
 					"🪙 each).",
 				)
-				Logger.info(log_message, "Sim")
+				Logger.debug(log_message, "Sim")
 
 				# seller has stock remaining, find new buyer
 				if goods_left > 0:

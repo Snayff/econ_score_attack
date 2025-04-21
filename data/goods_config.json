@@ -1,8 +1,29 @@
 {
-	"good_prices": {
-		"grain": 10,
-		"water": 10,
-		"wood": 20,
-		"bureaucracy": 0
+	"goods": {
+		"money": {
+			"base_price": 1,
+			"category": "currency",
+			"icon": "🪙"
+		},
+		"grain": {
+			"base_price": 10,
+			"category": "food",
+			"icon": "🌾"
+		},
+		"water": {
+			"base_price": 10,
+			"category": "resource",
+			"icon": "💧"
+		},
+		"wood": {
+			"base_price": 20,
+			"category": "material",
+			"icon": "🪵"
+		},
+		"bureaucracy": {
+			"base_price": 0,
+			"category": "service",
+			"icon": "📜"
+		}
 	}
 } 
