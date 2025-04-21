@@ -28,7 +28,8 @@ const DATA_PATH: String = "res://data/"
 
 ## Configuration file paths by type
 const _CONFIG_FILES: Dictionary = {
-	"people": "people_config.json"
+	"people": "people_config.json",
+	"demesne": "demesne_config.json"
 }
 
 ## Default values by config type
@@ -46,6 +47,22 @@ const _DEFAULT_CONFIGS: Dictionary = {
 			"grain": 3,
 			"water": 3,
 			"wood": 0
+		}
+	},
+	"demesne": {
+		"default_demesne_name": "Main Demesne",
+		"starting_resources": {
+			"money": 0,
+			"grain": 0,
+			"water": 0,
+			"wood": 0,
+			"bureaucracy": 0
+		},
+		"job_allocation": {
+			"farmer": 1,
+			"water collector": 1,
+			"woodcutter": 1,
+			"bureaucrat": 0
 		}
 	}
 }

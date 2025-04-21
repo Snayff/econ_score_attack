@@ -5,6 +5,11 @@
 class_name Sim
 extends Node
 
+# Import required classes
+const Demesne = preload("res://scripts/core/demesne.gd")
+const DataDemesne = preload("res://scripts/core/demesne_data.gd")
+const DataPeople = preload("res://scripts/core/people_data.gd")
+
 
 #region SIGNALS
 
@@ -25,34 +30,50 @@ extends Node
 
 
 #region VARS
-## Array of Person objects in the simulation
-var people: Array[Person] = []
+## The demesne in the simulation
+var demesne: Demesne
 
 ## Dictionary of good prices in the market
 var good_prices: Dictionary = {
 	"grain": 10,
 	"water": 10,
 	"wood": 20,
+	"bureaucracy": 0
 }
 
 #endregion
 
 
 #region FUNCS
-## Initializes the simulation and connects to the turn_complete signal
+## Initialises the simulation and connects to the turn_complete signal
 func _ready() -> void:
+	Logger.info("Sim: _ready called", "Sim")
 	EventBus.turn_complete.connect(resolve_turn)
 
+	# Create the demesne
+	var demesne_data = DataDemesne.new()
+	Logger.info("Sim: Created demesne_data", "Sim")
+	demesne = Demesne.new(demesne_data.get_default_demesne_name())
+	Logger.info("Sim: Created demesne: " + demesne.demesne_name, "Sim")
+
+	# Initialise demesne stockpile
+	for resource in demesne_data.get_starting_resources():
+		demesne.add_resource(resource, demesne_data.get_starting_resources()[resource])
+	Logger.info("Sim: Initialized demesne stockpile", "Sim")
+
 	_create_people()
+	Logger.info("Sim: Created people", "Sim")
 
 ## Creates the initial set of people for the simulation
 ## Uses PeopleData to load configuration and create Person objects
 func _create_people() -> void:
-	var people_data: PeopleData = PeopleData.new()
+	var people_data: DataPeople = DataPeople.new()
+	var demesne_data: DataDemesne = DataDemesne.new()
 
 	var num_people: int = people_data.get_num_people()
+	Logger.info("Sim: Creating " + str(num_people) + " people", "Sim")
 	var names: Array = people_data.get_names()
-	var job_allocation: Dictionary = people_data.get_job_allocation()
+	var job_allocation: Dictionary = demesne_data.get_job_allocation()
 	var starting_goods: Dictionary = people_data.get_starting_goods()
 
 	# put job allocation into an array
@@ -64,7 +85,9 @@ func _create_people() -> void:
 
 	# assign job and starting goods
 	for i in range(num_people):
-		people.append(Person.new(names[i], jobs[i], starting_goods.duplicate()))
+		var person = Person.new(names[i], jobs[i], starting_goods.duplicate())
+		demesne.add_person(person)
+		Logger.info("Sim: Added person " + person.f_name + " with job " + person.job, "Sim")
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
@@ -77,14 +100,15 @@ func resolve_turn() -> void:
 	var demand: Dictionary = {}  # {name: { good: amount } }
 
 	Logger.info(">>> Production & Consumption Phase", "Sim")
-	# simulate each person's turn
-	for person in people:
+
+	# Process production and consumption through the demesne
+	demesne.process_production()
+	demesne.process_consumption()
+
+	# simulate each person's turn for market operations
+	for person in demesne.get_people():
 		if !person.is_alive:
 			continue
-
-		# produce and consume
-		person.produce()
-		person.consume()
 
 		# get goods would sell, based on what is left
 		var goods_to_sell: Dictionary = person.get_goods_for_sale()

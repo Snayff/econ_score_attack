@@ -41,10 +41,11 @@ var turn_time_remaining: float:
 
 
 #region FUNCS
-## Initializes the Chrono class and connects signals
+## Initialises the Chrono class and connects signals
 func _ready() -> void:
 	connect_timer_signals()
 	connect_event_signals()
+	EventBus.turn_complete.connect(_on_turn_complete)
 
 ## Connects timer signals for turn progression
 func connect_timer_signals() -> void:
@@ -78,4 +79,7 @@ func unpause_timer() -> void:
 	_timer_turn.paused = false
 	if _timer_turn.is_stopped():
 		_timer_turn.start(_turn_duration)
+
+func _on_turn_complete() -> void:
+	pass
 #endregion

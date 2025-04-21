@@ -1,5 +1,5 @@
 ## Logger
-## Centralized logging system for the application
+## Centralised logging system for the application
 ## Provides consistent formatting and control over log output
 #@icon("")
 extends Node

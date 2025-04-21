@@ -27,6 +27,10 @@ insert_final_newline = true
 string_style = "double"
 # Use snake_case for variables and functions
 naming_style = "snake_case"
+# Never use "name" as a variable, use "f_name" instead
+avoid_name_variable = true
+# Data classes should be named with "Data" as a prefix
+data_class_prefix = true
 # Use PascalCase for classes
 class_naming_style = "PascalCase"
 

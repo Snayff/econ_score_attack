@@ -37,6 +37,7 @@ var thoughts: Dictionary[String, GoodThoughts] = {}
 
 #region FUNCS
 func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
+	Logger.info("Person: Creating " + f_name_ + " as " + job_, "Person")
 	f_name = f_name_
 	job = job_
 
@@ -45,8 +46,10 @@ func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
 	# add values from starting goods
 	for good in starting_goods:
 		stockpile[good] = starting_goods[good]
+		Logger.info("Person: " + f_name + " starts with " + str(starting_goods[good]) + " " + good, "Person")
 
 func establish_initial_thoughts():
+	Logger.info("Person: " + f_name + " establishing initial thoughts", "Person")
 	var grain: GoodThoughts = GoodThoughts.new()
 	grain.good_id = "grain"
 	grain.consumption_required = 1
@@ -66,9 +69,10 @@ func establish_initial_thoughts():
 	water.desire_threshold = 20
 	
 	thoughts[water.good_id] = water
-	
+	Logger.info("Person: " + f_name + " thoughts established", "Person")
 
 func produce() -> void:
+	Logger.info("Person: " + f_name + " producing as " + job, "Person")
 	match job:
 		"farmer":
 			stockpile["grain"] += 10
@@ -98,10 +102,19 @@ func produce() -> void:
 				" felled some trees. ⬆️10🪵.",
 			), "Person")
 			
+		"bureaucrat":
+			# Bureaucrats produce bureaucracy for the demesne, not for themselves
+			# This will be handled by the demesne
+			Logger.info(str(
+				f_name, 
+				" filed some paperwork. ⬆️5📋 for the demesne.",
+			), "Person")
+			
 		_:
 			pass
 
 func consume() -> void:
+	Logger.info("Person: " + f_name + " consuming goods", "Person")
 	for thought in thoughts.values():
 		# FIXME: this is bad as query a static value many times. 
 		#	move to some sort of good info and pull from there.
@@ -117,7 +130,7 @@ func consume() -> void:
 			stockpile[thought.good_id] -= thought.consumption_desired
 			happiness += 2
 			
-			print(str(
+			Logger.info(str(
 				f_name,
 				" consumed ",
 				thought.good_id,
@@ -125,14 +138,14 @@ func consume() -> void:
 				thought.consumption_desired, 
 				icon,
 				", ⬆️2🙂"
-			))
+			), "Person")
 		
 		# consume required amount
 		elif stockpile[thought.good_id] >= thought.consumption_required:
 			stockpile[thought.good_id] -= thought.consumption_required
 			happiness += 1
 			
-			print(str(
+			Logger.info(str(
 				f_name,
 				" consumed what they needed of ",
 				thought.good_id,
@@ -140,13 +153,13 @@ func consume() -> void:
 				thought.consumption_required, 
 				icon,
 				", ⬆️1🙂"
-			))
+			), "Person")
 		# handle lack of good
 		else:
 			health -= thought.requirement_not_met_damage
 			happiness -= 1
 		
-			print(str(
+			Logger.info(str(
 				f_name,
 				" lacked ",
 				thought.consumption_required,
@@ -154,18 +167,19 @@ func consume() -> void:
 				". ⬇️",
 				thought.requirement_not_met_damage,
 				"❤️, ⬇️1🙂"
-			))
+			), "Person")
 			
 			# check if dead and update
 			if health <= 0:
 				is_alive = false
-				print(str(
+				Logger.info(str(
 					f_name,
 					" died. "
-				))
+				), "Person")
 				return
 
 func get_goods_for_sale() -> Dictionary:
+	Logger.info("Person: " + f_name + " calculating goods for sale", "Person")
 	var goods_to_sell: Dictionary = {}
 	
 	# TODO: this will need to be changed so that the person only sells down to required-level
@@ -176,10 +190,12 @@ func get_goods_for_sale() -> Dictionary:
 		
 		if stockpile[thought.good_id] > thought.min_level_to_hold:
 			goods_to_sell[thought.good_id] = stockpile[thought.good_id] - thought.min_level_to_hold
+			Logger.info("Person: " + f_name + " will sell " + str(goods_to_sell[thought.good_id]) + " " + thought.good_id, "Person")
 
 	return goods_to_sell
 
 func get_goods_to_buy() -> Dictionary:
+	Logger.info("Person: " + f_name + " calculating goods to buy", "Person")
 	var goods_to_buy: Dictionary = {}
 	
 	# determine all goods above threshold
@@ -197,6 +213,7 @@ func get_goods_to_buy() -> Dictionary:
 			var amount_to_buy = max(0, thought.desire_threshold - stockpile[thought.good_id])
 			if amount_to_buy != 0:
 				goods_to_buy[thought.good_id] = amount_to_buy
+				Logger.info("Person: " + f_name + " needs to buy " + str(amount_to_buy) + " " + thought.good_id, "Person")
 		
 	return goods_to_buy
 			

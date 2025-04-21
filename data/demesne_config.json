@@ -1,0 +1,16 @@
+{
+	"default_demesne_name": "Main Demesne",
+	"starting_resources": {
+		"money": 0,
+		"grain": 0,
+		"water": 0,
+		"wood": 0,
+		"bureaucracy": 0
+	},
+	"job_allocation": {
+		"farmer": 1,
+		"water collector": 1,
+		"woodcutter": 1,
+		"bureaucrat": 0
+	}
+} 

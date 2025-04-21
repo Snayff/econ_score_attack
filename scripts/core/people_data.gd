@@ -1,8 +1,8 @@
-## PeopleData
+## DataPeople
 ## Manages people-related configuration data
 ## Handles loading and accessing people configuration
 #@icon("")
-class_name PeopleData
+class_name DataPeople
 extends Node
 
 

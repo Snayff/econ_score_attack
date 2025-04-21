@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="2_lquwl"]
 [ext_resource type="Script" uid="uid://bhjkkssint781" path="res://scripts/core/chrono.gd" id="3_7mycd"]
-[ext_resource type="Script" uid="uid://cuui0n5stgwjj" path="res://scripts/ui/people_info.gd" id="3_lquwl"]
+[ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://scripts/ui/rtl_people_info.gd" id="3_lquwl"]
 [ext_resource type="Script" uid="uid://ro8fq6c3k2s3" path="res://scripts/core/sim.gd" id="4_272bh"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
