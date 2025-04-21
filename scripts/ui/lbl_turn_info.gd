@@ -11,8 +11,6 @@ extends Label
 
 #region ON READY (for direct children only)
 @onready var _chrono: Chrono = %Chrono
-
-
 #endregion
 
 
@@ -35,21 +33,12 @@ func _process(_delta: float) -> void:
 		if !_chrono.is_node_ready():
 			return
 
-
-	text = str(
-		"Active:",
-		_chrono.is_running,
-		" | countdown: ",
-		"%0.2f" % _chrono.turn_time_remaining,
-		" | #",
-		_chrono.turn_num
-		)
-
-
-
-
-
-
-
-
+		text = str(
+			"Active:",
+			_chrono.is_running,
+			" | countdown: ",
+			"%0.2f" % _chrono.turn_time_remaining,
+			" | #",
+			_chrono.turn_num
+			)
 #endregion
