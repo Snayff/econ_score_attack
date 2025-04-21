@@ -49,6 +49,7 @@ func _ready() -> void:
 ## Uses PeopleData to load configuration and create Person objects
 func _create_people() -> void:
 	var people_data: PeopleData = PeopleData.new()
+
 	var num_people: int = people_data.get_num_people()
 	var names: Array = people_data.get_names()
 	var job_allocation: Dictionary = people_data.get_job_allocation()

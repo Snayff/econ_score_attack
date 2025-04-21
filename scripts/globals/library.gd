@@ -53,21 +53,34 @@ const _DEFAULT_CONFIGS: Dictionary = {
 
 
 #region PUBLIC FUNCS
-## Loads and caches JSON data from a file
-## @param file_path: Path to the JSON file relative to DATA_PATH
-## @return: Dictionary containing the parsed JSON data
-func load_json(file_path: String) -> Dictionary:
-	if _config_cache.has(file_path):
-		emit_signal("config_loaded", file_path)
-		return _config_cache[file_path]
+## Gets configuration data for a specific type
+## @param config_type: The type of configuration to load (e.g., "people")
+## @return: Dictionary containing the configuration data
+func get_config(config_type: String) -> Dictionary:
+	if not _CONFIG_FILES.has(config_type):
+		var error_msg: String = "Unknown config type: " + config_type
+		emit_signal("err_config_load_failed", config_type, error_msg)
+		push_error(error_msg)
+		return {}
 
+	if not _config_cache.has(config_type):
+		_load_config(config_type)
+
+	return _config_cache[config_type]
+
+## Loads configuration data from file
+## @param config_type: The type of configuration to load
+func _load_config(config_type: String) -> void:
+	var file_path: String = _CONFIG_FILES[config_type]
 	var full_path: String = DATA_PATH + file_path
+
 	var file: FileAccess = FileAccess.open(full_path, FileAccess.READ)
 	if not file:
 		var error_msg: String = "Failed to open file: " + full_path
-		emit_signal("err_config_load_failed", file_path, error_msg)
+		emit_signal("err_config_load_failed", config_type, error_msg)
 		push_error(error_msg)
-		return {}
+		_set_default_config(config_type)
+		return
 
 	var json: JSON = JSON.new()
 	var parse_result: Error = json.parse(file.get_as_text())
@@ -75,14 +88,21 @@ func load_json(file_path: String) -> Dictionary:
 
 	if parse_result != OK:
 		var error_msg: String = "Failed to parse JSON file: " + full_path
-		emit_signal("err_config_load_failed", file_path, error_msg)
+		emit_signal("err_config_load_failed", config_type, error_msg)
 		push_error(error_msg)
-		return {}
+		_set_default_config(config_type)
+		return
 
-	var data: Dictionary = json.get_data()
-	_config_cache[file_path] = data
-	emit_signal("config_loaded", file_path)
-	return data
+	_config_cache[config_type] = json.get_data()
+	emit_signal("config_loaded", config_type)
+
+## Sets default configuration values for a type
+## @param config_type: The type of configuration to set defaults for
+func _set_default_config(config_type: String) -> void:
+	if _DEFAULT_CONFIGS.has(config_type):
+		_config_cache[config_type] = _DEFAULT_CONFIGS[config_type].duplicate(true)
+	else:
+		_config_cache[config_type] = {}
 
 ## Clears the configuration cache
 func clear_cache() -> void:

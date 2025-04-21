@@ -33,7 +33,7 @@ const _CONFIG_TYPE: String = "people"
 
 
 #region FUNCS
-func _ready() -> void:
+func _init() -> void:
 	_load_config()
 
 ## Loads the people configuration from the Library
