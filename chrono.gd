@@ -1,4 +1,6 @@
-## time-related functionality
+## Chrono
+## Manages time-related functionality in the simulation.
+## Handles turn timing and progression.
 #@icon("")
 class_name Chrono
 extends Node
@@ -19,17 +21,17 @@ extends Node
 # @export_group("Component Links")
 #
 @export_group("Details")
-## how long each turn is, in seconds
+## How long each turn is, in seconds
 @export var _turn_duration: float = 2.0
 #endregion
 
 
 #region VARS
-## if turn timer is counting down
+## Whether the turn timer is counting down
 var is_running: bool = false
-## what turn number, counting up from 0
+## Current turn number, counting up from 0
 var turn_num: int = 0
-## seconds left in current turn
+## Seconds left in the current turn
 var turn_time_remaining: float:
 	set(x):
 		push_error("Can't set directly")
@@ -39,29 +41,41 @@ var turn_time_remaining: float:
 
 
 #region FUNCS
+## Initializes the Chrono class and connects signals
 func _ready() -> void:
-	## timer timeout connections
-	# next turn
+	connect_timer_signals()
+	connect_event_signals()
+
+## Connects timer signals for turn progression
+func connect_timer_signals() -> void:
+	# Next turn
 	_timer_turn.timeout.connect(_timer_turn.start.bind(_turn_duration))
-	# increment turn num
+	# Increment turn number
 	_timer_turn.timeout.connect(func(): turn_num += 1)
-	# announce turn completion
+	# Announce turn completion
 	_timer_turn.timeout.connect(EventBus.turn_complete.emit)
 
-	## listen to input commands
+## Connects event signals for timer control
+func connect_event_signals() -> void:
+	# Listen to input commands
 	EventBus.toggle_turn_timer.connect(toggle_is_running)
 
-
-## pause or unpause turn timer
+## Pauses or unpauses the turn timer
 func toggle_is_running() -> void:
 	if is_running:
-		_timer_turn.paused = true
-
+		pause_timer()
 	else:
-		_timer_turn.paused = false
-		if _timer_turn.is_stopped():
-			_timer_turn.start(_turn_duration)
-
+		unpause_timer()
+	
 	is_running = !is_running
 
+## Pauses the turn timer
+func pause_timer() -> void:
+	_timer_turn.paused = true
+
+## Unpauses the turn timer and starts it if stopped
+func unpause_timer() -> void:
+	_timer_turn.paused = false
+	if _timer_turn.is_stopped():
+		_timer_turn.start(_turn_duration)
 #endregion

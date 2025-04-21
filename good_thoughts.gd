@@ -1,11 +1,13 @@
-## what a person thinks about a good.
-#@icon("")
+## Represents and manages a person's thoughts and preferences about a specific good/resource
+## Handles consumption desires, requirements, and stockpile preferences
+## @icon("")
 class_name GoodThoughts
 extends Node
 
 
 #region SIGNALS
-
+signal requirement_not_met(damage: int)
+signal desire_threshold_reached(good_id: String)
 #endregion
 
 
@@ -23,17 +25,23 @@ extends Node
 
 
 #region VARS
-var good_id: String = ""
+var good_id: String:
+    get:
+        return good_id
+    set(value):
+        good_id = value
 var willing_to_sell: bool = true
-## base level of a good to meet basic need
+## Minimum amount required for basic survival/needs
+## Failing to meet this causes health damage
 var consumption_required: int = 0
-## level of good needed to meet desire
+## Desired consumption amount for comfort/satisfaction
+## Only consumed when above desire_threshold
 var consumption_desired: int = 0
-## num to try to have in stockpile. 
+## Minimum stockpile amount to maintain
 var min_level_to_hold: int = 0
-## amount to be held before consuming desired amount
+## Amount needed before consuming desired amount
 var desire_threshold: int = 0
-## damage taken to health when num required not met
+## Health damage taken when required consumption not met
 var requirement_not_met_damage: int = 0
 
 #endregion
@@ -49,4 +57,23 @@ var requirement_not_met_damage: int = 0
 
 
 
+#endregion
+
+
+#region PUBLIC_METHODS
+## Checks if current amount meets basic requirements
+## @param current_amount: The amount currently held
+## @return: bool indicating if requirements are met
+func meets_requirements(current_amount: int) -> bool:
+    return current_amount >= consumption_required
+
+## Checks if current amount meets desire threshold
+## @param current_amount: The amount currently held
+## @return: bool indicating if desire threshold is met
+func meets_desire_threshold(current_amount: int) -> bool:
+    return current_amount >= desire_threshold
+#endregion
+
+
+#region PRIVATE_METHODS
 #endregion
