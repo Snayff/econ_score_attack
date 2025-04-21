@@ -134,6 +134,8 @@ use_external_config = true
 prefer_immutable_data = true
 # Use data classes for complex data structures
 use_data_classes = true
+# Data classes must be stored in scripts/data folder
+data_class_location = "scripts/data"
 # If a constant is referred to in more than 1 file, define it in constants.gd
 shared_constants_location = "globals/constants.gd"
 

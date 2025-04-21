@@ -47,4 +47,4 @@ func get_starting_resources() -> Dictionary:
 ## @return A dictionary mapping job types to the number of people assigned
 func get_job_allocation() -> Dictionary:
 	return _config.get("job_allocation", {})
-#endregion 
+#endregion

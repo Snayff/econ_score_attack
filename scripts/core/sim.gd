@@ -5,11 +5,6 @@
 class_name Sim
 extends Node
 
-# Import required classes
-const Demesne = preload("res://scripts/core/demesne.gd")
-const DataDemesne = preload("res://scripts/core/demesne_data.gd")
-const DataPeople = preload("res://scripts/core/people_data.gd")
-
 
 #region SIGNALS
 signal sim_initialized

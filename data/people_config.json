@@ -1,9 +1,10 @@
 {
-	"default_num_people": 3,
+	"default_num_people": 4,
 	"people_names": [
 		"sally",
 		"reginald",
-		"estaban"
+		"estaban",
+		"bob"
 	],
 	"job_allocation": {
 		"farmer": 1,
