@@ -76,7 +76,7 @@ func resolve_turn() -> void:
 	var supply: Dictionary = {}  # {name: { good: amount } }
 	var demand: Dictionary = {}  # {name: { good: amount } }
 
-	print(">>> Production & Consumption Phase")
+	Logger.info(">>> Production & Consumption Phase", "Sim")
 	# simulate each person's turn
 	for person in people:
 		if !person.is_alive:
@@ -117,16 +117,16 @@ func resolve_turn() -> void:
 				demand[person.f_name] = {}
 			demand[person.f_name][good] = goods_to_buy[good]
 
-	print(">>> Market Setup")
-	print(str(
+	Logger.info(">>> Market Setup", "Sim")
+	Logger.info(str(
 		"Supply: ",
 		supply,
 		"\nDemand: ",
 		demand
-	))
+	), "Sim")
 
 	# conduct sale
-	print(">>> Market Opens")
+	Logger.info(">>> Market Opens", "Sim")
 	var purchasers: Array = []
 	var amount_to_buy: int = 0
 	var sellers: Array = []
@@ -194,7 +194,7 @@ func resolve_turn() -> void:
 					good_prices[good],
 					"🪙 each).",
 				)
-				print(log_message)
+				Logger.info(log_message, "Sim")
 
 				# seller has stock remaining, find new buyer
 				if goods_left > 0:
@@ -204,7 +204,7 @@ func resolve_turn() -> void:
 				elif goods_left == 0:
 					break
 
-	print(">>> Market Closes")
+	Logger.info(">>> Market Closes", "Sim")
 	var results: Dictionary = {}
 	# var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	for good in saleable_goods.keys():
@@ -212,11 +212,11 @@ func resolve_turn() -> void:
 			if seller.f_name not in results:
 				results[seller.f_name] = 0
 			results[seller.f_name] += saleable_goods[good][seller]["money_made"]
-	print(str(
+	Logger.info(str(
 		"Sales: ",
 		results
-	))
+	), "Sim")
 
-	print(">>> Turn Resolved >>>>>>>>>>>>>>>>>>>>")
+	Logger.info(">>> Turn Resolved >>>>>>>>>>>>>>>>>>>>", "Sim")
 
 #endregion

@@ -13,10 +13,21 @@ config_version=5
 config/name="econ_score_attack"
 run/main_scene="res://scenes/main/main.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://assets/icons/icon.svg"
+config/icon="res://icon.svg"
 
 [autoload]
 
 Constants="*res://scripts/globals/constants.gd"
 EventBus="*res://scripts/globals/event_bus.gd"
 Library="*res://scripts/globals/library.gd"
+Logger="*res://scripts/globals/logger.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

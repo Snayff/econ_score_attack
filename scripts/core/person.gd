@@ -72,31 +72,31 @@ func produce() -> void:
 	match job:
 		"farmer":
 			stockpile["grain"] += 10
-			print(str(
+			Logger.info(str(
 				f_name, 
 				" ploughed the fields. ⬆️10🥪."
-			))
+			), "Person")
 
 		"water collector":
 			stockpile["water"] += 20
-			print(str(
+			Logger.info(str(
 				f_name, 
 				" manned the well. ⬆️20💧."
-			))
+			), "Person")
 			
 		"gold miner":
 			stockpile["money"] += 5
-			print(str(
+			Logger.info(str(
 				f_name, 
 				" used their pick. ⬆️5🪙.",
-			))
+			), "Person")
 			
 		"woodcutter":
 			stockpile["wood"] += 10
-			print(str(
+			Logger.info(str(
 				f_name, 
 				" felled some trees. ⬆️10🪵.",
-			))
+			), "Person")
 			
 		_:
 			pass
