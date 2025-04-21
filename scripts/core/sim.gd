@@ -9,10 +9,11 @@ extends Node
 const Demesne = preload("res://scripts/core/demesne.gd")
 const DataDemesne = preload("res://scripts/core/demesne_data.gd")
 const DataPeople = preload("res://scripts/core/people_data.gd")
+const DataGoods = preload("res://scripts/core/goods_data.gd")
 
 
 #region SIGNALS
-
+signal sim_initialized
 #endregion
 
 
@@ -34,12 +35,10 @@ const DataPeople = preload("res://scripts/core/people_data.gd")
 var demesne: Demesne
 
 ## Dictionary of good prices in the market
-var good_prices: Dictionary = {
-	"grain": 10,
-	"water": 10,
-	"wood": 20,
-	"bureaucracy": 0
-}
+var good_prices: Dictionary = {}
+
+## Data class for goods configuration
+var goods_data: DataGoods
 
 #endregion
 
@@ -56,13 +55,21 @@ func _ready() -> void:
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	Logger.info("Sim: Created demesne: " + demesne.demesne_name, "Sim")
 
-	# Initialise demesne stockpile
-	for resource in demesne_data.get_starting_resources():
-		demesne.add_resource(resource, demesne_data.get_starting_resources()[resource])
-	Logger.info("Sim: Initialized demesne stockpile", "Sim")
+	# Initialise demesne stockpile with starting resources from config
+	var starting_resources = demesne_data.get_starting_resources()
+	for resource in starting_resources:
+		demesne.add_resource(resource, starting_resources[resource])
+	Logger.info("Sim: Initialized demesne stockpile with starting resources", "Sim")
+
+	# Initialize goods data
+	goods_data = DataGoods.new()
+	good_prices = goods_data.get_good_prices()
+	Logger.info("Sim: Initialized good prices", "Sim")
 
 	_create_people()
 	Logger.info("Sim: Created people", "Sim")
+
+	emit_signal("sim_initialized")
 
 ## Creates the initial set of people for the simulation
 ## Uses PeopleData to load configuration and create Person objects

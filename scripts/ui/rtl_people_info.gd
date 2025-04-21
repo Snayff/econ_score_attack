@@ -20,6 +20,8 @@ extends RichTextLabel
 func _ready() -> void:
 	Logger.info("PeopleInfo: _ready called", "PeopleInfo")
 	EventBus.turn_complete.connect(update_info)
+	if sim:
+		sim.sim_initialized.connect(update_info)
 	update_info()
 
 ## Updates the displayed information

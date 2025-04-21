@@ -27,8 +27,39 @@ insert_final_newline = true
 string_style = "double"
 # Use snake_case for variables and functions
 naming_style = "snake_case"
+# Never use "name" as a variable, use "f_name" instead
+avoid_name_variable = true
+# Data classes should be named with "Data" as a prefix
+data_class_prefix = true
 # Use PascalCase for classes
 class_naming_style = "PascalCase"
+# UI components must use type prefix (e.g., lbl_ for Label, rtl_ for RichTextLabel)
+ui_component_prefix = true
+# UI component prefixes:
+# - lbl_ for Label
+# - rtl_ for RichTextLabel
+# - btn_ for Button
+# - chk_ for CheckBox
+# - sln_ for Slider
+# - lne_ for LineEdit
+# - cmb_ for OptionButton/ComboBox
+# - pgb_ for ProgressBar
+# - spn_ for SpinBox
+# - tgl_ for ToggleButton
+# - lst_ for ItemList
+# - trv_ for Tree
+# - tbv_ for Table
+# - img_ for TextureRect/Image
+# - crt_ for ColorRect
+# - ctr_ for Container nodes
+# - pnl_ for Panel
+# - wnd_ for Window
+# - dlg_ for Dialog
+# - tbs_ for TabContainer
+# - scn_ for ScrollContainer
+# - grd_ for GridContainer
+# - hbx_ for HBoxContainer
+# - vbx_ for VBoxContainer
 
 # Documentation Rules
 [documentation]

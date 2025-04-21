@@ -29,7 +29,8 @@ const DATA_PATH: String = "res://data/"
 ## Configuration file paths by type
 const _CONFIG_FILES: Dictionary = {
 	"people": "people_config.json",
-	"demesne": "demesne_config.json"
+	"demesne": "demesne_config.json",
+	"goods": "goods_config.json"
 }
 
 ## Default values by config type
@@ -63,6 +64,14 @@ const _DEFAULT_CONFIGS: Dictionary = {
 			"water collector": 1,
 			"woodcutter": 1,
 			"bureaucrat": 0
+		}
+	},
+	"goods": {
+		"good_prices": {
+			"grain": 10,
+			"water": 10,
+			"wood": 20,
+			"bureaucracy": 0
 		}
 	}
 }
