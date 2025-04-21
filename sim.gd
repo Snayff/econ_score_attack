@@ -1,4 +1,6 @@
-## class desc
+## Sim
+## The main simulation class that manages the economic simulation.
+## It handles people creation, turn resolution, and market operations.
 #@icon("")
 class_name Sim
 extends Node
@@ -23,7 +25,10 @@ extends Node
 
 
 #region VARS
-var people: Array[Person]
+## Array of Person objects in the simulation
+var people: Array[Person] = []
+
+## Dictionary of good prices in the market
 var good_prices: Dictionary = {
 	"grain": 10,
 	"water": 10,
@@ -34,13 +39,16 @@ var good_prices: Dictionary = {
 
 
 #region FUNCS
+## Initializes the simulation and connects to the turn_complete signal
 func _ready() -> void:
 	EventBus.turn_complete.connect(resolve_turn)
 
 	_create_people()
 
+## Creates the initial set of people for the simulation
+## Uses PeopleData to load configuration and create Person objects
 func _create_people() -> void:
-	var people_data = PeopleData.new()
+	var people_data: PeopleData = PeopleData.new()
 	var num_people: int = people_data.get_num_people()
 	var names: Array = people_data.get_names()
 	var job_allocation: Dictionary = people_data.get_job_allocation()
@@ -57,6 +65,8 @@ func _create_people() -> void:
 	for i in range(num_people):
 		people.append(Person.new(names[i], jobs[i], starting_goods.duplicate()))
 
+## Resolves a single turn of the simulation
+## Handles production, consumption, and market operations
 func resolve_turn() -> void:
 	var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	var desired_goods: Dictionary = {}  # { good: { person: { amount: 123 } } }
@@ -145,7 +155,7 @@ func resolve_turn() -> void:
 
 				# make purchase
 				amount_to_buy = min(floor(buyer.stockpile["money"] / good_prices[good]), desired_goods[good][buyer])
-				var cost = good_prices[good] * amount_to_buy
+				var cost: int = good_prices[good] * amount_to_buy
 				buyer.stockpile["money"] -= cost
 				seller.stockpile["money"] += cost
 

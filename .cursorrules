@@ -1,0 +1,112 @@
+# Cursor Project Rules
+# This file defines coding standards and rules for the project
+
+# Typing Rules
+[typing]
+# Always use static typing wherever possible
+enforce_static_typing = true
+# Require type hints for function parameters and return values
+require_function_types = true
+# Require type hints for class variables
+require_class_variable_types = true
+# Require type hints for local variables
+require_local_variable_types = true
+
+# Style Rules
+[style]
+# Follow Python's Black style guide
+indent_size = 4
+max_line_length = 88
+# Use spaces for indentation
+use_spaces = false
+# No trailing whitespace
+trim_trailing_whitespace = true
+# Insert final newline
+insert_final_newline = true
+# Use double quotes for strings
+string_style = "double"
+# Use snake_case for variables and functions
+naming_style = "snake_case"
+# Use PascalCase for classes
+class_naming_style = "PascalCase"
+
+# Documentation Rules
+[documentation]
+# Require docstrings for all classes
+require_class_docstrings = true
+# Require docstrings for all functions
+require_function_docstrings = true
+# Require docstrings for all variables
+require_variable_docstrings = true
+# Docstring format: GDScript style
+docstring_style = "gdscript"
+# Minimum docstring length
+min_docstring_length = 10
+
+# Code Organization Rules
+[organization]
+# Group related code with regions
+use_regions = true
+# Region format: #region NAME and #endregion
+region_format = "#region {name}\n{content}\n#endregion"
+# Organize imports at the top of the file
+organize_imports = true
+# Sort imports alphabetically
+sort_imports = true
+
+# Linting Rules
+[linting]
+# Enable all linters
+enable_all_linters = true
+# Treat warnings as errors
+warnings_as_errors = true
+# Maximum complexity for functions
+max_function_complexity = 10
+# Maximum line length before warning
+max_line_length_warning = 88
+# Maximum file length before warning
+max_file_length_warning = 1000
+
+# Testing Rules
+[testing]
+# Require tests for all new code
+require_tests = true
+# Test file naming: test_*.gd
+test_file_pattern = "test_*.gd"
+# Test function naming: test_*
+test_function_pattern = "test_*"
+
+# Code Quality Rules
+[quality]
+# Prefer terse, concise code over verbose explanations
+prefer_terse_code = true
+# Maximum function length (lines)
+max_function_length = 20
+# Maximum class length (lines)
+max_class_length = 200
+# Prefer pure functions with no side effects
+prefer_pure_functions = true
+# Require functions to have a single responsibility
+single_responsibility_principle = true
+
+# Data Management Rules
+[data]
+# Separate data from functionality
+separate_data_from_logic = true
+# Store configuration in external files
+use_external_config = true
+# Prefer immutable data structures
+prefer_immutable_data = true
+# Use data classes for complex data structures
+use_data_classes = true
+
+# Comment Maintenance Rules
+[comments]
+# Comments must be updated when code changes
+require_comment_updates = true
+# Comments should explain why, not what
+explain_why_not_what = true
+# Outdated comments are treated as errors
+outdated_comments_as_errors = true
+# Regular comment review schedule (days)
+comment_review_interval = 30 
