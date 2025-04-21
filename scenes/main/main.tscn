@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b43wppeg5xjsl"]
+[gd_scene load_steps=9 format=3 uid="uid://b43wppeg5xjsl"]
 
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="2_lquwl"]
 [ext_resource type="Script" uid="uid://bhjkkssint781" path="res://scripts/core/chrono.gd" id="3_7mycd"]
 [ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://scripts/ui/rtl_people_info.gd" id="3_lquwl"]
 [ext_resource type="Script" uid="uid://ro8fq6c3k2s3" path="res://scripts/core/sim.gd" id="4_272bh"]
+[ext_resource type="Script" uid="uid://dlvescq0873nh" path="res://scripts/ui/rtl_demesne_stockpile.gd" id="5_stock"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
 device = -1
@@ -34,6 +35,39 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.639215, 0.526713, 0.674006, 1)
 
+[node name="VBoxContainerRight" type="VBoxContainer" parent="UI"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -537.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="RTLDemesneStockpile" type="RichTextLabel" parent="UI/VBoxContainerRight" node_paths=PackedStringArray("sim")]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("5_stock")
+sim = NodePath("../../../Sim")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 537.0
+grow_vertical = 2
+
+[node name="RTLPeopleInfo" type="RichTextLabel" parent="UI/VBoxContainer" node_paths=PackedStringArray("sim")]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("3_lquwl")
+sim = NodePath("../../../Sim")
+
 [node name="HBoxTime" type="HBoxContainer" parent="UI"]
 layout_mode = 1
 anchors_preset = 3
@@ -55,21 +89,6 @@ script = ExtResource("1_1bvp3")
 [node name="LblTurnInfo" type="Label" parent="UI/HBoxTime"]
 layout_mode = 2
 script = ExtResource("2_lquwl")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 537.0
-grow_vertical = 2
-
-[node name="RTLPeopleInfo" type="RichTextLabel" parent="UI/VBoxContainer" node_paths=PackedStringArray("sim")]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-script = ExtResource("3_lquwl")
-sim = NodePath("../../../Sim")
 
 [node name="Chrono" type="Node" parent="."]
 unique_name_in_owner = true

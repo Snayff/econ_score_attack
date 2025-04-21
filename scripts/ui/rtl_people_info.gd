@@ -48,23 +48,25 @@ func update_info() -> void:
 		return
 
 	var info_text: String = "[b]People Information[/b]\n\n"
+	info_text += "[table=5]\n"
+	info_text += "[cell][b]Name[/b][/cell][cell][b]Job[/b][/cell][cell][b]Health[/b][/cell][cell][b]Happiness[/b][/cell][cell][b]Stockpile[/b][/cell]\n"
 
 	for person in sim.demesne.get_people():
 		if not person.is_alive:
-			info_text += str(person.f_name, " is dead.\n")
+			info_text += "[cell]" + person.f_name + "[/cell][cell]Dead[/cell][cell][/cell][cell][/cell][cell][/cell]\n"
 			continue
 
-		info_text += str(
-			"[b]", person.f_name, "[/b] (", person.job, ")\n",
-			"Health: ", person.health, "❤️  Happiness: ", person.happiness, "🙂\n",
-			"Stockpile:\n"
-		)
-
+		var stockpile_text: String = ""
 		for good in person.stockpile:
 			var icon = Library.get_good_icon(good)
-			info_text += str("  - ", icon, " ", good, ": ", person.stockpile[good], "\n")
+			stockpile_text += str(icon, " ", good, ": ", person.stockpile[good], "\n")
 
-		info_text += "\n"
+		info_text += "[cell]" + person.f_name + "[/cell]" + \
+			"[cell]" + person.job + "[/cell]" + \
+			"[cell]" + str(person.health) + "❤️[/cell]" + \
+			"[cell]" + str(person.happiness) + "🙂[/cell]" + \
+			"[cell]" + stockpile_text + "[/cell]\n"
 
+	info_text += "[/table]"
 	text = info_text
 #endregion
