@@ -49,6 +49,31 @@ fit_content = true
 script = ExtResource("5_stock")
 sim = NodePath("../../../Sim")
 
+[node name="CenterPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/CenterPanel"]
+layout_mode = 2
+
+[node name="RTLPeopleInfo" type="RichTextLabel" parent="UI/CenterPanel/ScrollContainer"]
+custom_minimum_size = Vector2(580, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("3_lquwl")
+
 [node name="VBoxContainerRight" type="VBoxContainer" parent="UI"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
@@ -60,22 +85,6 @@ offset_left = -537.0
 offset_top = 50.0
 grow_horizontal = 0
 grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_top = 50.0
-offset_right = 537.0
-grow_vertical = 2
-
-[node name="RTLPeopleInfo" type="RichTextLabel" parent="UI/VBoxContainer" node_paths=PackedStringArray("sim")]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-script = ExtResource("3_lquwl")
-sim = NodePath("../../../Sim")
 
 [node name="HBoxTime" type="HBoxContainer" parent="UI"]
 layout_mode = 1

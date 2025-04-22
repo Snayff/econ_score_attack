@@ -1,6 +1,6 @@
 ## PeopleInfo
 ## Displays information about people in the simulation
-## Shows their health, happiness, and stockpile
+## Shows their health, happiness, and stockpile in a scrollable center panel
 #@icon("")
 class_name RTLPeopleInfo
 extends RichTextLabel
@@ -19,8 +19,21 @@ extends RichTextLabel
 func _ready() -> void:
 	Logger.debug("PeopleInfo: _ready called", "PeopleInfo")
 	EventBus.turn_complete.connect(update_info)
+
+	# Find the Sim node if not provided
+	if not sim:
+		sim = get_node("/root/Main/Sim")
+		Logger.debug("PeopleInfo: Found Sim node: " + str(sim), "PeopleInfo")
+
 	if sim:
 		sim.sim_initialized.connect(update_info)
+
+	# Set up the UI
+	horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	fit_content = true
+	scroll_following = true
+
 	update_info()
 
 ## Updates the displayed information
