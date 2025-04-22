@@ -3,6 +3,7 @@
 class_name Person
 extends Node
 
+const ComponentConsumer = preload("res://scripts/core/component_consumer.gd")
 
 #region SIGNALS
 
@@ -31,6 +32,7 @@ var job: String = ""
 ## goods held
 var stockpile: Dictionary = {}
 var thoughts: Dictionary[String, GoodThoughts] = {}
+var consumer: ComponentConsumer
 
 #endregion
 
@@ -47,6 +49,8 @@ func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
 	for good in starting_goods:
 		stockpile[good] = starting_goods[good]
 		Logger.debug("Person: " + f_name + " starts with " + str(starting_goods[good]) + " " + good, "Person")
+
+	consumer = ComponentConsumer.new(f_name, stockpile, thoughts)
 
 func establish_initial_thoughts():
 	Logger.debug("Person: " + f_name + " establishing initial thoughts", "Person")
@@ -115,68 +119,16 @@ func produce() -> void:
 
 func consume() -> void:
 	Logger.debug("Person: " + f_name + " consuming goods", "Person")
-	for thought in thoughts.values():
-		# FIXME: this is bad as query a static value many times.
-		#	move to some sort of good info and pull from there.
-		var icon: String = ""
-		match thought.good_id:
-			"grain":
-				icon = "🥪"
-			"water":
-				icon = "💧"
+	if consumer.consume():
+		happiness += 1
+		Logger.debug(str(f_name, " is happy with their consumption. ⬆️1🙂"), "Person")
+	else:
+		health -= 1
+		Logger.debug(str(f_name, " is unhappy with their consumption. ⬇️1❤️"), "Person")
 
-		# consume desired amount
-		if stockpile[thought.good_id] > thought.desire_threshold:
-			stockpile[thought.good_id] -= thought.consumption_desired
-			happiness += 2
-
-			Logger.debug(str(
-				f_name,
-				" consumed ",
-				thought.good_id,
-				" to their heart's desire. ⬇️",
-				thought.consumption_desired,
-				icon,
-				", ⬆️2🙂"
-			), "Person")
-
-		# consume required amount
-		elif stockpile[thought.good_id] >= thought.consumption_required:
-			stockpile[thought.good_id] -= thought.consumption_required
-			happiness += 1
-
-			Logger.debug(str(
-				f_name,
-				" consumed what they needed of ",
-				thought.good_id,
-				". ⬇️",
-				thought.consumption_required,
-				icon,
-				", ⬆️1🙂"
-			), "Person")
-		# handle lack of good
-		else:
-			health -= thought.requirement_not_met_damage
-			happiness -= 1
-
-			Logger.debug(str(
-				f_name,
-				" lacked ",
-				thought.consumption_required,
-				icon,
-				". ⬇️",
-				thought.requirement_not_met_damage,
-				"❤️, ⬇️1🙂"
-			), "Person")
-
-			# check if dead and update
-			if health <= 0:
-				is_alive = false
-				Logger.debug(str(
-					f_name,
-					" died. "
-				), "Person")
-				return
+		if health <= 0:
+			is_alive = false
+			Logger.debug(str(f_name, " died from lack of goods."), "Person")
 
 func get_goods_for_sale() -> Dictionary:
 	Logger.debug("Person: " + f_name + " calculating goods for sale", "Person")
