@@ -1,0 +1,12 @@
+{
+    "laws": [
+        {
+            "id": "sales_tax",
+            "name": "Sales Tax",
+            "description": "A percentage-based tax applied to all goods transactions",
+            "default_parameters": {
+                "tax_rate": 10.0
+            }
+        }
+    ]
+} 

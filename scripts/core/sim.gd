@@ -5,6 +5,7 @@
 class_name Sim
 extends Node
 
+const SalesTax = preload("res://scripts/core/laws/sales_tax.gd")
 
 #region SIGNALS
 signal sim_initialized
@@ -44,6 +45,13 @@ func _ready() -> void:
 	Logger.debug("Sim: Created demesne_data", "Sim")
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	Logger.debug("Sim: Created demesne: " + demesne.demesne_name, "Sim")
+
+	# Enact the sales tax law
+	var sales_tax = demesne.enact_law("sales_tax")
+	if sales_tax:
+		Logger.debug("Sim: Enacted sales tax law with rate " + str(sales_tax.get_parameter("tax_rate")) + "%", "Sim")
+	else:
+		Logger.error("Sim: Failed to enact sales tax law", "Sim")
 
 	# Initialise demesne stockpile with starting resources from config
 	var starting_resources = demesne_data.get_starting_resources()
@@ -178,9 +186,31 @@ func resolve_turn() -> void:
 
 				# make purchase
 				amount_to_buy = min(floor(buyer.stockpile["money"] / good_prices[good]), desired_goods[good][buyer])
-				var cost: int = good_prices[good] * amount_to_buy
-				buyer.stockpile["money"] -= cost
-				seller.stockpile["money"] += cost
+
+				# Apply sales tax if the law is active
+				var tax_amount: float = 0.0
+				var final_cost: int = good_prices[good] * amount_to_buy
+				var sales_tax_law: SalesTax = demesne.get_law("sales_tax") as SalesTax
+				if sales_tax_law and sales_tax_law.active:
+					tax_amount = sales_tax_law.calculate_tax(final_cost)
+					final_cost += tax_amount
+					demesne.add_resource("money", tax_amount)
+					Logger.debug("Sales tax collected: %s gold" % tax_amount, "Sim")
+
+				# Check if buyer can afford the purchase with tax
+				if buyer.stockpile["money"] < final_cost:
+					# Recalculate affordable amount
+					var tax_rate: float = sales_tax_law.get_parameter("tax_rate") if sales_tax_law else 0.0
+					amount_to_buy = floor(buyer.stockpile["money"] / (good_prices[good] * (1 + tax_rate / 100.0)))
+					final_cost = good_prices[good] * amount_to_buy
+					if sales_tax_law and sales_tax_law.active:
+						tax_amount = sales_tax_law.calculate_tax(final_cost)
+						final_cost += tax_amount
+						demesne.add_resource("money", tax_amount)
+						Logger.debug("Sales tax collected (recalculated): %s gold" % tax_amount, "Sim")
+
+				buyer.stockpile["money"] -= final_cost
+				seller.stockpile["money"] += good_prices[good] * amount_to_buy  # Seller gets only the base cost
 
 				# buyer doesnt want anything, move to next buyer
 				if amount_to_buy == 0:
@@ -200,7 +230,7 @@ func resolve_turn() -> void:
 				# update remaining
 				var goods_left: int = max(0, amount_to_sell - amount_to_buy)
 				saleable_goods[good][seller]["amount"] = goods_left
-				saleable_goods[good][seller]["money_made"] += cost
+				saleable_goods[good][seller]["money_made"] += good_prices[good] * amount_to_buy
 
 				log_message = str(
 					seller.f_name,
@@ -211,7 +241,7 @@ func resolve_turn() -> void:
 					" to ",
 					buyer.f_name,
 					" for 🪙",
-					cost,
+					good_prices[good] * amount_to_buy,
 					" (",
 					good_prices[good],
 					"🪙 each).",

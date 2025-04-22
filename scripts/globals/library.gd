@@ -15,6 +15,7 @@ signal cache_cleared
 func _ready() -> void:
 	_load_config("goods")
 	_load_config("consumption_rules")
+	_load_config("laws")
 #endregion
 
 
@@ -34,7 +35,8 @@ const _CONFIG_FILES: Dictionary = {
 	"people": "people.json",
 	"demesne": "demesne.json",
 	"goods": "goods.json",
-	"consumption_rules": "rules/consumption_rules.json"
+	"consumption_rules": "rules/consumption_rules.json",
+	"laws": "rules/laws.json"
 }
 
 ## Default values by config type

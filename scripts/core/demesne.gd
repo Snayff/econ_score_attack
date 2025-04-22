@@ -5,11 +5,15 @@
 class_name Demesne
 extends Node
 
+const Law = preload("res://scripts/core/laws/law.gd")
+const LawRegistry = preload("res://scripts/core/laws/law_registry.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
 signal person_added(person: Person)
 signal person_removed(person: Person)
+signal law_enacted(law: Law)
+signal law_repealed(law_id: String)
 #endregion
 
 
@@ -25,6 +29,9 @@ var people: Array[Person] = []
 
 ## Laws and rules of the demesne
 var laws: Dictionary = {}
+
+## Registry of available law types
+var law_registry: LawRegistry
 #endregion
 
 
@@ -32,6 +39,7 @@ var laws: Dictionary = {}
 func _init(demesne_name_: String) -> void:
 	Logger.debug("Demesne: Initializing with name " + demesne_name_, "Demesne")
 	demesne_name = demesne_name_
+	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
 
 ## Initialises the stockpile with starting values
@@ -114,17 +122,56 @@ func remove_resource(good_id: String, amount: int) -> bool:
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 	return true
 
-## Adds a law to the demesne
-## @param law_id: The ID of the law
-## @param law_data: The data for the law
-func add_law(law_id: String, law_data: Dictionary) -> void:
-	laws[law_id] = law_data
-
-## Removes a law from the demesne
-## @param law_id: The ID of the law to remove
-func remove_law(law_id: String) -> void:
+## Enacts a law in the demesne
+## @param law_id: The ID of the law to enact
+## @return: The enacted law or null if creation failed
+func enact_law(law_id: String) -> Law:
+	# Check if law already exists
 	if laws.has(law_id):
-		laws.erase(law_id)
+		var existing_law: Law = laws[law_id]
+		if not existing_law.active:
+			existing_law.activate()
+		return existing_law
+		
+	# Create a new law
+	var law: Law = law_registry.create_law(law_id)
+	if law == null:
+		Logger.error("Demesne: Failed to create law with ID " + law_id, "Demesne")
+		return null
+		
+	# Activate and store the law
+	law.activate()
+	laws[law_id] = law
+	emit_signal("law_enacted", law)
+	Logger.debug("Demesne: Enacted law " + law.name, "Demesne")
+	return law
+
+## Repeals a law from the demesne
+## @param law_id: The ID of the law to repeal
+## @return: bool indicating if repeal was successful
+func repeal_law(law_id: String) -> bool:
+	if not laws.has(law_id):
+		return false
+		
+	var law: Law = laws[law_id]
+	law.deactivate()
+	laws.erase(law_id)
+	emit_signal("law_repealed", law_id)
+	Logger.debug("Demesne: Repealed law " + law.name, "Demesne")
+	return true
+
+## Gets a law by its ID
+## @param law_id: The ID of the law to get
+## @return: The law or null if not found
+func get_law(law_id: String) -> Law:
+	return laws.get(law_id, null)
+
+## Checks if a law is active
+## @param law_id: The ID of the law to check
+## @return: bool indicating if the law is active
+func is_law_active(law_id: String) -> bool:
+	var law: Law = get_law(law_id)
+	return law != null and law.active
 
 ## Gets the current stockpile of the demesne
 ## @return: Dictionary of goods and their amounts
