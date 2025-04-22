@@ -12,7 +12,6 @@ extends RichTextLabel
 
 
 #region VARS
-var goods_config: Dictionary
 #endregion
 
 
@@ -22,16 +21,7 @@ func _ready() -> void:
 	EventBus.turn_complete.connect(update_info)
 	if sim:
 		sim.sim_initialized.connect(update_info)
-	_load_goods_config()
 	update_info()
-
-func _load_goods_config() -> void:
-	var config_file = FileAccess.open("res://data/goods.json", FileAccess.READ)
-	if config_file:
-		var json = JSON.parse_string(config_file.get_as_text())
-		goods_config = json.get("goods", {})
-	else:
-		Logger.error("Failed to load goods config", "PeopleInfo")
 
 ## Updates the displayed information
 func update_info() -> void:
