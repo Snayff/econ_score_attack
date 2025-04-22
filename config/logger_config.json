@@ -1,0 +1,16 @@
+{
+  "log_level": "DEBUG",
+  "output": {
+	"console": true,
+	"file": false,
+	"file_path": "logs/game.log"
+  },
+  "formatting": {
+	"show_timestamps": true,
+	"show_levels": true,
+	"show_source": true
+  },
+  "signals": {
+	"emit_signals": true
+  }
+}

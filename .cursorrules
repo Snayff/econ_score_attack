@@ -113,4 +113,19 @@ explain_why_not_what = true
 # Outdated comments are treated as errors
 outdated_comments_as_errors = true
 # Regular comment review schedule (days)
-comment_review_interval = 30 
+comment_review_interval = 30
+
+# Component Communication Rules
+[communication]
+# Call down the hierarchy, signal up the hierarchy
+hierarchy_communication = true
+# Never use get_parent() to access parent methods
+avoid_parent_access = true
+# Use signals for cross-component communication
+use_signals_for_communication = true
+# Document all signals with clear parameter names
+document_signals = true
+# Connect signals in _ready or when adding nodes
+connect_signals_early = true
+# Disconnect signals when removing nodes
+disconnect_signals_on_removal = true 

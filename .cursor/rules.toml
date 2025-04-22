@@ -12,6 +12,27 @@ require_class_variable_types = true
 # Require type hints for local variables
 require_local_variable_types = true
 
+# Programming Paradigm Rules
+[paradigm]
+# Programming paradigm preferences in order of priority
+paradigm_preferences = ["functional", "composition", "inheritance"]
+# Prefer pure functions with no side effects
+prefer_pure_functions = true
+# Use immutable data structures where possible
+prefer_immutable_data = true
+# Avoid global state
+avoid_global_state = true
+# Use composition over inheritance
+prefer_composition = true
+# Limit inheritance depth
+max_inheritance_depth = 2
+# Use interfaces/protocols for shared behavior
+use_interfaces = true
+# Prefer higher-order functions
+prefer_higher_order_functions = true
+# Use declarative code over imperative
+prefer_declarative = true
+
 # Style Rules
 [style]
 # Follow Python's Black style guide
@@ -33,6 +54,8 @@ avoid_name_variable = true
 data_class_prefix = true
 # Use PascalCase for classes
 class_naming_style = "PascalCase"
+# Use trailing underscore for parameters that differ from class variables
+parameter_naming = "trailing_underscore"
 # UI components must use type prefix (e.g., lbl_ for Label, rtl_ for RichTextLabel)
 ui_component_prefix = true
 # UI component prefixes:
@@ -119,8 +142,6 @@ prefer_terse_code = true
 max_function_length = 20
 # Maximum class length (lines)
 max_class_length = 200
-# Prefer pure functions with no side effects
-prefer_pure_functions = true
 # Require functions to have a single responsibility
 single_responsibility_principle = true
 
@@ -130,8 +151,6 @@ single_responsibility_principle = true
 separate_data_from_logic = true
 # Store configuration in external files
 use_external_config = true
-# Prefer immutable data structures
-prefer_immutable_data = true
 # Use data classes for complex data structures
 use_data_classes = true
 # Data classes must be stored in scripts/data folder
@@ -171,4 +190,19 @@ godot_min_version = "4.0"
 # If a signal is required by a class that is not a direct parent, define it in event_bus.gd
 cross_class_signals_in_event_bus = true
 # Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment
-event_bus_signal_warning_ignore = true 
+event_bus_signal_warning_ignore = true
+
+# Component Communication Rules
+[communication]
+# Call down the hierarchy, signal up the hierarchy
+hierarchy_communication = true
+# Never use get_parent() to access parent methods
+avoid_parent_access = true
+# Use signals for cross-component communication
+use_signals_for_communication = true
+# Document all signals with clear parameter names
+document_signals = true
+# Connect signals in _ready or when adding nodes
+connect_signals_early = true
+# Disconnect signals when removing nodes
+disconnect_signals_on_removal = true 
