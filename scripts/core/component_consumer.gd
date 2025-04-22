@@ -5,47 +5,42 @@ extends Node
 #region VARS
 var f_name: String
 var stockpile: Dictionary
-var thoughts: Dictionary[String, GoodThoughts]
 #endregion
 
 #region FUNCS
-func _init(f_name_: String, stockpile_: Dictionary, thoughts_: Dictionary[String, GoodThoughts]) -> void:
+func _init(f_name_: String, stockpile_: Dictionary) -> void:
 	f_name = f_name_
 	stockpile = stockpile_
-	thoughts = thoughts_
 
 func consume() -> bool:
 	Logger.debug("ComponentConsumer: " + f_name + " consuming goods", "ComponentConsumer")
-	for thought in thoughts.values():
-		var icon: String = ""
-		match thought.good_id:
-			"grain":
-				icon = "🥪"
-			"water":
-				icon = "💧"
-
+	
+	for rule in Library.get_all_consumption_rules():
+		var good_id = rule.good_id
+		var icon = Library.get_good_icon(good_id)
+		
 		# consume desired amount
-		if stockpile[thought.good_id] > thought.desire_threshold:
-			stockpile[thought.good_id] -= thought.consumption_desired
+		if stockpile[good_id] > rule.min_held_before_desired_consumption:
+			stockpile[good_id] -= rule.desired_consumption_amount
 			Logger.debug(str(
 				f_name,
 				" consumed ",
-				thought.good_id,
+				good_id,
 				" to their heart's desire. ⬇️",
-				thought.consumption_desired,
+				rule.desired_consumption_amount,
 				icon
 			), "ComponentConsumer")
 			return true
 
 		# consume required amount
-		elif stockpile[thought.good_id] >= thought.consumption_required:
-			stockpile[thought.good_id] -= thought.consumption_required
+		elif stockpile[good_id] >= rule.min_consumption_amount:
+			stockpile[good_id] -= rule.min_consumption_amount
 			Logger.debug(str(
 				f_name,
 				" consumed what they needed of ",
-				thought.good_id,
+				good_id,
 				". ⬇️",
-				thought.consumption_required,
+				rule.min_consumption_amount,
 				icon
 			), "ComponentConsumer")
 			return true
@@ -55,7 +50,7 @@ func consume() -> bool:
 			Logger.debug(str(
 				f_name,
 				" lacked ",
-				thought.consumption_required,
+				rule.min_consumption_amount,
 				icon,
 				". Cannot consume."
 			), "ComponentConsumer")

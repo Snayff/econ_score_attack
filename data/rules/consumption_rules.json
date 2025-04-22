@@ -1,0 +1,22 @@
+{
+	"consumption_rules": [
+		{
+			"good_id": "grain",
+			"min_consumption_amount": 1,
+			"desired_consumption_amount": 2,
+			"min_held_before_desired_consumption": 3,
+			"amount_to_hold_before_selling": 10,
+			"desired_consumption_happiness_increase": 2,
+			"consumption_failure_cost": 1
+		},
+		{
+			"good_id": "water",
+			"min_consumption_amount": 2,
+			"desired_consumption_amount": 4,
+			"min_held_before_desired_consumption": 10,
+			"amount_to_hold_before_selling": 20,
+			"desired_consumption_happiness_increase": 2,
+			"consumption_failure_cost": 1
+		}
+	]
+} 

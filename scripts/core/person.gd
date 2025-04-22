@@ -31,7 +31,6 @@ var happiness: int = 5
 var job: String = ""
 ## goods held
 var stockpile: Dictionary = {}
-var thoughts: Dictionary[String, GoodThoughts] = {}
 var consumer: ComponentConsumer
 
 #endregion
@@ -43,37 +42,12 @@ func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
 	f_name = f_name_
 	job = job_
 
-	establish_initial_thoughts()
-
 	# add values from starting goods
 	for good in starting_goods:
 		stockpile[good] = starting_goods[good]
 		Logger.debug("Person: " + f_name + " starts with " + str(starting_goods[good]) + " " + good, "Person")
 
-	consumer = ComponentConsumer.new(f_name, stockpile, thoughts)
-
-func establish_initial_thoughts():
-	Logger.debug("Person: " + f_name + " establishing initial thoughts", "Person")
-	var grain: GoodThoughts = GoodThoughts.new()
-	grain.good_id = "grain"
-	grain.consumption_required = 1
-	grain.consumption_desired = 2
-	grain.requirement_not_met_damage = 1
-	grain.min_level_to_hold = 3
-	grain.desire_threshold = 10
-
-	thoughts[grain.good_id] = grain
-
-	var water: GoodThoughts = GoodThoughts.new()
-	water.good_id = "water"
-	water.consumption_required = 2
-	water.consumption_desired = 4
-	water.requirement_not_met_damage = 1
-	water.min_level_to_hold = 10
-	water.desire_threshold = 20
-
-	thoughts[water.good_id] = water
-	Logger.debug("Person: " + f_name + " thoughts established", "Person")
+	consumer = ComponentConsumer.new(f_name, stockpile)
 
 func produce() -> void:
 	Logger.debug("Person: " + f_name + " producing as " + job, "Person")
@@ -120,11 +94,24 @@ func produce() -> void:
 func consume() -> void:
 	Logger.debug("Person: " + f_name + " consuming goods", "Person")
 	if consumer.consume():
-		happiness += 1
-		Logger.debug(str(f_name, " is happy with their consumption. ⬆️1🙂"), "Person")
+		# Find the rule that was used for consumption
+		for rule in Library.get_all_consumption_rules():
+			if stockpile[rule.good_id] < rule.min_consumption_amount:
+				continue
+			if stockpile[rule.good_id] >= rule.min_held_before_desired_consumption:
+				happiness += rule.desired_consumption_happiness_increase
+				Logger.debug(str(f_name, " is happy with their consumption. ⬆️", rule.desired_consumption_happiness_increase, "🙂"), "Person")
+			else:
+				happiness += 1
+				Logger.debug(str(f_name, " is satisfied with their consumption. ⬆️1🙂"), "Person")
+			break
 	else:
-		health -= 1
-		Logger.debug(str(f_name, " is unhappy with their consumption. ⬇️1❤️"), "Person")
+		# Find the rule that failed
+		for rule in Library.get_all_consumption_rules():
+			if stockpile[rule.good_id] < rule.min_consumption_amount:
+				health -= rule.consumption_failure_cost
+				Logger.debug(str(f_name, " is unhappy with their consumption. ⬇️", rule.consumption_failure_cost, "❤️"), "Person")
+				break
 
 		if health <= 0:
 			is_alive = false
@@ -134,15 +121,12 @@ func get_goods_for_sale() -> Dictionary:
 	Logger.debug("Person: " + f_name + " calculating goods for sale", "Person")
 	var goods_to_sell: Dictionary = {}
 
-	# TODO: this will need to be changed so that the person only sells down to required-level
-	#	*if* they cannot afford to get all required goods up to requirement-level.
-
 	# determine all goods above threshold
-	for thought in thoughts.values():
-
-		if stockpile[thought.good_id] > thought.min_level_to_hold:
-			goods_to_sell[thought.good_id] = stockpile[thought.good_id] - thought.min_level_to_hold
-			Logger.debug("Person: " + f_name + " will sell " + str(goods_to_sell[thought.good_id]) + " " + thought.good_id, "Person")
+	for rule in Library.get_all_consumption_rules():
+		var good_id = rule.good_id
+		if stockpile[good_id] > rule.amount_to_hold_before_selling:
+			goods_to_sell[good_id] = stockpile[good_id] - rule.amount_to_hold_before_selling
+			Logger.debug("Person: " + f_name + " will sell " + str(goods_to_sell[good_id]) + " " + good_id, "Person")
 
 	return goods_to_sell
 
@@ -151,21 +135,16 @@ func get_goods_to_buy() -> Dictionary:
 	var goods_to_buy: Dictionary = {}
 
 	# determine all goods above threshold
-	for thought in thoughts.values():
-
+	for rule in Library.get_all_consumption_rules():
+		var good_id = rule.good_id
 		# we already have enough, dont buy more
-		if stockpile[thought.good_id] > thought.desire_threshold:
+		if stockpile[good_id] > rule.amount_to_hold_before_selling:
 			continue
-
 		else:
-
-			# TODO: need to prevent spanking all money on 1 required good, leading to abundance,
-			# 	when that leaves another required good short
-
-			var amount_to_buy = max(0, thought.desire_threshold - stockpile[thought.good_id])
+			var amount_to_buy = max(0, rule.amount_to_hold_before_selling - stockpile[good_id])
 			if amount_to_buy != 0:
-				goods_to_buy[thought.good_id] = amount_to_buy
-				Logger.debug("Person: " + f_name + " needs to buy " + str(amount_to_buy) + " " + thought.good_id, "Person")
+				goods_to_buy[good_id] = amount_to_buy
+				Logger.debug("Person: " + f_name + " needs to buy " + str(amount_to_buy) + " " + good_id, "Person")
 
 	return goods_to_buy
 

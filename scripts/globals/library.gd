@@ -14,6 +14,7 @@ signal cache_cleared
 #region ON READY
 func _ready() -> void:
 	_load_config("goods")
+	_load_config("consumption_rules")
 #endregion
 
 
@@ -32,7 +33,8 @@ const DATA_PATH: String = "res://data/"
 const _CONFIG_FILES: Dictionary = {
 	"people": "people.json",
 	"demesne": "demesne.json",
-	"goods": "goods.json"
+	"goods": "goods.json",
+	"consumption_rules": "rules/consumption_rules.json"
 }
 
 ## Default values by config type
@@ -91,6 +93,28 @@ const _DEFAULT_CONFIGS: Dictionary = {
 				"icon": "📜"
 			}
 		}
+	},
+	"consumption_rules": {
+		"consumption_rules": [
+			{
+				"good_id": "grain",
+				"min_consumption_amount": 1,
+				"desired_consumption_amount": 2,
+				"min_held_before_desired_consumption": 3,
+				"amount_to_hold_before_selling": 10,
+				"desired_consumption_happiness_increase": 2,
+				"consumption_failure_cost": 1
+			},
+			{
+				"good_id": "water",
+				"min_consumption_amount": 2,
+				"desired_consumption_amount": 4,
+				"min_held_before_desired_consumption": 10,
+				"amount_to_hold_before_selling": 20,
+				"desired_consumption_happiness_increase": 2,
+				"consumption_failure_cost": 1
+			}
+		]
 	}
 }
 #endregion
@@ -173,4 +197,19 @@ func get_good_base_price(good_name: String) -> int:
 func get_good_category(good_name: String) -> String:
 	var goods_data = get_config("goods").get("goods", {})
 	return goods_data.get(good_name, {}).get("category", "")
+
+## Get consumption rules for a specific good
+## @param good_id: ID of the good to get rules for
+## @return: Dictionary containing the consumption rules or empty dict if not found
+func get_consumption_rule(good_id: String) -> Dictionary:
+	var rules = get_config("consumption_rules").get("consumption_rules", [])
+	for rule in rules:
+		if rule.get("good_id") == good_id:
+			return rule
+	return {}
+
+## Get all consumption rules
+## @return: Array of all consumption rules
+func get_all_consumption_rules() -> Array:
+	return get_config("consumption_rules").get("consumption_rules", [])
 #endregion
