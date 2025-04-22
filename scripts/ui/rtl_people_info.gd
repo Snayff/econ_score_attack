@@ -26,7 +26,7 @@ func _ready() -> void:
 	update_info()
 
 func _load_goods_config() -> void:
-	var config_file = FileAccess.open("res://data/goods_config.json", FileAccess.READ)
+	var config_file = FileAccess.open("res://data/goods.json", FileAccess.READ)
 	if config_file:
 		var json = JSON.parse_string(config_file.get_as_text())
 		goods_config = json.get("goods", {})

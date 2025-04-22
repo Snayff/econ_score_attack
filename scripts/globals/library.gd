@@ -30,9 +30,9 @@ const DATA_PATH: String = "res://data/"
 
 ## Configuration file paths by type
 const _CONFIG_FILES: Dictionary = {
-	"people": "people_config.json",
-	"demesne": "demesne_config.json",
-	"goods": "goods_config.json"
+	"people": "people.json",
+	"demesne": "demesne.json",
+	"goods": "goods.json"
 }
 
 ## Default values by config type
