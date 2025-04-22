@@ -1,5 +1,5 @@
 ## DemesneStockpile
-## Displays information about the demesne's stockpile
+## Displays information about the demesne's stockpile in a top bar
 ## Shows current resource levels with icons
 #@icon("")
 class_name RTLDemesneStockpile
@@ -18,9 +18,17 @@ extends RichTextLabel
 #region FUNCS
 func _ready() -> void:
 	Logger.debug("DemesneStockpile: _ready called", "DemesneStockpile")
+
+	# Connect to signals for updates
 	EventBus.turn_complete.connect(update_info)
 	if sim:
-		sim.sim_initialized.connect(update_info)
+		sim.sim_initialized.connect(_on_sim_initialized)
+
+	# Set up the UI
+	horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fit_content = true
+
 	update_info()
 
 ## Updates the displayed information
@@ -37,15 +45,26 @@ func update_info() -> void:
 		text = "No simulation data available (demesne is null)"
 		return
 
-	var info_text: String = "[b]Demesne Stockpile[/b]\n\n"
-	info_text += "[table=2]\n"
-	info_text += "[cell][b]Resource[/b][/cell][cell][b]Amount[/b][/cell]\n"
-
+	var info_text: String = ""
 	var stockpile = sim.demesne.get_stockpile()
+
+	# Create a horizontal bar with icons and amounts
 	for good in stockpile:
 		var icon = Library.get_good_icon(good)
-		info_text += "[cell]" + icon + " " + good + "[/cell][cell]" + str(stockpile[good]) + "[/cell]\n"
+		info_text += icon + " " + str(stockpile[good]) + "  "
 
-	info_text += "[/table]"
 	text = info_text
-#endregion 
+
+## Handles stockpile changes from the demesne
+func _on_stockpile_changed(good_id: String, new_amount: int) -> void:
+	Logger.debug("DemesneStockpile: stockpile changed for " + good_id + " to " + str(new_amount), "DemesneStockpile")
+	update_info()
+
+## Called when the simulation is initialized
+func _on_sim_initialized() -> void:
+	Logger.debug("DemesneStockpile: sim initialized", "DemesneStockpile")
+	# Connect to demesne's stockpile_changed signal
+	if sim and sim.demesne:
+		sim.demesne.stockpile_changed.connect(_on_stockpile_changed)
+	update_info()
+#endregion
