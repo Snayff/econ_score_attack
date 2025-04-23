@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmkfp7f7dii75"]
+[gd_scene load_steps=9 format=3 uid="uid://cmkfp7f7dii75"]
 
+[ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://scripts/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://scripts/ui/btn_sidebar_button.gd" id="1_4yfr8"]
 [ext_resource type="Script" uid="uid://dlvescq0873nh" path="res://scripts/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
 [ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://scripts/ui/rtl_people_info.gd" id="3_b1beo"]
@@ -21,6 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_2k3m4")
 
 [node name="CRBackground" type="ColorRect" parent="."]
 layout_mode = 1
@@ -68,14 +70,6 @@ text = "Laws"
 script = ExtResource("1_4yfr8")
 button_text = "Laws"
 
-[node name="MainContent" type="MarginContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
 [node name="TopBar" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 10
@@ -91,7 +85,7 @@ bbcode_enabled = true
 fit_content = true
 script = ExtResource("2_46cp5")
 
-[node name="CenterPanel" type="PanelContainer" parent="."]
+[node name="CentrePanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -105,10 +99,10 @@ offset_bottom = 293.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CentrePanel"]
 layout_mode = 2
 
-[node name="RTLPeopleInfo" type="RichTextLabel" parent="CenterPanel/ScrollContainer"]
+[node name="RTLPeopleInfo" type="RichTextLabel" parent="CentrePanel/ScrollContainer"]
 custom_minimum_size = Vector2(580, 0)
 layout_mode = 2
 size_flags_horizontal = 3

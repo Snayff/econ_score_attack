@@ -52,7 +52,7 @@ alwaysApply: true
   - Connect signals as early as possible, preferably in _ready().
   - Godot's minimum version is 4.4. 
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
-  - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment.
+  - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment, but before the signal.
   - Avoid narrowing precision by converting floats to ints. 
   
   

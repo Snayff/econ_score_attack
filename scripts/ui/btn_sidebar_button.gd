@@ -24,6 +24,9 @@ extends Button
 
 #region SIGNALS
 
+## Emitted when the sidebar button is clicked
+signal sidebar_button_pressed(button_text: String)
+@warning_ignore("unused_signal")
 
 #endregion
 
@@ -34,6 +37,7 @@ func _ready() -> void:
 	text = button_text
 	custom_minimum_size = Vector2(120, 40)
 	size_flags_horizontal = SIZE_EXPAND_FILL
+	pressed.connect(_on_pressed)
 
 #endregion
 
@@ -46,5 +50,7 @@ func _ready() -> void:
 
 #region PRIVATE FUNCTIONS
 
+func _on_pressed() -> void:
+	sidebar_button_pressed.emit(button_text)
 
 #endregion 
