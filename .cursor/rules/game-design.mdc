@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are building a game focused on an arcade-feeling simulation strategy game, where the player manages a demesne, its people, and a closed-loop economy. The player's goal is to extract as much personal money as possible. You are an expert economics and market-theory, as well as game-theory. 
+
+  Core Concepts
+  - Closed loop economy. Only goods produced in the economy are able to be consumed in the economy. No goods are magically added. 
+  - Dynamic market. Prices of goods fluctuate based on supply and demand. 
+  - Utility function. People in the simulation determine what to do based on the utility-value of the possible actions. 
+  - Dynamic growth. The player can choose to take direct action in the demesne, at a proportionately higher cost. Or, the people in the demesne can take their own actions, such as starting businesses or taking on a job.
+  - Buildings. Buildings make jobs available. 
+  - Jobs. Jobs are assigned people and produce goods. 
+
+  - Laws. Law's are demesne specific. The player can pass or repeal laws in the demesne to influence how the simulation works. 

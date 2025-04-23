@@ -37,6 +37,7 @@ alwaysApply: true
   - Utilise the single responsibility principle. 
   - Game behaviour should be defined in data. 
   - Configs and other static referenced data are all held externally in .json files. 
+  - Use data classes for complex data structures. 
 
   GDScript 2.0/Godot
   - Never use "name" as a variable, use "f_name" instead.
@@ -47,11 +48,15 @@ alwaysApply: true
   - When communicating up the hierarchy, i.e. from a child to a parent, use signals. Never call a function or variable from a parent directly. 
   - Ensure signals are disconnected when removed. 
   - Connect signals as early as possible, preferably in _ready().
+  - Godot's minimum version is 4.4. 
+  - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
   
   Naming Conventions
   - Private members, whether classes or functions, should be prefixed with an undescore, "_". 
   - Use descriptive variable and function names; adhere to naming conventions of python's black (e.g., PascalCase for classes, snake_case for variables).
   - Data classes should have their name prefixed with "Data".
+  - UI components must use a 3-letter type prefix (e.g., lbl_ for Label, rtl_ for RichTextLabel) in their name.
+  - For function arguments, if we need to differentiate between an argument name and an existing variable name, use a trailing underscore "_". 
 
 
   Documentation
@@ -89,8 +94,3 @@ alwaysApply: true
   Refer to Godot documentation and GDScript 2.0 programming guides for best practices in scripting, game architecture, and performance optimization.
 
 
-
-
-
-
-   
