@@ -10,7 +10,7 @@ extends Label
 
 
 #region ON READY (for direct children only)
-@onready var _chrono: Chrono = %Chrono
+@onready var _chrono: Chrono = get_node("/root/Main/Chrono")
 #endregion
 
 
@@ -28,6 +28,9 @@ extends Label
 
 
 #region FUNCS
+func _ready() -> void:
+	assert(_chrono != null, "Chrono node not found!")
+
 func _process(_delta: float) -> void:
 	if is_instance_valid(_chrono):
 		if !_chrono.is_node_ready():

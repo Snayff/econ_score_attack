@@ -55,6 +55,7 @@ alwaysApply: true
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
   - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment, but before the signal.
   - Avoid narrowing precision by converting floats to ints. 
+  - If a .gd file is ever moved, look for a file with the same name, but a .gd.uid extension, held in the same location. If such a file is found, move it to the new location, too. 
   
   
   Naming Conventions

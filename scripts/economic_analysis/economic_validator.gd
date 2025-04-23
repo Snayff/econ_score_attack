@@ -48,11 +48,11 @@ func set_initial_money(amount: float) -> void:
 
 ## Records a new transaction for validation
 func record_transaction(
-	transaction_type: String, 
-	good: String, 
-	amount: int, 
+	transaction_type: String,
+	good: String,
+	amount: int,
 	price: float,
-	buyer: String, 
+	buyer: String,
 	seller: String
 ) -> void:
 	var transaction = {
@@ -64,13 +64,13 @@ func record_transaction(
 		"buyer": buyer,
 		"seller": seller
 	}
-	
+
 	_transaction_history.append(transaction)
-	
+
 	# Keep history size manageable
 	if _transaction_history.size() > MAX_TRANSACTION_HISTORY:
 		_transaction_history.pop_front()
-	
+
 	Logger.debug("EconomicValidator: Recorded transaction - %s" % str(transaction), "EconomicValidator")
 
 ## Updates the total resources tracking
@@ -83,14 +83,14 @@ func update_resource_totals(resource_totals: Dictionary) -> void:
 func validate_money_conservation() -> bool:
 	var current_total = _calculate_total_money()
 	var expected_total = _get_expected_total_money()
-	
+
 	if abs(current_total - expected_total) > FLOAT_EPSILON:
-		emit_signal("invariant_violated", 
+		emit_signal("invariant_violated",
 			"money_conservation",
 			"Money not conserved: Expected %f, got %f" % [expected_total, current_total]
 		)
 		Logger.error(
-			"Money conservation violated: Expected %f, got %f" % [expected_total, current_total], 
+			"Money conservation violated: Expected %f, got %f" % [expected_total, current_total],
 			"EconomicValidator"
 		)
 		return false
@@ -100,9 +100,10 @@ func validate_money_conservation() -> bool:
 func validate_closed_loop_economy() -> bool:
 	var production_totals = _calculate_total_production()
 	var consumption_totals = _calculate_total_consumption()
-	
+
 	for good in production_totals.keys():
-		if production_totals[good] < consumption_totals[good]:
+		var consumed: int = consumption_totals.get(good, 0)  # Default to 0 if good hasn't been consumed
+		if production_totals[good] < consumed:
 			emit_signal("invariant_violated",
 				"closed_loop_economy",
 				"More %s consumed than produced" % good
@@ -161,4 +162,4 @@ func _calculate_total_consumption() -> Dictionary:
 			totals[good] += transaction["amount"]
 	return totals
 
-#endregion 
+#endregion
