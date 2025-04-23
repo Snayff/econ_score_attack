@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://b43wppeg5xjsl"]
+[gd_scene load_steps=5 format=3 uid="uid://b43wppeg5xjsl"]
 
 [ext_resource type="Script" uid="uid://bhjkkssint781" path="res://scripts/core/chrono.gd" id="3_7mycd"]
 [ext_resource type="Script" uid="uid://ro8fq6c3k2s3" path="res://scripts/core/sim.gd" id="4_272bh"]
+[ext_resource type="Script" uid="uid://cd8aiosoe0v0y" path="res://scripts/ui/panel_header.gd" id="4_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://cmkfp7f7dii75" path="res://scenes/ui/main_ui.tscn" id="7_hujxm"]
 
 [node name="Main" type="Node"]
@@ -21,9 +22,17 @@ script = ExtResource("4_272bh")
 [node name="RTLDemesneStockpile" parent="UI/TopBar" index="0" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../Sim")
 
-[node name="RTLPeopleInfo" parent="UI/CentrePanel/ScrollContainer" index="0"]
-unique_name_in_owner = false
-visible = true
+[node name="PanelHeader" parent="UI/CentrePanel/MarginContainer/VBoxContainer" index="0"]
+script = ExtResource("4_l3cfh")
+
+[node name="TitleLabel" parent="UI/CentrePanel/MarginContainer/VBoxContainer/PanelHeader" index="0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "People"
+horizontal_alignment = 1
+
+[node name="HSeparator" parent="UI/CentrePanel/MarginContainer/VBoxContainer/PanelHeader" index="1"]
+layout_mode = 2
 
 [node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
 text = "Progress"

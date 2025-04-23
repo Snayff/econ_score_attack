@@ -28,7 +28,12 @@ const VIEWS = {
 
 #region ON READY
 
+@onready var panel_header: VBoxContainer = %PanelHeader
+
 func _ready() -> void:
+	# Ensure we have our required nodes
+	assert(panel_header != null, "PanelHeader node not found!")
+
 	# Connect button signals
 	for button_name in VIEWS.keys():
 		var button = get_node_or_null("HBoxContainer/Sidebar/MarginContainer/VBoxContainer/btn_" + button_name.to_lower())
@@ -61,10 +66,13 @@ func _show_view(view_name: String) -> void:
 		push_error("Invalid view name: " + view_name)
 		return
 
-	var container = $CentrePanel/ScrollContainer
+	var container = $"CentrePanel/MarginContainer/VBoxContainer/ScrollContainer"
 	if not container:
 		push_error("ScrollContainer not found!")
 		return
+
+	# Update header title
+	panel_header.set_title(view_name)
 
 	# Hide all views first
 	for view in VIEWS.values():
