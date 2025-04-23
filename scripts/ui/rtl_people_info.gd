@@ -120,24 +120,45 @@ func _create_person_panel(person: Person) -> PanelContainer:
 	var vbox = VBoxContainer.new()
 	panel.add_child(vbox)
 
-	# Add main info row
-	var values = [
-		person.f_name,
-		person.is_alive if person.job.is_empty() else person.job,  # Use job if available, otherwise show alive status
-		str(person.health) + "❤️" if person.is_alive else "",
-		str(person.happiness) + "🙂" if person.is_alive else "",
-		"" # Stockpile will be added below if person is alive
-	]
+	# Create the main row with columns
+	var row = HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_child(row)
 
-	var main_row = _create_person_row(values)
-	vbox.add_child(main_row)
+	# Name column
+	var name_label = Label.new()
+	name_label.text = person.f_name
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	row.add_child(name_label)
 
-	# Add stockpile info if person is alive
+	# Job column
+	var job_label = Label.new()
+	job_label.text = person.is_alive if person.job.is_empty() else person.job
+	job_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	job_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	row.add_child(job_label)
+
+	# Health column
+	var health_label = Label.new()
+	health_label.text = str(person.health) + "❤️" if person.is_alive else ""
+	health_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	row.add_child(health_label)
+
+	# Happiness column
+	var happiness_label = Label.new()
+	happiness_label.text = str(person.happiness) + "🙂" if person.is_alive else ""
+	happiness_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	happiness_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	row.add_child(happiness_label)
+
+	# Stockpile column
+	var stockpile_container = VBoxContainer.new()
+	stockpile_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(stockpile_container)
+
 	if person.is_alive:
-		var stockpile_container = VBoxContainer.new()
-		stockpile_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		vbox.add_child(stockpile_container)
-
 		for good in person.stockpile:
 			var icon = Library.get_good_icon(good)
 			var good_label = Label.new()
