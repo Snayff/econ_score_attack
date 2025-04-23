@@ -59,6 +59,11 @@ const BASE_PERIOD: int = 10
 ## Updates metrics based on new economic data
 ## @param sim_state Dictionary containing current simulation state
 func update_metrics(sim_state: Dictionary) -> void:
+	Logger.log_event("metrics_update_started", {
+		"timestamp": Time.get_unix_time_from_system(),
+		"current_metrics": _metrics.duplicate()
+	}, "EconomicMetrics")
+	
 	_update_price_level(sim_state)
 	_update_trade_volume(sim_state)
 	_update_money_velocity(sim_state)
@@ -70,7 +75,10 @@ func update_metrics(sim_state: Dictionary) -> void:
 	_check_thresholds()
 	_record_history()
 	
-	Logger.debug("EconomicMetrics: Updated metrics", "EconomicMetrics")
+	Logger.log_event("metrics_update_completed", {
+		"timestamp": Time.get_unix_time_from_system(),
+		"updated_metrics": _metrics.duplicate()
+	}, "EconomicMetrics")
 
 ## Gets a specific metric value
 ## @param metric_name Name of the metric to retrieve
@@ -93,19 +101,26 @@ func get_metric_history(metric_name: String, periods: int = 10) -> Array:
 ## Generates a comprehensive economic report
 ## @return Dictionary containing current metrics, trends, and alerts
 func generate_report() -> Dictionary:
-	return {
+	var report = {
 		"current_metrics": _metrics.duplicate(),
 		"historical_trends": _calculate_trends(),
 		"alerts": _generate_alerts(),
 		"timestamp": Time.get_unix_time_from_system()
 	}
+	
+	Logger.log_event("economic_report_generated", report, "EconomicMetrics")
+	return report
 
 ## Sets a threshold for a metric
 ## @param metric_name Name of the metric
 ## @param threshold New threshold value
 func set_threshold(metric_name: String, threshold: float) -> void:
 	_metric_thresholds[metric_name] = threshold
-	Logger.debug("EconomicMetrics: Set threshold for %s to %f" % [metric_name, threshold], "EconomicMetrics")
+	Logger.log_event("metric_threshold_set", {
+		"metric": metric_name,
+		"threshold": threshold,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicMetrics")
 
 #endregion
 
@@ -197,8 +212,17 @@ func _update_market_activity(sim_state: Dictionary) -> void:
 
 ## Updates a specific metric and emits signal
 func _update_metric(metric_name: String, value: float) -> void:
+	var old_value = _metrics.get(metric_name, 0.0)
 	_metrics[metric_name] = value
 	emit_signal("metric_updated", metric_name, value)
+	
+	Logger.log_event("metric_updated", {
+		"metric": metric_name,
+		"old_value": old_value,
+		"new_value": value,
+		"change": value - old_value,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicMetrics")
 
 ## Checks if any metrics have crossed their thresholds
 func _check_thresholds() -> void:
@@ -209,11 +233,12 @@ func _check_thresholds() -> void:
 			
 			if current_value > threshold:
 				emit_signal("threshold_crossed", metric, threshold, current_value)
-				Logger.warning(
-					"Economic threshold crossed: %s at %f (threshold: %f)" % 
-					[metric, current_value, threshold],
-					"EconomicMetrics"
-				)
+				Logger.log_event("metric_threshold_crossed", {
+					"metric": metric,
+					"threshold": threshold,
+					"current_value": current_value,
+					"timestamp": Time.get_unix_time_from_system()
+				}, "EconomicMetrics")
 
 ## Records current metrics in history
 func _record_history() -> void:

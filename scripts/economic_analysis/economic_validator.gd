@@ -44,7 +44,10 @@ const MAX_TRANSACTION_HISTORY: int = 1000
 ## Sets the initial money in the system for validation
 func set_initial_money(amount: float) -> void:
 	_initial_money = amount
-	Logger.debug("EconomicValidator: Set initial money to %f" % amount, "EconomicValidator")
+	Logger.log_event("initial_money_set", {
+		"amount": amount,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicValidator")
 
 ## Records a new transaction for validation
 func record_transaction(
@@ -71,12 +74,15 @@ func record_transaction(
 	if _transaction_history.size() > MAX_TRANSACTION_HISTORY:
 		_transaction_history.pop_front()
 
-	Logger.debug("EconomicValidator: Recorded transaction - %s" % str(transaction), "EconomicValidator")
+	Logger.log_event("transaction_recorded", transaction, "EconomicValidator")
 
 ## Updates the total resources tracking
 func update_resource_totals(resource_totals: Dictionary) -> void:
 	_total_resources = resource_totals.duplicate()
-	Logger.debug("EconomicValidator: Updated resource totals - %s" % str(_total_resources), "EconomicValidator")
+	Logger.log_event("resource_totals_updated", {
+		"totals": _total_resources,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicValidator")
 
 ## Validates that the total money in the system remains constant
 ## (except for explicitly tracked sources/sinks)
@@ -85,15 +91,20 @@ func validate_money_conservation() -> bool:
 	var expected_total = _get_expected_total_money()
 
 	if abs(current_total - expected_total) > FLOAT_EPSILON:
-		emit_signal("invariant_violated",
-			"money_conservation",
-			"Money not conserved: Expected %f, got %f" % [expected_total, current_total]
-		)
-		Logger.error(
-			"Money conservation violated: Expected %f, got %f" % [expected_total, current_total],
-			"EconomicValidator"
-		)
+		var details = {
+			"expected_total": expected_total,
+			"current_total": current_total,
+			"difference": current_total - expected_total,
+			"timestamp": Time.get_unix_time_from_system()
+		}
+		emit_signal("invariant_violated", "money_conservation", "Money not conserved: Expected %.2f, got %.2f" % [expected_total, current_total])
+		Logger.log_event("money_conservation_violated", details, "EconomicValidator")
 		return false
+
+	Logger.log_event("money_conservation_validated", {
+		"total": current_total,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicValidator")
 	return true
 
 ## Validates that all goods in the economy came from valid production
@@ -102,17 +113,24 @@ func validate_closed_loop_economy() -> bool:
 	var consumption_totals = _calculate_total_consumption()
 
 	for good in production_totals.keys():
-		var consumed: int = consumption_totals.get(good, 0)  # Default to 0 if good hasn't been consumed
+		var consumed = consumption_totals.get(good, 0)
 		if production_totals[good] < consumed:
-			emit_signal("invariant_violated",
-				"closed_loop_economy",
-				"More %s consumed than produced" % good
-			)
-			Logger.error(
-				"Closed loop economy violated: More %s consumed than produced" % good,
-				"EconomicValidator"
-			)
+			var details = {
+				"good": good,
+				"produced": production_totals[good],
+				"consumed": consumed,
+				"difference": consumed - production_totals[good],
+				"timestamp": Time.get_unix_time_from_system()
+			}
+			emit_signal("invariant_violated", "closed_loop_economy", "More %s consumed than produced" % good)
+			Logger.log_event("closed_loop_economy_violated", details, "EconomicValidator")
 			return false
+
+	Logger.log_event("closed_loop_economy_validated", {
+		"production_totals": production_totals,
+		"consumption_totals": consumption_totals,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicValidator")
 	return true
 
 ## Gets the current transaction history
@@ -122,7 +140,9 @@ func get_transaction_history() -> Array[Dictionary]:
 ## Clears the transaction history
 func clear_transaction_history() -> void:
 	_transaction_history.clear()
-	Logger.debug("EconomicValidator: Cleared transaction history", "EconomicValidator")
+	Logger.log_event("transaction_history_cleared", {
+		"timestamp": Time.get_unix_time_from_system()
+	}, "EconomicValidator")
 
 #endregion
 

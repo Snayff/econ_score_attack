@@ -44,11 +44,10 @@ func transfer_stockpile(person: Person, demesne: Demesne) -> void:
     if not active:
         return
         
-    Logger.debug(str(
-        "DemesneInheritance: Transferring stockpile from ",
-        person.f_name,
-        " to demesne"
-    ), "DemesneInheritance")
+    Logger.log_event("Transferring stockpile", {
+        "from": person.f_name,
+        "to": "demesne"
+    }, "DemesneInheritance")
     
     var total_transferred: Dictionary = {}
     
@@ -58,24 +57,14 @@ func transfer_stockpile(person: Person, demesne: Demesne) -> void:
         if amount > 0:
             demesne.add_resource(good_id, amount)
             total_transferred[good_id] = amount
-            Logger.debug(str(
-                "DemesneInheritance: Transferred ",
-                amount,
-                " ",
-                good_id,
-                " from ",
-                person.f_name,
-                " to demesne"
-            ), "DemesneInheritance")
+            Logger.log_resource_change(good_id, amount, demesne.stockpile[good_id], "DemesneInheritance")
             # Clear the person's stockpile as we transfer
             person.stockpile[good_id] = 0
             
-    Logger.debug(str(
-        "DemesneInheritance: Total resources transferred from ",
-        person.f_name,
-        ": ",
-        total_transferred
-    ), "DemesneInheritance")
+    Logger.log_event("Stockpile transfer complete", {
+        "from": person.f_name,
+        "transferred": total_transferred
+    }, "DemesneInheritance")
 #endregion
 
 

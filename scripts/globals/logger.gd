@@ -1,6 +1,31 @@
 ## Logger
 ## Centralised logging system for the application
 ## Provides consistent formatting and control over log output
+##
+## Log Levels:
+## - DEBUG: Detailed information useful during debugging. Use for function entry/exit,
+##          variable values, and detailed flow control.
+## - INFO: Important state changes and business events that track normal operation.
+##         Use for major state transitions, business events, and user actions.
+## - WARNING: Potential issues that don't break system operation but require attention.
+##           Use for deprecated features, resource thresholds, or unexpected states.
+## - ERROR: Critical issues that affect functionality or break invariants.
+##         Use for unrecoverable errors, invalid states, or broken invariants.
+##
+## Standard Message Patterns:
+## - State Changes: "{attribute} changed {change:+d} → {new_value}"
+## - Resource Changes: "{resource} changed {amount:+d} → {new_total}"
+## - Events: "{event_name} [{details}]"
+## - Validations: "{validation_name}: {result} [{details}]"
+##
+## Emoji Indicators:
+## - 📈 Increases
+## - 📉 Decreases
+## - ❌ Errors
+## - ⚠️ Warnings
+## - ✅ Success
+## - 💰 Money operations
+## - 📦 Resource operations
 #@icon("")
 extends Node
 
@@ -205,6 +230,69 @@ func load_config() -> void:
 	# Setup log file if needed
 	if write_to_file:
 		_setup_log_file()
+
+## Log a state change with standardized formatting
+## @param attribute: The attribute that changed
+## @param change: The amount of change (can be positive or negative)
+## @param new_value: The new value after the change
+## @param source: The source of the change
+func log_state_change(attribute: String, change: float, new_value: float, source: String = "") -> void:
+	var emoji = "📈" if change > 0 else "📉"
+	var msg = "%s changed %+.2f → %.2f %s" % [attribute, change, new_value, emoji]
+	info(msg, source)
+
+## Log a resource change with standardized formatting
+## @param resource: The resource that changed
+## @param amount: The amount of change (can be positive or negative)
+## @param new_total: The new total after the change
+## @param source: The source of the change
+func log_resource_change(resource: String, amount: int, new_total: int, source: String = "") -> void:
+	var emoji = "📈" if amount > 0 else "📉"
+	var msg = "%s changed %+d → %d %s📦" % [resource, amount, new_total, emoji]
+	debug(msg, source)
+
+## Log a money change with standardized formatting
+## @param amount: The amount of change (can be positive or negative)
+## @param new_total: The new total after the change
+## @param source: The source of the change
+func log_money_change(amount: float, new_total: float, source: String = "") -> void:
+	var emoji = "📈" if amount > 0 else "📉"
+	var msg = "Money changed %+.2f → %.2f %s💰" % [amount, new_total, emoji]
+	info(msg, source)
+
+## Log a validation result with standardized formatting
+## @param validation_name: The name of the validation
+## @param result: The validation result
+## @param details: Additional validation details
+## @param source: The source of the validation
+func log_validation(validation_name: String, result: bool, details: String = "", source: String = "") -> void:
+	var emoji = "✅" if result else "❌"
+	var msg = "%s: %s %s" % [validation_name, "passed" if result else "failed", emoji]
+	if details:
+		msg += " [%s]" % details
+	if result:
+		debug(msg, source)
+	else:
+		error(msg, source)
+
+## Log a business event with standardized formatting
+## @param event_name: The name of the event
+## @param details: Dictionary of event details
+## @param source: The source of the event
+func log_event(event_name: String, details: Dictionary = {}, source: String = "") -> void:
+	var msg = event_name
+	if not details.is_empty():
+		msg += " [%s]" % JSON.stringify(details)
+	info(msg, source)
+
+## Log a threshold violation with standardized formatting
+## @param metric_name: The name of the metric
+## @param threshold: The threshold value
+## @param current_value: The current value
+## @param source: The source of the violation
+func log_threshold_violation(metric_name: String, threshold: float, current_value: float, source: String = "") -> void:
+	var msg = "Threshold crossed: %s = %.2f [threshold: %.2f] ⚠️" % [metric_name, current_value, threshold]
+	warning(msg, source)
 #endregion
 
 

@@ -48,7 +48,7 @@ var _turn_transactions: Array[Dictionary] = []
 #region FUNCS
 ## Initialises the simulation and connects to the turn_complete signal
 func _ready() -> void:
-	Logger.debug("Sim: _ready called", "Sim")
+	Logger.log_event("Initializing simulation", {}, "Sim")
 	EventBusGame.turn_complete.connect(resolve_turn)
 
 	# Initialize economic monitoring
@@ -62,44 +62,41 @@ func _ready() -> void:
 
 	# Create the demesne
 	var demesne_data = DataDemesne.new()
-	Logger.debug("Sim: Created demesne_data", "Sim")
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
-	Logger.debug("Sim: Created demesne: " + demesne.demesne_name, "Sim")
+	Logger.log_event("Created demesne", {"name": demesne.demesne_name}, "Sim")
 
 	# Enact the sales tax law
 	var sales_tax = demesne.enact_law("sales_tax")
 	if sales_tax:
-		Logger.debug("Sim: Enacted sales tax law with rate " + str(sales_tax.get_parameter("tax_rate")) + "%", "Sim")
+		Logger.log_event("Enacted sales tax law", {"rate": sales_tax.get_parameter("tax_rate")}, "Sim")
 	else:
-		Logger.error("Sim: Failed to enact sales tax law", "Sim")
+		Logger.log_validation("Sales tax law enactment", false, "Failed to create law", "Sim")
 
 	# Enact the demesne inheritance law
 	var inheritance = demesne.enact_law("demesne_inheritance")
 	if inheritance:
-		Logger.debug("Sim: Enacted demesne inheritance law", "Sim")
+		Logger.log_event("Enacted inheritance law", {}, "Sim")
 	else:
-		Logger.error("Sim: Failed to enact demesne inheritance law", "Sim")
+		Logger.log_validation("Inheritance law enactment", false, "Failed to create law", "Sim")
 
-	# Initialise demesne stockpile with starting resources
+	# Initialize demesne stockpile with starting resources
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
 		demesne.add_resource(resource, starting_resources[resource])
-	Logger.debug("Sim: Initialized demesne stockpile with starting resources", "Sim")
+	Logger.log_event("Initialized stockpile", starting_resources, "Sim")
 
 	# Initialize good prices from Library
 	var goods_data = Library.get_config("goods").get("goods", {})
 	for good in goods_data:
 		good_prices[good] = goods_data[good].get("base_price", 0)
-	Logger.debug("Sim: Initialized good prices", "Sim")
+	Logger.log_event("Initialized good prices", good_prices, "Sim")
 
 	# Set initial money for validation
 	var total_money = _calculate_total_money()
 	_economic_validator.set_initial_money(total_money)
-	Logger.debug("Sim: Set initial money to %f" % total_money, "Sim")
+	Logger.log_money_change(total_money, total_money, "Sim")
 
 	_create_people()
-	Logger.debug("Sim: Created people", "Sim")
-
 	emit_signal("sim_initialized")
 
 ## Creates the initial set of people for the simulation
@@ -109,7 +106,8 @@ func _create_people() -> void:
 	var demesne_data: DataDemesne = DataDemesne.new()
 
 	var num_people: int = people_data.get_num_people()
-	Logger.debug("Sim: Creating " + str(num_people) + " people", "Sim")
+	Logger.log_event("Creating people", {"count": num_people}, "Sim")
+
 	var names: Array = people_data.get_names()
 	var job_allocation: Dictionary = demesne_data.get_job_allocation()
 	var starting_goods: Dictionary = people_data.get_starting_goods()
@@ -125,7 +123,11 @@ func _create_people() -> void:
 	for i in range(num_people):
 		var person = Person.new(names[i], jobs[i], starting_goods.duplicate())
 		demesne.add_person(person)
-		Logger.debug("Sim: Added person " + person.f_name + " with job " + person.job, "Sim")
+		Logger.log_event("Created person", {
+			"name": person.f_name,
+			"job": person.job,
+			"starting_goods": starting_goods
+		}, "Sim")
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
@@ -138,7 +140,7 @@ func resolve_turn() -> void:
 	var supply: Dictionary = {}  # {name: { good: amount } }
 	var demand: Dictionary = {}  # {name: { good: amount } }
 
-	Logger.info(">>> Production & Consumption Phase", "Sim")
+	Logger.log_event("Starting turn", {}, "Sim")
 
 	# Process production and consumption through the demesne
 	demesne.process_production()
@@ -183,13 +185,10 @@ func resolve_turn() -> void:
 				demand[person.f_name] = {}
 			demand[person.f_name][good] = goods_to_buy[good]
 
-	Logger.info(">>> Market Setup", "Sim")
-	Logger.info(str(
-		"Supply: ",
-		supply,
-		"\nDemand: ",
-		demand
-	), "Sim")
+	Logger.log_event("Market setup", {
+		"supply": supply,
+		"demand": demand
+	}, "Sim")
 
 	# conduct sale
 	Logger.info(">>> Market Opens", "Sim")

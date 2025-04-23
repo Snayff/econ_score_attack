@@ -26,7 +26,7 @@ func _process_consumption_statement(statement: String, good_id: String, amount: 
 	return processed
 
 func consume() -> bool:
-	Logger.debug("ComponentConsumer: " + f_name + " consuming goods", "ComponentConsumer")
+	Logger.log_event("Starting consumption", {"consumer": f_name}, "ComponentConsumer")
 	
 	for rule in Library.get_all_consumption_rules():
 		var good_id = rule.good_id
@@ -34,45 +34,50 @@ func consume() -> bool:
 		
 		# consume desired amount
 		if stockpile[good_id] > rule.min_held_before_desired_consumption:
+			var old_amount = stockpile[good_id]
 			stockpile[good_id] -= rule.desired_consumption_amount
-			var statement := _process_consumption_statement(
-				rule.desired_consumption_statement,
-				good_id,
-				rule.desired_consumption_amount
-			)
-			Logger.debug(str(
-				statement,
-				" ⬇️",
-				rule.desired_consumption_amount,
-				icon
-			), "ComponentConsumer")
+			
+			Logger.log_event("Desired consumption", {
+				"consumer": f_name,
+				"good": good_id,
+				"amount": rule.desired_consumption_amount,
+				"statement": _process_consumption_statement(
+					rule.desired_consumption_statement,
+					good_id,
+					rule.desired_consumption_amount
+				)
+			}, "ComponentConsumer")
+			
+			Logger.log_resource_change(good_id, -rule.desired_consumption_amount, stockpile[good_id], "ComponentConsumer")
 			return true
 
 		# consume required amount
 		elif stockpile[good_id] >= rule.min_consumption_amount:
+			var old_amount = stockpile[good_id]
 			stockpile[good_id] -= rule.min_consumption_amount
-			var statement := _process_consumption_statement(
-				rule.min_consumption_statement,
-				good_id,
-				rule.min_consumption_amount
-			)
-			Logger.debug(str(
-				statement,
-				" ⬇️",
-				rule.min_consumption_amount,
-				icon
-			), "ComponentConsumer")
+			
+			Logger.log_event("Minimum consumption", {
+				"consumer": f_name,
+				"good": good_id,
+				"amount": rule.min_consumption_amount,
+				"statement": _process_consumption_statement(
+					rule.min_consumption_statement,
+					good_id,
+					rule.min_consumption_amount
+				)
+			}, "ComponentConsumer")
+			
+			Logger.log_resource_change(good_id, -rule.min_consumption_amount, stockpile[good_id], "ComponentConsumer")
 			return true
 		
 		# handle lack of good
 		else:
-			Logger.debug(str(
-				f_name,
-				" lacked ",
-				rule.min_consumption_amount,
-				icon,
-				". Cannot consume."
-			), "ComponentConsumer")
+			Logger.log_event("Consumption failed", {
+				"consumer": f_name,
+				"good": good_id,
+				"required": rule.min_consumption_amount,
+				"available": stockpile[good_id]
+			}, "ComponentConsumer")
 			return false
 	return false
 #endregion 

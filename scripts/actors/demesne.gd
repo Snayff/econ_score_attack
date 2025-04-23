@@ -38,14 +38,26 @@ var law_registry: LawRegistry
 
 #region FUNCS
 func _init(demesne_name_: String) -> void:
-	Logger.debug("Demesne: Initializing with name " + demesne_name_, "Demesne")
+	Logger.log_event("demesne_created", {
+		"name": demesne_name_,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	demesne_name = demesne_name_
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
-	Logger.debug("Demesne: Initializing stockpile", "Demesne")
+	Logger.log_event("stockpile_initialised", {
+		"initial_values": {
+			"money": 0,
+			"grain": 0,
+			"water": 0,
+			"wood": 0,
+			"bureaucracy": 0
+		},
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	stockpile = {
 		"money": 0,
 		"grain": 0,
@@ -56,7 +68,13 @@ func _initialise_stockpile() -> void:
 
 ## Processes production for all people in the demesne
 func process_production() -> void:
-	Logger.debug("Demesne: Processing production for " + str(people.size()) + " people", "Demesne")
+	Logger.log_event("production_cycle_started", {
+		"demesne": demesne_name,
+		"people_count": people.size(),
+		"alive_count": people.filter(func(p): return p.is_alive).size(),
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
 	for person in people:
 		if not person.is_alive:
 			continue
@@ -67,17 +85,23 @@ func process_production() -> void:
 		# Special handling for bureaucrats
 		if person.job == "bureaucrat":
 			add_resource("bureaucracy", 5)
-			Logger.debug(str(
-				"Demesne received 5 bureaucracy from ",
-				person.f_name,
-				". Total: ",
-				stockpile["bureaucracy"],
-				"📋"
-			), "Demesne")
+
+	Logger.log_event("production_cycle_completed", {
+		"demesne": demesne_name,
+		"final_stockpile": stockpile.duplicate(),
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 
 ## Processes consumption for all people in the demesne
 func process_consumption() -> void:
-	Logger.debug("Demesne: Processing consumption for " + str(people.size()) + " people", "Demesne")
+	Logger.log_event("consumption_cycle_started", {
+		"demesne": demesne_name,
+		"people_count": people.size(),
+		"alive_count": people.filter(func(p): return p.is_alive).size(),
+		"initial_stockpile": stockpile.duplicate(),
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
 	var was_alive: Array[Person] = []
 
 	for person in people:
@@ -91,10 +115,23 @@ func process_consumption() -> void:
 		if not person.is_alive:
 			_handle_person_death(person)
 
+	Logger.log_event("consumption_cycle_completed", {
+		"demesne": demesne_name,
+		"deaths_this_cycle": was_alive.filter(func(p): return not p.is_alive).size(),
+		"final_stockpile": stockpile.duplicate(),
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
 ## Processes a person's death
 ## @param person: The person who died
 func _handle_person_death(person: Person) -> void:
-	Logger.debug("Demesne: Handling death of " + person.f_name, "Demesne")
+	Logger.log_event("handling_death", {
+		"demesne": demesne_name,
+		"person_name": person.f_name,
+		"person_job": person.job,
+		"person_stockpile": person.stockpile.duplicate(),
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 
 	# Check if demesne inheritance law is active
 	var inheritance_law: DemesneInheritance = get_law("demesne_inheritance") as DemesneInheritance
@@ -104,20 +141,30 @@ func _handle_person_death(person: Person) -> void:
 ## Adds a person to the demesne
 ## @param person: The person to add
 func add_person(person: Person) -> void:
-	Logger.debug("Demesne: Adding person " + person.f_name, "Demesne")
 	if not people.has(person):
 		people.append(person)
 		emit_signal("person_added", person)
-		Logger.debug("Demesne: Now has " + str(people.size()) + " people", "Demesne")
+		Logger.log_event("person_added_to_demesne", {
+			"demesne": demesne_name,
+			"person_name": person.f_name,
+			"person_job": person.job,
+			"total_people": people.size(),
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
 
 ## Removes a person from the demesne
 ## @param person: The person to remove
 func remove_person(person: Person) -> void:
-	Logger.debug("Demesne: Removing person " + person.f_name, "Demesne")
 	if people.has(person):
 		people.erase(person)
 		emit_signal("person_removed", person)
-		Logger.debug("Demesne: Now has " + str(people.size()) + " people", "Demesne")
+		Logger.log_event("person_removed_from_demesne", {
+			"demesne": demesne_name,
+			"person_name": person.f_name,
+			"person_job": person.job,
+			"total_people": people.size(),
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
 
 ## Adds resources to the demesne's stockpile
 ## @param good_id: The ID of the good to add
@@ -126,7 +173,13 @@ func add_resource(good_id: String, amount: int) -> void:
 	if not stockpile.has(good_id):
 		stockpile[good_id] = 0
 	stockpile[good_id] += amount
-	Logger.debug("Demesne: Added " + str(amount) + " " + good_id + ". Total: " + str(stockpile[good_id]), "Demesne")
+	Logger.log_event("resource_added_to_stockpile", {
+		"demesne": demesne_name,
+		"good": good_id,
+		"amount": amount,
+		"new_total": stockpile[good_id],
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 
 ## Removes resources from the demesne's stockpile
@@ -135,8 +188,22 @@ func add_resource(good_id: String, amount: int) -> void:
 ## @return: bool indicating if removal was successful
 func remove_resource(good_id: String, amount: int) -> bool:
 	if not stockpile.has(good_id) or stockpile[good_id] < amount:
+		Logger.log_event("resource_removal_failed", {
+			"demesne": demesne_name,
+			"good": good_id,
+			"amount_requested": amount,
+			"available": stockpile.get(good_id, 0),
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
 		return false
 	stockpile[good_id] -= amount
+	Logger.log_event("resource_removed_from_stockpile", {
+		"demesne": demesne_name,
+		"good": good_id,
+		"amount": amount,
+		"new_total": stockpile[good_id],
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 	return true
 
@@ -149,19 +216,34 @@ func enact_law(law_id: String) -> Law:
 		var existing_law: Law = laws[law_id]
 		if not existing_law.active:
 			existing_law.activate()
+			Logger.log_event("existing_law_activated", {
+				"demesne": demesne_name,
+				"law_id": law_id,
+				"law_name": existing_law.name,
+				"timestamp": Time.get_unix_time_from_system()
+			}, "Demesne")
 		return existing_law
 
 	# Create a new law
 	var law: Law = law_registry.create_law(law_id)
 	if law == null:
-		Logger.error("Demesne: Failed to create law with ID " + law_id, "Demesne")
+		Logger.log_event("law_creation_failed", {
+			"demesne": demesne_name,
+			"law_id": law_id,
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
 		return null
 
 	# Activate and store the law
 	law.activate()
 	laws[law_id] = law
 	emit_signal("law_enacted", law)
-	Logger.debug("Demesne: Enacted law " + law.name, "Demesne")
+	Logger.log_event("new_law_enacted", {
+		"demesne": demesne_name,
+		"law_id": law_id,
+		"law_name": law.name,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	return law
 
 ## Repeals a law from the demesne
@@ -169,13 +251,24 @@ func enact_law(law_id: String) -> Law:
 ## @return: bool indicating if repeal was successful
 func repeal_law(law_id: String) -> bool:
 	if not laws.has(law_id):
+		Logger.log_event("law_repeal_failed", {
+			"demesne": demesne_name,
+			"law_id": law_id,
+			"reason": "law_not_found",
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
 		return false
 
 	var law: Law = laws[law_id]
 	law.deactivate()
 	laws.erase(law_id)
 	emit_signal("law_repealed", law_id)
-	Logger.debug("Demesne: Repealed law " + law.name, "Demesne")
+	Logger.log_event("law_repealed", {
+		"demesne": demesne_name,
+		"law_id": law_id,
+		"law_name": law.name,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	return true
 
 ## Gets a law by its ID

@@ -1,4 +1,4 @@
-## class desc
+## A person in the simulation that can produce and consume goods
 #@icon("")
 class_name Person
 extends Node
@@ -38,61 +38,70 @@ var consumer: ComponentConsumer
 
 #region FUNCS
 func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
-	Logger.debug("Person: Creating " + f_name_ + " as " + job_, "Person")
+	Logger.log_event("person_created", {
+		"name": f_name_,
+		"job": job_,
+		"starting_goods": starting_goods,
+		"initial_health": health,
+		"initial_happiness": happiness
+	}, "Person")
 	f_name = f_name_
 	job = job_
 
 	# add values from starting goods
 	for good in starting_goods:
 		stockpile[good] = starting_goods[good]
-		Logger.debug("Person: " + f_name + " starts with " + str(starting_goods[good]) + " " + good, "Person")
+		Logger.log_resource_change(good, starting_goods[good], starting_goods[good], "Person")
 
 	consumer = ComponentConsumer.new(f_name, stockpile)
 
 func produce() -> void:
-	Logger.debug("Person: " + f_name + " producing as " + job, "Person")
+	Logger.log_event("production_started", {
+		"name": f_name,
+		"job": job,
+		"current_health": health,
+		"current_happiness": happiness
+	}, "Person")
 	match job:
 		"farmer":
 			stockpile["grain"] += 10
-			Logger.debug(str(
-				f_name,
-				" ploughed the fields. ⬆️10🥪."
-			), "Person")
+			Logger.log_resource_change("grain", 10, stockpile["grain"], "Person")
 
 		"water collector":
 			stockpile["water"] += 20
-			Logger.debug(str(
-				f_name,
-				" manned the well. ⬆️20💧."
-			), "Person")
+			Logger.log_resource_change("water", 20, stockpile["water"], "Person")
 
 		"gold miner":
 			stockpile["money"] += 5
-			Logger.debug(str(
-				f_name,
-				" used their pick. ⬆️5🪙.",
-			), "Person")
+			Logger.log_money_change(5, stockpile["money"], "Person")
 
 		"woodcutter":
 			stockpile["wood"] += 10
-			Logger.debug(str(
-				f_name,
-				" felled some trees. ⬆️10🪵.",
-			), "Person")
+			Logger.log_resource_change("wood", 10, stockpile["wood"], "Person")
 
 		"bureaucrat":
 			# Bureaucrats produce bureaucracy for the demesne, not for themselves
-			# This will be handled by the demesne
-			Logger.debug(str(
-				f_name,
-				" filed some paperwork. ⬆️5📋 for the demesne.",
-			), "Person")
+			Logger.log_event("bureaucracy_produced", {
+				"name": f_name,
+				"amount": 5,
+				"current_health": health,
+				"current_happiness": happiness
+			}, "Person")
 
 		_:
-			pass
+			Logger.log_event("no_production_for_job", {
+				"name": f_name,
+				"job": job
+			}, "Person")
 
 func consume() -> void:
-	Logger.debug("Person: " + f_name + " consuming goods", "Person")
+	Logger.log_event("consumption_started", {
+		"name": f_name,
+		"current_health": health,
+		"current_happiness": happiness,
+		"current_stockpile": stockpile
+	}, "Person")
+
 	if consumer.consume():
 		# Find the rule that was used for consumption
 		for rule in Library.get_all_consumption_rules():
@@ -100,25 +109,53 @@ func consume() -> void:
 				continue
 			if stockpile[rule.good_id] >= rule.min_held_before_desired_consumption:
 				happiness += rule.desired_consumption_happiness_increase
-				Logger.debug(str(f_name, " is happy with their consumption. ⬆️", rule.desired_consumption_happiness_increase, "🙂"), "Person")
+				Logger.log_state_change("happiness", rule.desired_consumption_happiness_increase, happiness, "Person")
+				Logger.log_event("desired_consumption_completed", {
+					"name": f_name,
+					"good": rule.good_id,
+					"happiness_increase": rule.desired_consumption_happiness_increase,
+					"new_happiness": happiness
+				}, "Person")
 			else:
 				happiness += 1
-				Logger.debug(str(f_name, " is satisfied with their consumption. ⬆️1🙂"), "Person")
+				Logger.log_state_change("happiness", 1, happiness, "Person")
+				Logger.log_event("minimum_consumption_completed", {
+					"name": f_name,
+					"good": rule.good_id,
+					"happiness_increase": 1,
+					"new_happiness": happiness
+				}, "Person")
 			break
 	else:
 		# Find the rule that failed
 		for rule in Library.get_all_consumption_rules():
 			if stockpile[rule.good_id] < rule.min_consumption_amount:
 				health -= rule.consumption_failure_cost
-				Logger.debug(str(f_name, " is unhappy with their consumption. ⬇️", rule.consumption_failure_cost, "❤️"), "Person")
+				Logger.log_state_change("health", -rule.consumption_failure_cost, health, "Person")
+				Logger.log_event("consumption_failed", {
+					"name": f_name,
+					"good": rule.good_id,
+					"health_decrease": rule.consumption_failure_cost,
+					"new_health": health,
+					"current_happiness": happiness
+				}, "Person")
 				break
 
 		if health <= 0:
 			is_alive = false
-			Logger.debug(str(f_name, " died from lack of goods."), "Person")
+			Logger.log_event("person_died", {
+				"name": f_name,
+				"cause": "lack_of_goods",
+				"final_health": health,
+				"final_happiness": happiness,
+				"final_stockpile": stockpile
+			}, "Person")
 
 func get_goods_for_sale() -> Dictionary:
-	Logger.debug("Person: " + f_name + " calculating goods for sale", "Person")
+	Logger.log_event("calculating_goods_for_sale", {
+		"name": f_name,
+		"current_stockpile": stockpile
+	}, "Person")
 	var goods_to_sell: Dictionary = {}
 
 	# determine all goods above threshold
@@ -126,12 +163,21 @@ func get_goods_for_sale() -> Dictionary:
 		var good_id = rule.good_id
 		if stockpile[good_id] > rule.amount_to_hold_before_selling:
 			goods_to_sell[good_id] = stockpile[good_id] - rule.amount_to_hold_before_selling
-			Logger.debug("Person: " + f_name + " will sell " + str(goods_to_sell[good_id]) + " " + good_id, "Person")
+			Logger.log_event("goods_marked_for_sale", {
+				"name": f_name,
+				"good": good_id,
+				"amount": goods_to_sell[good_id],
+				"threshold": rule.amount_to_hold_before_selling,
+				"current_stockpile": stockpile[good_id]
+			}, "Person")
 
 	return goods_to_sell
 
 func get_goods_to_buy() -> Dictionary:
-	Logger.debug("Person: " + f_name + " calculating goods to buy", "Person")
+	Logger.log_event("calculating_goods_to_buy", {
+		"name": f_name,
+		"current_stockpile": stockpile
+	}, "Person")
 	var goods_to_buy: Dictionary = {}
 
 	# determine all goods above threshold
@@ -144,11 +190,14 @@ func get_goods_to_buy() -> Dictionary:
 			var amount_to_buy = max(0, rule.amount_to_hold_before_selling - stockpile[good_id])
 			if amount_to_buy != 0:
 				goods_to_buy[good_id] = amount_to_buy
-				Logger.debug("Person: " + f_name + " needs to buy " + str(amount_to_buy) + " " + good_id, "Person")
+				Logger.log_event("goods_marked_for_purchase", {
+					"name": f_name,
+					"good": good_id,
+					"amount": amount_to_buy,
+					"threshold": rule.amount_to_hold_before_selling,
+					"current_stockpile": stockpile[good_id]
+				}, "Person")
 
 	return goods_to_buy
-
-
-
 
 #endregion
