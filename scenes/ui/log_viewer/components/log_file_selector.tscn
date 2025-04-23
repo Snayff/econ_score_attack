@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/log_viewer/components/log_file_selector.gd" id="1_script"]
+
+[node name="LogFileSelector" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+script = ExtResource("1_script")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Log File:"
+
+[node name="OptFiles" type="OptionButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnRefresh" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh" 
