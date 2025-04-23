@@ -3,7 +3,8 @@
   "output": {
 	"console": true,
 	"file": true,
-	"file_path": "dev/logs/game.log"
+	"file_path": "dev/logs",
+	"max_log_files": 7
   },
   "formatting": {
 	"show_timestamps": true,

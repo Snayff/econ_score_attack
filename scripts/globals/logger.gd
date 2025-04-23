@@ -37,11 +37,17 @@ var print_to_console: bool = true
 ## Whether to write to file
 var write_to_file: bool = false
 
-## Path to log file
-var log_file_path: String = "logs/game.log"
+## Path to log directory
+var log_directory: String = "logs"
+
+## Maximum number of log files to keep
+var max_log_files: int = 7
 
 ## Log file handle
 var log_file: FileAccess
+
+## Current log file path
+var current_log_file: String = ""
 
 ## Whether to emit signals
 var emit_signals: bool = true
@@ -122,22 +128,24 @@ func set_print_to_console(enabled: bool) -> void:
 func set_write_to_file(enabled: bool) -> void:
 	write_to_file = enabled
 	if enabled and log_file == null:
-		_open_log_file()
+		_setup_log_file()
 	elif not enabled and log_file != null:
 		_close_log_file()
 
-## Set the log file path
-## @param path: The path to the log file
-func set_log_file_path(path: String) -> void:
-	log_file_path = path
+## Set the log directory path
+## @param path: The path to the log directory
+func set_log_directory(path: String) -> void:
+	log_directory = path
 	if write_to_file:
 		_close_log_file()
-		_open_log_file()
+		_setup_log_file()
 
-## Enable or disable signal emission
-## @param enabled: Whether to emit signals
-func set_emit_signals(enabled: bool) -> void:
-	emit_signals = enabled
+## Set the maximum number of log files to keep
+## @param max_files: The maximum number of log files
+func set_max_log_files(max_files: int) -> void:
+	max_log_files = max_files
+	if write_to_file:
+		_cleanup_old_logs()
 
 ## Load configuration from file
 func load_config() -> void:
@@ -174,7 +182,9 @@ func load_config() -> void:
 		if output.has("file"):
 			write_to_file = output["file"]
 		if output.has("file_path"):
-			log_file_path = output["file_path"]
+			log_directory = output["file_path"]
+		if output.has("max_log_files"):
+			max_log_files = output["max_log_files"]
 	
 	# Set formatting options
 	if config.has("formatting"):
@@ -192,9 +202,9 @@ func load_config() -> void:
 		if signals_config.has("emit_signals"):
 			emit_signals = signals_config["emit_signals"]
 	
-	# Open log file if needed
+	# Setup log file if needed
 	if write_to_file:
-		_open_log_file()
+		_setup_log_file()
 #endregion
 
 
@@ -212,8 +222,10 @@ func _log(level: int, message: String, source: String = "") -> void:
 	if print_to_console:
 		print(formatted_message)
 		
-	if write_to_file and log_file != null:
-		log_file.store_line(formatted_message)
+	if write_to_file:
+		_ensure_log_file()
+		if log_file != null:
+			log_file.store_line(formatted_message)
 		
 	if emit_signals:
 		emit_signal("log_message", LEVEL_NAMES[level], formatted_message)
@@ -239,23 +251,77 @@ func _format_message(level: int, message: String, source: String = "") -> String
 	
 	return " | ".join(parts)
 
-## Open the log file
-func _open_log_file() -> void:
+## Generate the current log file name using ISO format
+## @return: The current log file name
+func _generate_log_file_name() -> String:
+	var datetime: Dictionary = Time.get_datetime_dict_from_system()
+	return "%04d-%02d-%02dT%02d-%02d-%02d.log" % [
+		datetime["year"],
+		datetime["month"],
+		datetime["day"],
+		datetime["hour"],
+		datetime["minute"],
+		datetime["second"]
+	]
+
+## Setup the log file system
+func _setup_log_file() -> void:
 	# Create directory if it doesn't exist
 	var dir: DirAccess = DirAccess.open("res://")
-	if not dir.dir_exists("logs"):
-		dir.make_dir("logs")
+	if not dir.dir_exists(log_directory):
+		dir.make_dir_recursive(log_directory)
 	
-	# Open file for writing
-	log_file = FileAccess.open(log_file_path, FileAccess.WRITE)
-	if log_file == null:
-		error("Failed to open log file: " + log_file_path)
+	_cleanup_old_logs()
+	_ensure_log_file()
+
+## Ensure we have the correct log file open
+func _ensure_log_file() -> void:
+	var new_log_file: String = log_directory.path_join(_generate_log_file_name())
+	
+	if new_log_file != current_log_file:
+		_close_log_file()
+		current_log_file = new_log_file
+		log_file = FileAccess.open(current_log_file, FileAccess.WRITE)
+		if log_file == null:
+			error("Failed to open log file: " + current_log_file)
+
+## Clean up old log files if we exceed the maximum
+func _cleanup_old_logs() -> void:
+	var dir: DirAccess = DirAccess.open(log_directory)
+	if dir == null:
+		error("Failed to open log directory: " + log_directory)
+		return
+	
+	var files: Array = []
+	dir.list_dir_begin()
+	var file_name: String = dir.get_next()
+	
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(".log"):
+			files.append({
+				"path": log_directory.path_join(file_name),
+				"name": file_name
+			})
+		file_name = dir.get_next()
+	
+	dir.list_dir_end()
+	
+	if files.size() > max_log_files:
+		# Sort by name (which will be by date due to ISO format)
+		files.sort_custom(func(a, b): return a["name"] < b["name"])
+		
+		# Delete oldest files until we're at max_log_files
+		var files_to_delete: int = files.size() - max_log_files
+		for i in range(files_to_delete):
+			var file_to_delete: String = files[i]["path"]
+			dir.remove(file_to_delete)
 
 ## Close the log file
 func _close_log_file() -> void:
 	if log_file != null:
 		log_file.close()
 		log_file = null
+		current_log_file = ""
 
 ## Called when the node enters the scene tree
 func _ready() -> void:
