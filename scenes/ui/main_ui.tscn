@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cmkfp7f7dii75"]
+[gd_scene load_steps=12 format=3 uid="uid://cmkfp7f7dii75"]
 
 [ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://scripts/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://scripts/ui/btn_sidebar_button.gd" id="1_4yfr8"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="Script" uid="uid://bpkg5efx4n6h6" path="res://scripts/ui/rtl_laws_info.gd" id="7_xxxxx"]
 [ext_resource type="PackedScene" path="res://scenes/ui/panel_header.tscn" id="8_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://dxxx" path="res://scenes/ui/view_economy.tscn" id="9_xxxxx"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
 device = -1
@@ -71,6 +72,13 @@ layout_mode = 2
 text = "Laws"
 script = ExtResource("1_4yfr8")
 button_text = "Laws"
+
+[node name="BtnEconomy" type="Button" parent="HBoxContainer/Sidebar/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Economy"
+script = ExtResource("1_4yfr8")
+button_text = "Economy"
 
 [node name="TopBar" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -183,6 +191,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
+
+[node name="ViewEconomy" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("9_xxxxx")]
+unique_name_in_owner = true
+visible = false
 
 [node name="HBoxTime" type="HBoxContainer" parent="."]
 layout_mode = 1

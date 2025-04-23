@@ -13,8 +13,9 @@ extends Control
 #region CONSTANTS
 
 const VIEWS = {
-	"People": "RTLPeopleInfo",
-	"Laws": "LawsInfo"
+	"People": "ViewPeople",
+	"Laws": "ViewLaws",
+	"Economy": "ViewEconomy"
 }
 
 #endregion
@@ -36,7 +37,7 @@ func _ready() -> void:
 
 	# Connect button signals
 	for button_name in VIEWS.keys():
-		var button = get_node_or_null("HBoxContainer/Sidebar/MarginContainer/VBoxContainer/btn_" + button_name.to_lower())
+		var button = get_node_or_null("HBoxContainer/Sidebar/MarginContainer/VBoxContainer/Btn" + button_name)
 		if button:
 			button.sidebar_button_pressed.connect(_on_sidebar_button_pressed)
 		else:
