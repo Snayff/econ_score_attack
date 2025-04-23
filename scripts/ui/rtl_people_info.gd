@@ -29,6 +29,7 @@ extends Control
 #region ON READY
 
 @onready var people_container: VBoxContainer = %PeopleContainer
+@onready var header_container: VBoxContainer = $MarginContainer/VBoxContainer/HeaderContainer
 
 func _ready() -> void:
 	Logger.debug("PeopleInfo: _ready called", "PeopleInfo")
@@ -54,8 +55,10 @@ func _ready() -> void:
 func update_info() -> void:
 	Logger.debug("PeopleInfo: update_info called", "PeopleInfo")
 
-	# Clear existing people info
+	# Clear existing content
 	for child in people_container.get_children():
+		child.queue_free()
+	for child in header_container.get_children():
 		child.queue_free()
 
 	if not sim:
@@ -73,7 +76,7 @@ func update_info() -> void:
 		["Name", "Job", "Health", "Happiness", "Stockpile"],
 		true
 	)
-	people_container.add_child(header)
+	header_container.add_child(header)
 
 	# Add person rows
 	for person in sim.demesne.get_people():
