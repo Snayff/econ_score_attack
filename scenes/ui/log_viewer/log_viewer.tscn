@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://buljym0dqutf1"]
+[gd_scene load_steps=5 format=3 uid="uid://dxxx"]
 
-[ext_resource type="Script" uid="uid://c3rblhltoxpg5" path="res://scripts/ui/log_viewer/log_viewer.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/ui/log_viewer/components/log_file_selector.tscn" id="2_selector"]
-[ext_resource type="PackedScene" path="res://scenes/ui/log_viewer/components/log_content.tscn" id="3_content"]
+[ext_resource type="Script" uid="uid://c3rblhltoxpg5" path="res://scripts/ui/log_viewer/log_viewer.gd" id="1_xxxxx"]
+[ext_resource type="PackedScene" path="res://scenes/ui/log_viewer/components/log_file_selector.tscn" id="2_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://ceucr0l84tu51" path="res://scenes/ui/log_viewer/components/log_header.tscn" id="3_xxxxx"]
+[ext_resource type="Script" uid="uid://40rfn6ffg8f6" path="res://scripts/ui/log_viewer/components/log_content.gd" id="4_xxxxx"]
 
 [node name="LogViewer" type="Control"]
 layout_mode = 3
@@ -11,9 +12,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_script")
+script = ExtResource("1_xxxxx")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,21 +22,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="FileSelector" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_selector")]
+[node name="FileSelector" parent="VBoxContainer" instance=ExtResource("2_xxxxx")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LogContent" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_content")]
+[node name="LogHeader" parent="VBoxContainer" instance=ExtResource("3_xxxxx")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
+
+[node name="LogContent" type="ScrollContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("4_xxxxx")
+
+[node name="ContentContainer" type="VBoxContainer" parent="VBoxContainer/LogContent"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
