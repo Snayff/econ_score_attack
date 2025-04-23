@@ -4,8 +4,8 @@
 class_name LawRegistry
 extends RefCounted
 
-const Law = preload("res://scripts/core/laws/law.gd")
-const SalesTax = preload("res://scripts/core/laws/sales_tax.gd")
+const Law = preload("res://scripts/laws/law.gd")
+const SalesTax = preload("res://scripts/laws/sales_tax.gd")
 
 #region VARS
 ## Mapping of law IDs to their data classes

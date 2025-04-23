@@ -33,7 +33,7 @@ extends Control
 
 func _ready() -> void:
 	Logger.debug("PeopleInfo: _ready called", "PeopleInfo")
-	EventBus.turn_complete.connect(update_info)
+	EventBusGame.turn_complete.connect(update_info)
 
 	# Find the Sim node if not provided
 	if not sim:

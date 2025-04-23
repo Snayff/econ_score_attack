@@ -45,7 +45,7 @@ var turn_time_remaining: float:
 func _ready() -> void:
 	connect_timer_signals()
 	connect_event_signals()
-	EventBus.turn_complete.connect(_on_turn_complete)
+	EventBusGame.turn_complete.connect(_on_turn_complete)
 
 ## Connects timer signals for turn progression
 func connect_timer_signals() -> void:
@@ -54,12 +54,12 @@ func connect_timer_signals() -> void:
 	# Increment turn number
 	_timer_turn.timeout.connect(func(): turn_num += 1)
 	# Announce turn completion
-	_timer_turn.timeout.connect(EventBus.turn_complete.emit)
+	_timer_turn.timeout.connect(EventBusGame.turn_complete.emit)
 
 ## Connects event signals for timer control
 func connect_event_signals() -> void:
 	# Listen to input commands
-	EventBus.toggle_turn_timer.connect(toggle_is_running)
+	EventBusUI.toggle_turn_timer.connect(toggle_is_running)
 
 ## Pauses or unpauses the turn timer
 func toggle_is_running() -> void:

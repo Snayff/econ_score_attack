@@ -20,7 +20,7 @@ func _ready() -> void:
 	Logger.debug("DemesneStockpile: _ready called", "DemesneStockpile")
 
 	# Connect to signals for updates
-	EventBus.turn_complete.connect(update_info)
+	EventBusGame.turn_complete.connect(update_info)
 	if sim:
 		sim.sim_initialized.connect(_on_sim_initialized)
 

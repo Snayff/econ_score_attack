@@ -5,8 +5,8 @@
 class_name Demesne
 extends Node
 
-const Law = preload("res://scripts/core/laws/law.gd")
-const LawRegistry = preload("res://scripts/core/laws/law_registry.gd")
+const Law = preload("res://scripts/laws/law.gd")
+const LawRegistry = preload("res://scripts/laws/law_registry.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)

@@ -18,7 +18,8 @@ config/icon="uid://6enbllaeljxy"
 [autoload]
 
 Constants="*res://scripts/globals/constants.gd"
-EventBus="*res://scripts/globals/event_bus.gd"
+EventBusGame="*res://scripts/globals/event_bus_game.gd"
+EventBusUI="*res://scripts/globals/event_bus_ui.gd"
 Library="*res://scripts/globals/library.gd"
 Logger="*res://scripts/globals/logger.gd"
 

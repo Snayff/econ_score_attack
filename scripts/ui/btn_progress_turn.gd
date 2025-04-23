@@ -29,7 +29,7 @@ extends Button
 
 #region FUNCS
 func _ready() -> void:
-	button_up.connect(EventBus.toggle_turn_timer.emit)
+	button_up.connect(EventBusUI.toggle_turn_timer.emit)
 
 
 

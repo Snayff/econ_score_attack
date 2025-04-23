@@ -12,5 +12,6 @@ You are building a game focused on an arcade-feeling simulation strategy game, w
   - Dynamic growth. The player can choose to take direct action in the demesne, at a proportionately higher cost. Or, the people in the demesne can take their own actions, such as starting businesses or taking on a job.
   - Buildings. Buildings make jobs available. 
   - Jobs. Jobs are assigned people and produce goods. 
-
   - Laws. Law's are demesne specific. The player can pass or repeal laws in the demesne to influence how the simulation works. 
+
+  - A physical space. The world is made up of a grid of tiles. A tile has properties, such as natural resources. Buildings are located on tiles. 

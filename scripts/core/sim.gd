@@ -5,7 +5,9 @@
 class_name Sim
 extends Node
 
-const SalesTax = preload("res://scripts/core/laws/sales_tax.gd")
+const SalesTax = preload("res://scripts/laws/sales_tax.gd")
+const EconomicValidator = preload("res://scripts/economic_analysis/economic_validator.gd")
+const EconomicMetrics = preload("res://scripts/economic_analysis/economic_metrics.gd")
 
 #region SIGNALS
 signal sim_initialized
@@ -31,6 +33,15 @@ var demesne: Demesne
 
 ## Dictionary of good prices in the market
 var good_prices: Dictionary = {}
+
+## Economic validator for monitoring invariants
+var _economic_validator: EconomicValidator
+
+## Economic metrics tracker
+var _economic_metrics: EconomicMetrics
+
+## Transactions in the current turn
+var _turn_transactions: Array[Dictionary] = []
 #endregion
 
 
@@ -38,7 +49,16 @@ var good_prices: Dictionary = {}
 ## Initialises the simulation and connects to the turn_complete signal
 func _ready() -> void:
 	Logger.debug("Sim: _ready called", "Sim")
-	EventBus.turn_complete.connect(resolve_turn)
+	EventBusGame.turn_complete.connect(resolve_turn)
+
+	# Initialize economic monitoring
+	_economic_validator = EconomicValidator.new()
+	add_child(_economic_validator)
+	_economic_validator.invariant_violated.connect(_on_invariant_violated)
+
+	_economic_metrics = EconomicMetrics.new()
+	add_child(_economic_metrics)
+	_economic_metrics.threshold_crossed.connect(_on_threshold_crossed)
 
 	# Create the demesne
 	var demesne_data = DataDemesne.new()
@@ -53,7 +73,7 @@ func _ready() -> void:
 	else:
 		Logger.error("Sim: Failed to enact sales tax law", "Sim")
 
-	# Initialise demesne stockpile with starting resources from config
+	# Initialise demesne stockpile with starting resources
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
 		demesne.add_resource(resource, starting_resources[resource])
@@ -64,6 +84,11 @@ func _ready() -> void:
 	for good in goods_data:
 		good_prices[good] = goods_data[good].get("base_price", 0)
 	Logger.debug("Sim: Initialized good prices", "Sim")
+
+	# Set initial money for validation
+	var total_money = _calculate_total_money()
+	_economic_validator.set_initial_money(total_money)
+	Logger.debug("Sim: Set initial money to %f" % total_money, "Sim")
 
 	_create_people()
 	Logger.debug("Sim: Created people", "Sim")
@@ -98,6 +123,7 @@ func _create_people() -> void:
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
 func resolve_turn() -> void:
+	_turn_transactions.clear()
 	var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	var desired_goods: Dictionary = {}  # { good: { person: { amount: 123 } } }
 
@@ -110,6 +136,9 @@ func resolve_turn() -> void:
 	# Process production and consumption through the demesne
 	demesne.process_production()
 	demesne.process_consumption()
+
+	# Record production and consumption in validator
+	_record_production_consumption()
 
 	# simulate each person's turn for market operations
 	for person in demesne.get_people():
@@ -212,6 +241,9 @@ func resolve_turn() -> void:
 				buyer.stockpile["money"] -= final_cost
 				seller.stockpile["money"] += good_prices[good] * amount_to_buy  # Seller gets only the base cost
 
+				# Record the transaction
+				_record_transaction(good, amount_to_buy, good_prices[good], buyer.f_name, seller.f_name)
+
 				# buyer doesnt want anything, move to next buyer
 				if amount_to_buy == 0:
 					continue
@@ -258,7 +290,6 @@ func resolve_turn() -> void:
 
 	Logger.info(">>> Market Closes", "Sim")
 	var results: Dictionary = {}
-	# var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	for good in saleable_goods.keys():
 		for seller in saleable_goods[good]:
 			if seller.f_name not in results:
@@ -269,6 +300,115 @@ func resolve_turn() -> void:
 		results
 	), "Sim")
 
+	# Validate economic state
+	_validate_economic_state()
+
+	# Update economic metrics
+	_update_economic_metrics()
+
 	Logger.info(">>> Turn Resolved >>>>>>>>>>>>>>>>>>>>", "Sim")
+
+## Records a transaction for monitoring
+func _record_transaction(
+	good: String,
+	amount: int,
+	price: float,
+	buyer: String,
+	seller: String
+) -> void:
+	var transaction = {
+		"good": good,
+		"amount": amount,
+		"price": price,
+		"buyer": buyer,
+		"seller": seller
+	}
+	_turn_transactions.append(transaction)
+	_economic_validator.record_transaction("trade", good, amount, price, buyer, seller)
+
+## Records production and consumption for monitoring
+func _record_production_consumption() -> void:
+	for person in demesne.get_people():
+		if not person.is_alive:
+			continue
+
+		# Record production based on job
+		match person.job:
+			"farmer":
+				_economic_validator.record_transaction("production", "grain", 10, 0.0, person.f_name, "")
+			"water collector":
+				_economic_validator.record_transaction("production", "water", 20, 0.0, person.f_name, "")
+			"woodcutter":
+				_economic_validator.record_transaction("production", "wood", 10, 0.0, person.f_name, "")
+			"bureaucrat":
+				_economic_validator.record_transaction("production", "bureaucracy", 5, 0.0, person.f_name, "")
+
+## Validates the current economic state
+func _validate_economic_state() -> void:
+	# Update resource totals
+	var resource_totals = _calculate_resource_totals()
+	_economic_validator.update_resource_totals(resource_totals)
+
+	# Validate economic invariants
+	_economic_validator.validate_money_conservation()
+	_economic_validator.validate_closed_loop_economy()
+
+## Updates economic metrics
+func _update_economic_metrics() -> void:
+	var sim_state = {
+		"market_prices": good_prices,
+		"transactions": _turn_transactions,
+		"total_money": _calculate_total_money(),
+		"people": demesne.get_people(),
+		"production": _calculate_production_totals()
+	}
+
+	_economic_metrics.update_metrics(sim_state)
+
+	var report = _economic_metrics.generate_report()
+	Logger.info("Economic Report: " + str(report), "Sim")
+
+## Calculates the total money in the system
+func _calculate_total_money() -> float:
+	var total = float(demesne.stockpile.get("money", 0))
+	for person in demesne.get_people():
+		total += float(person.stockpile.get("money", 0))
+	return total
+
+## Calculates total resources in the system
+func _calculate_resource_totals() -> Dictionary:
+	var totals = {}
+
+	# Add demesne resources
+	for resource in demesne.stockpile:
+		totals[resource] = demesne.stockpile[resource]
+
+	# Add people's resources
+	for person in demesne.get_people():
+		for resource in person.stockpile:
+			if resource not in totals:
+				totals[resource] = 0
+			totals[resource] += person.stockpile[resource]
+
+	return totals
+
+## Calculates production totals for the current turn
+func _calculate_production_totals() -> Dictionary:
+	var totals = {}
+	for transaction in _turn_transactions:
+		if transaction.get("type") == "production":
+			var good = transaction["good"]
+			if good not in totals:
+				totals[good] = 0
+			totals[good] += transaction["amount"]
+	return totals
+
+## Emits an economic error signal when an invariant is violated
+func _on_invariant_violated(invariant_name: String, details: String) -> void:
+	EventBusGame.economic_error.emit(invariant_name, details)
+
+## Emits an economic alert signal when a threshold is crossed
+func _on_threshold_crossed(metric_name: String, threshold: float, current_value: float) -> void:
+	EventBusGame.economic_alert.emit(metric_name, threshold, current_value)
 
 #endregion
