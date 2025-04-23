@@ -70,7 +70,7 @@ alwaysApply: true
   Documentation
   - Docstring style is as per GDScript best practice, unles sotherwise stated. 
   - All classes should begin with a docstring explaining the purpose and intent of that class. An example of usage should also be included. 
-  - A class should begin with the Docstring then the classname (if the class needs to be referred to elsewhere), then the extends keyword, defining any base class. 
+  - A class should begin with the Docstring, then be followed by the classname (if the class needs to be referred to elsewhere), then finally the extends keyword, defining any base class. 
   - Documenation should always be kept up to date. 
   - All functions require comprehensive, but succinct docstrings. Arguments and return types should be documented. 
   - Functions that can return null should include "@null" at the start of their docstring.
