@@ -40,6 +40,7 @@ alwaysApply: true
   - Game behaviour should be defined in data. 
   - Configs and other static referenced data are all held externally in .json files. 
   - Use data classes for complex data structures. 
+  - 1 class definition per file. 
 
 
   GDScript 2.0/Godot
@@ -106,6 +107,7 @@ alwaysApply: true
   2. Prioritize performance optimization and memory management in every stage of development.
   3. Maintain a clear and logical project structure to enhance readability and asset management.
   
+
 
 
   Refer to Godot documentation and GDScript 2.0 programming guides for best practices in scripting, game architecture, and performance optimization.

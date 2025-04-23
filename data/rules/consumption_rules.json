@@ -7,7 +7,9 @@
 			"min_held_before_desired_consumption": 3,
 			"amount_to_hold_before_selling": 10,
 			"desired_consumption_happiness_increase": 2,
-			"consumption_failure_cost": 1
+			"consumption_failure_cost": 1,
+			"min_consumption_statement": "[consumer] barely managed to eat enough [good].",
+			"desired_consumption_statement": "[consumer] enjoyed a hearty meal of [good]."
 		},
 		{
 			"good_id": "water",
@@ -16,7 +18,9 @@
 			"min_held_before_desired_consumption": 10,
 			"amount_to_hold_before_selling": 20,
 			"desired_consumption_happiness_increase": 2,
-			"consumption_failure_cost": 1
+			"consumption_failure_cost": 1,
+			"min_consumption_statement": "[consumer] took small sips of [good].",
+			"desired_consumption_statement": "[consumer] drank [amount] units of [good] heartily."
 		}
 	]
 } 

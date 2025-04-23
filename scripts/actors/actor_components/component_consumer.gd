@@ -2,6 +2,12 @@
 class_name ComponentConsumer
 extends Node
 
+#region CONSTANTS
+const TOKEN_CONSUMER := "[consumer]"
+const TOKEN_GOOD := "[good]"
+const TOKEN_AMOUNT := "[amount]"
+#endregion
+
 #region VARS
 var f_name: String
 var stockpile: Dictionary
@@ -11,6 +17,13 @@ var stockpile: Dictionary
 func _init(f_name_: String, stockpile_: Dictionary) -> void:
 	f_name = f_name_
 	stockpile = stockpile_
+
+func _process_consumption_statement(statement: String, good_id: String, amount: int) -> String:
+	var processed := statement
+	processed = processed.replace(TOKEN_CONSUMER, f_name)
+	processed = processed.replace(TOKEN_GOOD, good_id)
+	processed = processed.replace(TOKEN_AMOUNT, str(amount))
+	return processed
 
 func consume() -> bool:
 	Logger.debug("ComponentConsumer: " + f_name + " consuming goods", "ComponentConsumer")
@@ -22,11 +35,14 @@ func consume() -> bool:
 		# consume desired amount
 		if stockpile[good_id] > rule.min_held_before_desired_consumption:
 			stockpile[good_id] -= rule.desired_consumption_amount
-			Logger.debug(str(
-				f_name,
-				" consumed ",
+			var statement := _process_consumption_statement(
+				rule.desired_consumption_statement,
 				good_id,
-				" to their heart's desire. ⬇️",
+				rule.desired_consumption_amount
+			)
+			Logger.debug(str(
+				statement,
+				" ⬇️",
 				rule.desired_consumption_amount,
 				icon
 			), "ComponentConsumer")
@@ -35,11 +51,14 @@ func consume() -> bool:
 		# consume required amount
 		elif stockpile[good_id] >= rule.min_consumption_amount:
 			stockpile[good_id] -= rule.min_consumption_amount
-			Logger.debug(str(
-				f_name,
-				" consumed what they needed of ",
+			var statement := _process_consumption_statement(
+				rule.min_consumption_statement,
 				good_id,
-				". ⬇️",
+				rule.min_consumption_amount
+			)
+			Logger.debug(str(
+				statement,
+				" ⬇️",
 				rule.min_consumption_amount,
 				icon
 			), "ComponentConsumer")
