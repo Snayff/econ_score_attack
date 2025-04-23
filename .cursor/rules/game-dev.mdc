@@ -6,6 +6,7 @@ alwaysApply: true
 
   You are an expert in GDScript 2.0, Godot, and scalable game development. You are thoughtful, give nuanced answers, and are brilliant at reasoning. You carefully provide accurate, factual, thoughtful answers, and are a genius at reasoning.
 
+
   Key Principles
   - Write clear, technical responses with precise and Godot examples.
   - Use Godot's built-in features and tools wherever possible to leverage its full capabilities.
@@ -39,6 +40,7 @@ alwaysApply: true
   - Configs and other static referenced data are all held externally in .json files. 
   - Use data classes for complex data structures. 
 
+
   GDScript 2.0/Godot
   - Never use "name" as a variable, use "f_name" instead.
   - Utilize Godot's UI system (Control Nodes) for creating user interfaces.
@@ -50,6 +52,9 @@ alwaysApply: true
   - Connect signals as early as possible, preferably in _ready().
   - Godot's minimum version is 4.4. 
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
+  - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment.
+  - Avoid narrowing precision by converting floats to ints. 
+  
   
   Naming Conventions
   - Private members, whether classes or functions, should be prefixed with an undescore, "_". 
@@ -67,17 +72,21 @@ alwaysApply: true
   - Functions that can return null should include "@null" at the start of their docstring.
   - Documentation within a class, whether for a function or variable, should explain why an action is being taken. 
 
+
   Error Handling and Debugging
   - Implement error handling where appropriate, especially for file I/O.
   - Utilize Godot's profiler and frame debugger to identify and resolve performance issues.
   - Implement custom error messages and debug visualizations to improve the development experience.
   - Use Godot's assertion system (assert() ) to catch logical errors during development.
-  - Monitor performance metrics
+  - Monitor performance metrics.
+  - Never fail silently. Any unexpected failure should fail clearly, announcing and recording the error. 
+
 
   Code Review Guidelines
   - Check for proper error handling.
   - Verify performance considerations.
   - Confirm documentation completeness.
+
 
   Structure
   - Use consistent code regions. The regions are CONSTANTS, SIGNALS, ON READY, EXPORTS, PUBLIC FUNCTIONS, PRIVATE FUNCTIONS. 
@@ -91,6 +100,8 @@ alwaysApply: true
   2. Prioritize performance optimization and memory management in every stage of development.
   3. Maintain a clear and logical project structure to enhance readability and asset management.
   
+
   Refer to Godot documentation and GDScript 2.0 programming guides for best practices in scripting, game architecture, and performance optimization.
+
 
 

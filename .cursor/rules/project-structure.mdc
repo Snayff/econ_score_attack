@@ -14,10 +14,9 @@ You always ensure new files and functionality is added in keeping with a logical
   - "globals/event_bus_ui.gd" holds all signals used for ui events.
   - External data files are held in "data/" folder.
   - Autloads/globals are held in "globals/" folder. 
-  
+
 
 
   Storing New Functionality
-  - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
 
-  - 
+  - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
