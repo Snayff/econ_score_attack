@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="Script" uid="uid://bpkg5efx4n6h6" path="res://scripts/ui/rtl_laws_info.gd" id="7_xxxxx"]
-[ext_resource type="PackedScene" path="res://scenes/ui/panel_header.tscn" id="8_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://scenes/ui/panel_header.tscn" id="8_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://scenes/ui/view_economy.tscn" id="9_xxxxx"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]

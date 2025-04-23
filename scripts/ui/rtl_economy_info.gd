@@ -93,7 +93,7 @@ func _update_info() -> void:
 		push_error("MetricsContainer node not found!")
 		return
 
-	# Clear existing metrics
+	# Clear existing content
 	for child in metrics_container.get_children():
 		child.queue_free()
 
@@ -131,6 +131,7 @@ func _create_alerts_panel(alerts: Array) -> PanelContainer:
 
 	var header = Label.new()
 	header.text = "Economic Alerts"
+	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	header.add_theme_font_size_override("font_size", 18)
 	header.add_theme_color_override("font_color", Color(1, 0.5, 0.5))
 	vbox.add_child(header)
@@ -142,6 +143,7 @@ func _create_alerts_panel(alerts: Array) -> PanelContainer:
 			alert.current_value,
 			alert.threshold
 		]
+		alert_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vbox.add_child(alert_label)
 
 	return panel

@@ -14,6 +14,7 @@ script = ExtResource("1_xxxxx")
 layout_mode = 2
 theme_type_variation = &"HeaderLarge"
 text = "Panel Title"
+horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
