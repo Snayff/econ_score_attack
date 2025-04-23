@@ -1,0 +1,503 @@
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: _ready called
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Created demesne_data
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Initializing with name Main Demesne
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Initializing stockpile
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Created demesne: Main Demesne
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Enacted law Sales Tax
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Enacted sales tax law with rate 10.0%
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Enacted law Demesne Inheritance
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Enacted demesne inheritance law
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Added 0 money. Total: 0
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Added 0 grain. Total: 0
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Added 0 water. Total: 0
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Added 0 wood. Total: 0
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Added 0 bureaucracy. Total: 0
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Initialized demesne stockpile with starting resources
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Initialized good prices
+2025-04-23T21:43:11 | DEBUG | EconomicValidator | EconomicValidator: Set initial money to 0.000000
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Set initial money to 0.000000
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Creating 4 people
+2025-04-23T21:43:11 | DEBUG | Person | Person: Creating sally as farmer
+2025-04-23T21:43:11 | DEBUG | Person | Person: sally starts with 100.0 money
+2025-04-23T21:43:11 | DEBUG | Person | Person: sally starts with 3.0 grain
+2025-04-23T21:43:11 | DEBUG | Person | Person: sally starts with 3.0 water
+2025-04-23T21:43:11 | DEBUG | Person | Person: sally starts with 0.0 wood
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Adding person sally
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Now has 1 people
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Added person sally with job farmer
+2025-04-23T21:43:11 | DEBUG | Person | Person: Creating reginald as water collector
+2025-04-23T21:43:11 | DEBUG | Person | Person: reginald starts with 100.0 money
+2025-04-23T21:43:11 | DEBUG | Person | Person: reginald starts with 3.0 grain
+2025-04-23T21:43:11 | DEBUG | Person | Person: reginald starts with 3.0 water
+2025-04-23T21:43:11 | DEBUG | Person | Person: reginald starts with 0.0 wood
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Adding person reginald
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Now has 2 people
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Added person reginald with job water collector
+2025-04-23T21:43:11 | DEBUG | Person | Person: Creating estaban as woodcutter
+2025-04-23T21:43:11 | DEBUG | Person | Person: estaban starts with 100.0 money
+2025-04-23T21:43:11 | DEBUG | Person | Person: estaban starts with 3.0 grain
+2025-04-23T21:43:11 | DEBUG | Person | Person: estaban starts with 3.0 water
+2025-04-23T21:43:11 | DEBUG | Person | Person: estaban starts with 0.0 wood
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Adding person estaban
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Now has 3 people
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Added person estaban with job woodcutter
+2025-04-23T21:43:11 | DEBUG | Person | Person: Creating bob as bureaucrat
+2025-04-23T21:43:11 | DEBUG | Person | Person: bob starts with 100.0 money
+2025-04-23T21:43:11 | DEBUG | Person | Person: bob starts with 3.0 grain
+2025-04-23T21:43:11 | DEBUG | Person | Person: bob starts with 3.0 water
+2025-04-23T21:43:11 | DEBUG | Person | Person: bob starts with 0.0 wood
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Adding person bob
+2025-04-23T21:43:11 | DEBUG | Demesne | Demesne: Now has 4 people
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Added person bob with job bureaucrat
+2025-04-23T21:43:11 | DEBUG | Sim | Sim: Created people
+2025-04-23T21:43:11 | DEBUG | DemesneStockpile | DemesneStockpile: _ready called
+2025-04-23T21:43:11 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:11 | DEBUG | PeopleInfo | PeopleInfo: _ready called
+2025-04-23T21:43:11 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:11 | DEBUG | LawsInfo | LawsInfo: _ready called
+2025-04-23T21:43:11 | DEBUG | EconomyInfo | EconomyInfo: _ready called
+2025-04-23T21:43:11 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:14 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:18 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:18 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:18 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:18 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:18 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 5
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 5📋
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:18 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | reginald consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:18 | DEBUG | Person | reginald is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | estaban consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:18 | DEBUG | Person | estaban is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:18 | DEBUG | ComponentConsumer | bob consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:18 | DEBUG | Person | bob is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.612, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.612, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.612, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.612, "type": "production", "good": "bureaucracy", "amount": 5, "price": 0.0, "buyer": "bob", "seller": "" }
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally will sell 1.0 grain
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:18 | DEBUG | Person | Person: sally needs to buy 17.0 water
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald will sell 3.0 water
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:18 | DEBUG | Person | Person: reginald needs to buy 8.0 grain
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban needs to buy 8.0 grain
+2025-04-23T21:43:18 | DEBUG | Person | Person: estaban needs to buy 17.0 water
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob calculating goods for sale
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob calculating goods to buy
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob needs to buy 8.0 grain
+2025-04-23T21:43:18 | DEBUG | Person | Person: bob needs to buy 17.0 water
+2025-04-23T21:43:18 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:18 | INFO | Sim | Supply: { "sally": { "grain": 1.0 }, "reginald": { "water": 3.0 } }
+Demand: { "sally": { "water": 17.0 }, "reginald": { "grain": 8.0 }, "estaban": { "grain": 8.0, "water": 17.0 }, "bob": { "grain": 8.0, "water": 17.0 } }
+2025-04-23T21:43:18 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Added 8 money. Total: 8
+2025-04-23T21:43:18 | DEBUG | Sim | Sales tax collected: 8.0 gold
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.615, "type": "trade", "good": "grain", "amount": 8, "price": 10.0, "buyer": "estaban", "seller": "sally" }
+2025-04-23T21:43:18 | DEBUG | Sim | sally sold 8 grain to estaban for 🪙80.0 (10.0🪙 each).
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Added 1 money. Total: 9
+2025-04-23T21:43:18 | DEBUG | Sim | Sales tax collected: 1.0 gold
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.615, "type": "trade", "good": "water", "amount": 1, "price": 10.0, "buyer": "estaban", "seller": "reginald" }
+2025-04-23T21:43:18 | DEBUG | Sim | reginald sold 1 water to estaban for 🪙10.0 (10.0🪙 each).
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Added 10 money. Total: 19
+2025-04-23T21:43:18 | DEBUG | Sim | Sales tax collected: 10.0 gold
+2025-04-23T21:43:18 | DEBUG | Demesne | Demesne: Added 9 money. Total: 28
+2025-04-23T21:43:18 | DEBUG | Sim | Sales tax collected (recalculated): 9.0 gold
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745440998.615, "type": "trade", "good": "water", "amount": 9, "price": 10.0, "buyer": "bob", "seller": "reginald" }
+2025-04-23T21:43:18 | DEBUG | Sim | reginald sold 9 water to bob for 🪙90.0 (10.0🪙 each).
+2025-04-23T21:43:18 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:18 | INFO | Sim | Sales: { "sally": 80.0, "reginald": 100.0 }
+2025-04-23T21:43:18 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 17.0, "water": 32.0, "wood": 10.0, "bureaucracy": 5 }
+2025-04-23T21:43:18 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:18 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:18 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 3.0, "money_velocity": 0.4390243902439, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 4.0 }, "historical_trends": {  }, "alerts": [], "timestamp": 1745440998.616 }
+2025-04-23T21:43:18 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:18 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:18 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:20 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:20 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:20 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:20 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:20 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 10
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 10📋
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:20 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | reginald consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:20 | DEBUG | Person | reginald is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | estaban consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:20 | DEBUG | Person | estaban is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:20 | DEBUG | ComponentConsumer | bob consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:20 | DEBUG | Person | bob is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.595, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.595, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.595, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.595, "type": "production", "good": "bureaucracy", "amount": 5, "price": 0.0, "buyer": "bob", "seller": "" }
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally will sell 1.0 grain
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:20 | DEBUG | Person | Person: sally needs to buy 17.0 water
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald will sell 13.0 water
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:20 | DEBUG | Person | Person: reginald needs to buy 9.0 grain
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban needs to buy 2.0 grain
+2025-04-23T21:43:20 | DEBUG | Person | Person: estaban needs to buy 16.0 water
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob calculating goods for sale
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob calculating goods to buy
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob needs to buy 9.0 grain
+2025-04-23T21:43:20 | DEBUG | Person | Person: bob needs to buy 8.0 water
+2025-04-23T21:43:20 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:20 | INFO | Sim | Supply: { "sally": { "grain": 1.0 }, "reginald": { "water": 13.0 } }
+Demand: { "sally": { "water": 17.0 }, "reginald": { "grain": 9.0 }, "estaban": { "grain": 2.0, "water": 16.0 }, "bob": { "grain": 9.0, "water": 8.0 } }
+2025-04-23T21:43:20 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Added 9 money. Total: 37
+2025-04-23T21:43:20 | DEBUG | Sim | Sales tax collected: 9.0 gold
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.597, "type": "trade", "good": "grain", "amount": 9, "price": 10.0, "buyer": "reginald", "seller": "sally" }
+2025-04-23T21:43:20 | DEBUG | Sim | sally sold 9 grain to reginald for 🪙90.0 (10.0🪙 each).
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Added 0 money. Total: 37
+2025-04-23T21:43:20 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.597, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "reginald" }
+2025-04-23T21:43:20 | DEBUG | Demesne | Demesne: Added 17 money. Total: 54
+2025-04-23T21:43:20 | DEBUG | Sim | Sales tax collected: 17.0 gold
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441000.598, "type": "trade", "good": "water", "amount": 17, "price": 10.0, "buyer": "sally", "seller": "reginald" }
+2025-04-23T21:43:20 | DEBUG | Sim | reginald sold 17 water to sally for 🪙170.0 (10.0🪙 each).
+2025-04-23T21:43:20 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:20 | INFO | Sim | Sales: { "sally": 90.0, "reginald": 170.0 }
+2025-04-23T21:43:20 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 21.0, "water": 52.0, "wood": 20.0, "bureaucracy": 10 }
+2025-04-23T21:43:20 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:20 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:20 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 3.0, "money_velocity": 0.63414634146341, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 3.0 }, "historical_trends": { "average_price_level": { "change": 0.0, "percent_change": 0.0 }, "trade_volume": { "change": 0.0, "percent_change": 0.0 }, "money_velocity": { "change": 0.19512195121951, "percent_change": 44.4444444444445 }, "unemployment_rate": { "change": 0.0, "percent_change": 0.0 }, "production_index": { "change": 0.0, "percent_change": 0.0 }, "wealth_gini": { "change": 0.0, "percent_change": 0.0 }, "market_activity": { "change": -1.0, "percent_change": -25.0 } }, "alerts": [], "timestamp": 1745441000.598 }
+2025-04-23T21:43:20 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:20 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:20 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:22 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:22 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:22 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:22 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:22 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:22 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 15
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 15📋
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:22 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:22 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | reginald consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:22 | DEBUG | Person | reginald is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | estaban consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:22 | DEBUG | Person | estaban is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:22 | DEBUG | ComponentConsumer | bob consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:22 | DEBUG | Person | bob is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.613, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.613, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.613, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.613, "type": "production", "good": "bureaucracy", "amount": 5, "price": 0.0, "buyer": "bob", "seller": "" }
+2025-04-23T21:43:22 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:22 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald will sell 16.0 water
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:22 | DEBUG | Person | Person: reginald needs to buy 2.0 grain
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban needs to buy 4.0 grain
+2025-04-23T21:43:22 | DEBUG | Person | Person: estaban needs to buy 16.0 water
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob calculating goods for sale
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob calculating goods to buy
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob needs to buy 10.0 grain
+2025-04-23T21:43:22 | DEBUG | Person | Person: bob needs to buy 8.0 water
+2025-04-23T21:43:22 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:22 | INFO | Sim | Supply: { "reginald": { "water": 16.0 } }
+Demand: { "reginald": { "grain": 2.0 }, "estaban": { "grain": 4.0, "water": 16.0 }, "bob": { "grain": 10.0, "water": 8.0 } }
+2025-04-23T21:43:22 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne: Added 0 money. Total: 54
+2025-04-23T21:43:22 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.614, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "reginald" }
+2025-04-23T21:43:22 | DEBUG | Demesne | Demesne: Added 0 money. Total: 54
+2025-04-23T21:43:22 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441002.614, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "reginald" }
+2025-04-23T21:43:22 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:22 | INFO | Sim | Sales: { "reginald": 0 }
+2025-04-23T21:43:22 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 24.0, "water": 72.0, "wood": 30.0, "bureaucracy": 15 }
+2025-04-23T21:43:22 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:22 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:22 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 2.0, "money_velocity": 0.0, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 3.0 }, "historical_trends": { "average_price_level": { "change": 0.0, "percent_change": 0.0 }, "trade_volume": { "change": -1.0, "percent_change": -33.3333333333333 }, "money_velocity": { "change": -0.63414634146341, "percent_change": -100.0 }, "unemployment_rate": { "change": 0.0, "percent_change": 0.0 }, "production_index": { "change": 0.0, "percent_change": 0.0 }, "wealth_gini": { "change": 0.0, "percent_change": 0.0 }, "market_activity": { "change": 0.0, "percent_change": 0.0 } }, "alerts": [], "timestamp": 1745441002.615 }
+2025-04-23T21:43:22 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:22 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:22 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:24 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:24 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:24 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:24 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:24 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:24 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 20
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 20📋
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:24 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:24 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | reginald consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:24 | DEBUG | Person | reginald is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | estaban consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:24 | DEBUG | Person | estaban is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:24 | DEBUG | ComponentConsumer | bob lacked 1.0🌾. Cannot consume.
+2025-04-23T21:43:24 | DEBUG | Person | bob is unhappy with their consumption. ⬇️1.0❤️
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.631, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.632, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.632, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.632, "type": "production", "good": "bureaucracy", "amount": 5, "price": 0.0, "buyer": "bob", "seller": "" }
+2025-04-23T21:43:24 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:24 | DEBUG | Person | Person: sally will sell 8.0 grain
+2025-04-23T21:43:24 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald will sell 36.0 water
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:24 | DEBUG | Person | Person: reginald needs to buy 4.0 grain
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban needs to buy 6.0 grain
+2025-04-23T21:43:24 | DEBUG | Person | Person: estaban needs to buy 16.0 water
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob calculating goods for sale
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob calculating goods to buy
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob needs to buy 10.0 grain
+2025-04-23T21:43:24 | DEBUG | Person | Person: bob needs to buy 8.0 water
+2025-04-23T21:43:24 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:24 | INFO | Sim | Supply: { "sally": { "grain": 8.0 }, "reginald": { "water": 36.0 } }
+Demand: { "reginald": { "grain": 4.0 }, "estaban": { "grain": 6.0, "water": 16.0 }, "bob": { "grain": 10.0, "water": 8.0 } }
+2025-04-23T21:43:24 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 4 money. Total: 58
+2025-04-23T21:43:24 | DEBUG | Sim | Sales tax collected: 4.0 gold
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.633, "type": "trade", "good": "grain", "amount": 4, "price": 10.0, "buyer": "reginald", "seller": "sally" }
+2025-04-23T21:43:24 | DEBUG | Sim | sally sold 4 grain to reginald for 🪙40.0 (10.0🪙 each).
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:24 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.634, "type": "trade", "good": "grain", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "sally" }
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:24 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.634, "type": "trade", "good": "grain", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "sally" }
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:24 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.634, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "reginald" }
+2025-04-23T21:43:24 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:24 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441004.634, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "reginald" }
+2025-04-23T21:43:24 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:24 | INFO | Sim | Sales: { "sally": 40.0, "reginald": 0 }
+2025-04-23T21:43:24 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 28.0, "water": 92.0, "wood": 40.0, "bureaucracy": 20 }
+2025-04-23T21:43:24 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:24 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:24 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 5.0, "money_velocity": 0.09756097560976, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 4.0 }, "historical_trends": { "average_price_level": { "change": 0.0, "percent_change": 0.0 }, "trade_volume": { "change": 3.0, "percent_change": 150.0 }, "money_velocity": { "change": 0.09756097560976, "percent_change": 0.0 }, "unemployment_rate": { "change": 0.0, "percent_change": 0.0 }, "production_index": { "change": 0.0, "percent_change": 0.0 }, "wealth_gini": { "change": 0.0, "percent_change": 0.0 }, "market_activity": { "change": 1.0, "percent_change": 33.3333333333333 } }, "alerts": [], "timestamp": 1745441004.636 }
+2025-04-23T21:43:24 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:24 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:24 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:26 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:26 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:26 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:26 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:26 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:26 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 25
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 25📋
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:26 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:26 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | reginald consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:26 | DEBUG | Person | reginald is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | estaban consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:26 | DEBUG | Person | estaban is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:26 | DEBUG | ComponentConsumer | bob lacked 1.0🌾. Cannot consume.
+2025-04-23T21:43:26 | DEBUG | Person | bob is unhappy with their consumption. ⬇️1.0❤️
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.631, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.631, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.631, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.631, "type": "production", "good": "bureaucracy", "amount": 5, "price": 0.0, "buyer": "bob", "seller": "" }
+2025-04-23T21:43:26 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:26 | DEBUG | Person | Person: sally will sell 12.0 grain
+2025-04-23T21:43:26 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald will sell 56.0 water
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:26 | DEBUG | Person | Person: reginald needs to buy 2.0 grain
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban needs to buy 8.0 grain
+2025-04-23T21:43:26 | DEBUG | Person | Person: estaban needs to buy 16.0 water
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob calculating goods for sale
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob calculating goods to buy
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob needs to buy 10.0 grain
+2025-04-23T21:43:26 | DEBUG | Person | Person: bob needs to buy 8.0 water
+2025-04-23T21:43:26 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:26 | INFO | Sim | Supply: { "sally": { "grain": 12.0 }, "reginald": { "water": 56.0 } }
+Demand: { "reginald": { "grain": 2.0 }, "estaban": { "grain": 8.0, "water": 16.0 }, "bob": { "grain": 10.0, "water": 8.0 } }
+2025-04-23T21:43:26 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:26 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.633, "type": "trade", "good": "grain", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "sally" }
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 0 money. Total: 58
+2025-04-23T21:43:26 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.633, "type": "trade", "good": "grain", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "sally" }
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 2 money. Total: 60
+2025-04-23T21:43:26 | DEBUG | Sim | Sales tax collected: 2.0 gold
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.633, "type": "trade", "good": "grain", "amount": 2, "price": 10.0, "buyer": "reginald", "seller": "sally" }
+2025-04-23T21:43:26 | DEBUG | Sim | sally sold 2 grain to reginald for 🪙20.0 (10.0🪙 each).
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 0 money. Total: 60
+2025-04-23T21:43:26 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.634, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "reginald" }
+2025-04-23T21:43:26 | DEBUG | Demesne | Demesne: Added 0 money. Total: 60
+2025-04-23T21:43:26 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441006.634, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "bob", "seller": "reginald" }
+2025-04-23T21:43:26 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:26 | INFO | Sim | Sales: { "sally": 20.0, "reginald": 0 }
+2025-04-23T21:43:26 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 32.0, "water": 112.0, "wood": 50.0, "bureaucracy": 25 }
+2025-04-23T21:43:26 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:26 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:26 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 5.0, "money_velocity": 0.04878048780488, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 4.0 }, "historical_trends": { "average_price_level": { "change": 0.0, "percent_change": 0.0 }, "trade_volume": { "change": 0.0, "percent_change": 0.0 }, "money_velocity": { "change": -0.04878048780488, "percent_change": -50.0 }, "unemployment_rate": { "change": 0.0, "percent_change": 0.0 }, "production_index": { "change": 0.0, "percent_change": 0.0 }, "wealth_gini": { "change": 0.0, "percent_change": 0.0 }, "market_activity": { "change": 0.0, "percent_change": 0.0 } }, "alerts": [], "timestamp": 1745441006.636 }
+2025-04-23T21:43:26 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:26 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:26 | DEBUG | PeopleInfo | PeopleInfo: update_info called
+2025-04-23T21:43:28 | INFO | Sim | >>> Production & Consumption Phase
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Processing production for 4 people
+2025-04-23T21:43:28 | DEBUG | Person | Person: sally producing as farmer
+2025-04-23T21:43:28 | DEBUG | Person | sally ploughed the fields. ⬆️10🥪.
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald producing as water collector
+2025-04-23T21:43:28 | DEBUG | Person | reginald manned the well. ⬆️20💧.
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban producing as woodcutter
+2025-04-23T21:43:28 | DEBUG | Person | estaban felled some trees. ⬆️10🪵.
+2025-04-23T21:43:28 | DEBUG | Person | Person: bob producing as bureaucrat
+2025-04-23T21:43:28 | DEBUG | Person | bob filed some paperwork. ⬆️5📋 for the demesne.
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 5 bureaucracy. Total: 30
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne received 5 bureaucracy from bob. Total: 30📋
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Processing consumption for 4 people
+2025-04-23T21:43:28 | DEBUG | Person | Person: sally consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | ComponentConsumer: sally consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | sally consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:28 | DEBUG | Person | sally is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | ComponentConsumer: reginald consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | reginald consumed grain to their heart's desire. ⬇️2.0🌾
+2025-04-23T21:43:28 | DEBUG | Person | reginald is happy with their consumption. ⬆️2.0🙂
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | ComponentConsumer: estaban consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | estaban consumed what they needed of grain. ⬇️1.0🌾
+2025-04-23T21:43:28 | DEBUG | Person | estaban is satisfied with their consumption. ⬆️1🙂
+2025-04-23T21:43:28 | DEBUG | Person | Person: bob consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | ComponentConsumer: bob consuming goods
+2025-04-23T21:43:28 | DEBUG | ComponentConsumer | bob lacked 1.0🌾. Cannot consume.
+2025-04-23T21:43:28 | DEBUG | Person | bob is unhappy with their consumption. ⬇️1.0❤️
+2025-04-23T21:43:28 | DEBUG | Person | bob died from lack of goods.
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Handling death of bob
+2025-04-23T21:43:28 | DEBUG | DemesneInheritance | DemesneInheritance: Transferring stockpile from bob to demesne
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 1 money. Total: 61
+2025-04-23T21:43:28 | DEBUG | DemesneInheritance | DemesneInheritance: Transferred 1 money from bob to demesne
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 12 water. Total: 12
+2025-04-23T21:43:28 | DEBUG | DemesneInheritance | DemesneInheritance: Transferred 12 water from bob to demesne
+2025-04-23T21:43:28 | DEBUG | DemesneInheritance | DemesneInheritance: Total resources transferred from bob: { "money": 1, "water": 12 }
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.65, "type": "production", "good": "grain", "amount": 10, "price": 0.0, "buyer": "sally", "seller": "" }
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.65, "type": "production", "good": "water", "amount": 20, "price": 0.0, "buyer": "reginald", "seller": "" }
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.65, "type": "production", "good": "wood", "amount": 10, "price": 0.0, "buyer": "estaban", "seller": "" }
+2025-04-23T21:43:28 | DEBUG | Person | Person: sally calculating goods for sale
+2025-04-23T21:43:28 | DEBUG | Person | Person: sally will sell 18.0 grain
+2025-04-23T21:43:28 | DEBUG | Person | Person: sally calculating goods to buy
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald calculating goods for sale
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald will sell 76.0 water
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald calculating goods to buy
+2025-04-23T21:43:28 | DEBUG | Person | Person: reginald needs to buy 2.0 grain
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban calculating goods for sale
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban calculating goods to buy
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban needs to buy 9.0 grain
+2025-04-23T21:43:28 | DEBUG | Person | Person: estaban needs to buy 16.0 water
+2025-04-23T21:43:28 | INFO | Sim | >>> Market Setup
+2025-04-23T21:43:28 | INFO | Sim | Supply: { "sally": { "grain": 18.0 }, "reginald": { "water": 76.0 } }
+Demand: { "reginald": { "grain": 2.0 }, "estaban": { "grain": 9.0, "water": 16.0 } }
+2025-04-23T21:43:28 | INFO | Sim | >>> Market Opens
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 0 money. Total: 61
+2025-04-23T21:43:28 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.652, "type": "trade", "good": "grain", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "sally" }
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 2 money. Total: 63
+2025-04-23T21:43:28 | DEBUG | Sim | Sales tax collected: 2.0 gold
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.652, "type": "trade", "good": "grain", "amount": 2, "price": 10.0, "buyer": "reginald", "seller": "sally" }
+2025-04-23T21:43:28 | DEBUG | Sim | sally sold 2 grain to reginald for 🪙20.0 (10.0🪙 each).
+2025-04-23T21:43:28 | DEBUG | Demesne | Demesne: Added 0 money. Total: 63
+2025-04-23T21:43:28 | DEBUG | Sim | Sales tax collected: 0.0 gold
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Recorded transaction - { "timestamp": 1745441008.653, "type": "trade", "good": "water", "amount": 0, "price": 10.0, "buyer": "estaban", "seller": "reginald" }
+2025-04-23T21:43:28 | INFO | Sim | >>> Market Closes
+2025-04-23T21:43:28 | INFO | Sim | Sales: { "sally": 20.0, "reginald": 0 }
+2025-04-23T21:43:28 | DEBUG | EconomicValidator | EconomicValidator: Updated resource totals - { "money": 410.0, "grain": 37.0, "water": 132.0, "wood": 60.0, "bureaucracy": 30 }
+2025-04-23T21:43:28 | ERROR | EconomicValidator | Money conservation violated: Expected 0.000000, got 410.000000
+2025-04-23T21:43:28 | DEBUG | EconomicMetrics | EconomicMetrics: Updated metrics
+2025-04-23T21:43:28 | INFO | Sim | Economic Report: { "current_metrics": { "average_price_level": 8.2, "trade_volume": 3.0, "money_velocity": 0.04878048780488, "unemployment_rate": 0.0, "production_index": 0.0, "wealth_gini": 0.0, "market_activity": 3.0 }, "historical_trends": { "average_price_level": { "change": 0.0, "percent_change": 0.0 }, "trade_volume": { "change": -2.0, "percent_change": -40.0 }, "money_velocity": { "change": 0.0, "percent_change": 0.0 }, "unemployment_rate": { "change": 0.0, "percent_change": 0.0 }, "production_index": { "change": 0.0, "percent_change": 0.0 }, "wealth_gini": { "change": 0.0, "percent_change": 0.0 }, "market_activity": { "change": -1.0, "percent_change": -25.0 } }, "alerts": [], "timestamp": 1745441008.654 }
+2025-04-23T21:43:28 | INFO | Sim | >>> Turn Resolved >>>>>>>>>>>>>>>>>>>>
+2025-04-23T21:43:28 | DEBUG | DemesneStockpile | DemesneStockpile: update_info called
+2025-04-23T21:43:28 | DEBUG | PeopleInfo | PeopleInfo: update_info called

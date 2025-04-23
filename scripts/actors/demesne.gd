@@ -7,6 +7,7 @@ extends Node
 
 const Law = preload("res://scripts/laws/law.gd")
 const LawRegistry = preload("res://scripts/laws/law_registry.gd")
+const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
@@ -77,11 +78,28 @@ func process_production() -> void:
 ## Processes consumption for all people in the demesne
 func process_consumption() -> void:
 	Logger.debug("Demesne: Processing consumption for " + str(people.size()) + " people", "Demesne")
+	var was_alive: Array[Person] = []
+
 	for person in people:
 		if not person.is_alive:
 			continue
 
+		was_alive.append(person)
 		person.consume()
+
+		# Check if person died during consumption
+		if not person.is_alive:
+			_handle_person_death(person)
+
+## Processes a person's death
+## @param person: The person who died
+func _handle_person_death(person: Person) -> void:
+	Logger.debug("Demesne: Handling death of " + person.f_name, "Demesne")
+
+	# Check if demesne inheritance law is active
+	var inheritance_law: DemesneInheritance = get_law("demesne_inheritance") as DemesneInheritance
+	if inheritance_law and inheritance_law.active:
+		inheritance_law.transfer_stockpile(person, self)
 
 ## Adds a person to the demesne
 ## @param person: The person to add

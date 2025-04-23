@@ -4,6 +4,8 @@
             "id": "sales_tax",
             "name": "Sales Tax",
             "category": "Economic",
+            "subcategory": "Taxation",
+            "tags": ["tax", "commerce", "revenue", "trade"],
             "description": "A percentage-based tax applied to all goods transactions. Tax revenue goes to the demesne treasury.",
             "parameters": {
                 "tax_rate": {
@@ -14,6 +16,15 @@
                     "options": [5.0, 10.0, 15.0, 20.0, 25.0]
                 }
             }
+        },
+        {
+            "id": "demesne_inheritance",
+            "name": "Demesne Inheritance",
+            "category": "Economic",
+            "subcategory": "Inheritance",
+            "tags": ["death", "inheritance", "stockpile", "wealth"],
+            "description": "When a person dies, their stockpile is added to the demesne's stockpile. This ensures all unclaimed goods return to the demesne.",
+            "parameters": {}
         }
     ]
 } 

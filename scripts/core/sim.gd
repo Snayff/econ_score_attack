@@ -73,6 +73,13 @@ func _ready() -> void:
 	else:
 		Logger.error("Sim: Failed to enact sales tax law", "Sim")
 
+	# Enact the demesne inheritance law
+	var inheritance = demesne.enact_law("demesne_inheritance")
+	if inheritance:
+		Logger.debug("Sim: Enacted demesne inheritance law", "Sim")
+	else:
+		Logger.error("Sim: Failed to enact demesne inheritance law", "Sim")
+
 	# Initialise demesne stockpile with starting resources
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
