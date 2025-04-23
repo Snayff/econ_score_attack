@@ -47,9 +47,30 @@ func create_law(law_id: String) -> Law:
         return null
         
     var law_class: GDScript = _law_types[law_id]
+    
+    # Extract default parameter values from the new format
+    var default_parameters = {}
+    for param_name in law_data.get("parameters", {}):
+        default_parameters[param_name] = law_data.parameters[param_name].default
+    
     return law_class.new(
         law_data.name,
         law_data.description,
-        law_data.default_parameters.duplicate()
+        default_parameters
     )
+
+## Gets the available parameter options for a law type
+## @param law_id: ID of the law type
+## @param parameter_name: Name of the parameter
+## @return: Array of available options or empty array if not found
+func get_parameter_options(law_id: String, parameter_name: String) -> Array:
+    var law_data: Dictionary = Library.get_config("laws").get("laws", []).filter(
+        func(law): return law.get("id") == law_id
+    ).front()
+    
+    if law_data.is_empty():
+        return []
+        
+    return law_data.get("parameters", {}).get(parameter_name, {}).get("options", [])
+
 #endregion 

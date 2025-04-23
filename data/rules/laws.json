@@ -3,9 +3,16 @@
         {
             "id": "sales_tax",
             "name": "Sales Tax",
-            "description": "A percentage-based tax applied to all goods transactions",
-            "default_parameters": {
-                "tax_rate": 10.0
+            "category": "Economic",
+            "description": "A percentage-based tax applied to all goods transactions. Tax revenue goes to the demesne treasury.",
+            "parameters": {
+                "tax_rate": {
+                    "name": "Tax Rate",
+                    "description": "Percentage of transaction value taken as tax",
+                    "type": "float",
+                    "default": 10.0,
+                    "options": [5.0, 10.0, 15.0, 20.0, 25.0]
+                }
             }
         }
     ]

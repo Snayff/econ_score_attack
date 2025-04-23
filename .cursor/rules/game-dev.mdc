@@ -60,13 +60,16 @@ alwaysApply: true
   - Private members, whether classes or functions, should be prefixed with an undescore, "_". 
   - Use descriptive variable and function names; adhere to naming conventions of python's black (e.g., PascalCase for classes, snake_case for variables).
   - Data classes should have their name prefixed with "Data".
+  - Any abstract base class should have their name prefixed with "ABC".
   - UI components must use a 3-letter type prefix (e.g., lbl_ for Label, rtl_ for RichTextLabel) in their name.
   - For function arguments, if we need to differentiate between an argument name and an existing variable name, use a trailing underscore "_". 
+  
 
 
   Documentation
-  - Docstring style is as per GDScript best practice. 
+  - Docstring style is as per GDScript best practice, unles sotherwise stated. 
   - All classes should begin with a docstring explaining the purpose and intent of that class. An example of usage should also be included. 
+  - A class should begin with the Docstring then the classname (if the class needs to be referred to elsewhere), then the extends keyword, defining any base class. 
   - Documenation should always be kept up to date. 
   - All functions require comprehensive, but succinct docstrings. Arguments and return types should be documented. 
   - Functions that can return null should include "@null" at the start of their docstring.
@@ -101,7 +104,5 @@ alwaysApply: true
   3. Maintain a clear and logical project structure to enhance readability and asset management.
   
 
+
   Refer to Godot documentation and GDScript 2.0 programming guides for best practices in scripting, game architecture, and performance optimization.
-
-
-

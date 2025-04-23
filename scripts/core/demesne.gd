@@ -59,17 +59,17 @@ func process_production() -> void:
 	for person in people:
 		if not person.is_alive:
 			continue
-			
+
 		# Handle regular production
 		person.produce()
-		
+
 		# Special handling for bureaucrats
 		if person.job == "bureaucrat":
 			add_resource("bureaucracy", 5)
 			Logger.debug(str(
-				"Demesne received 5 bureaucracy from ", 
-				person.f_name, 
-				". Total: ", 
+				"Demesne received 5 bureaucracy from ",
+				person.f_name,
+				". Total: ",
 				stockpile["bureaucracy"],
 				"📋"
 			), "Demesne")
@@ -80,7 +80,7 @@ func process_consumption() -> void:
 	for person in people:
 		if not person.is_alive:
 			continue
-			
+
 		person.consume()
 
 ## Adds a person to the demesne
@@ -132,13 +132,13 @@ func enact_law(law_id: String) -> Law:
 		if not existing_law.active:
 			existing_law.activate()
 		return existing_law
-		
+
 	# Create a new law
 	var law: Law = law_registry.create_law(law_id)
 	if law == null:
 		Logger.error("Demesne: Failed to create law with ID " + law_id, "Demesne")
 		return null
-		
+
 	# Activate and store the law
 	law.activate()
 	laws[law_id] = law
@@ -152,7 +152,7 @@ func enact_law(law_id: String) -> Law:
 func repeal_law(law_id: String) -> bool:
 	if not laws.has(law_id):
 		return false
-		
+
 	var law: Law = laws[law_id]
 	law.deactivate()
 	laws.erase(law_id)
@@ -187,4 +187,4 @@ func get_people() -> Array[Person]:
 ## @return: Dictionary of laws
 func get_laws() -> Dictionary:
 	return laws.duplicate(true)
-#endregion 
+#endregion
