@@ -21,6 +21,7 @@ alwaysApply: true
   - Ensure code is complete! Verify thoroughly finalised.
   - If you think there might not be a correct answer, you say so.
   - If you do not know the answer, say so, instead of guessing.
+  - If you think what you are being asked to do contradicts best practice or the project rules, say so before taking action and explain why you think that is the case. 
 
 
   Coding Architecture & Approach
@@ -83,6 +84,7 @@ alwaysApply: true
   - Use Godot's assertion system (assert() ) to catch logical errors during development.
   - Monitor performance metrics.
   - Never fail silently. Any unexpected failure should fail clearly, announcing and recording the error. 
+  - Use assertions in _ready() to confirm that any referenced Nodes exist. 
 
 
   Code Review Guidelines

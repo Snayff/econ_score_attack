@@ -12,6 +12,10 @@ extends Control
 
 #region CONSTANTS
 
+const VIEWS = {
+	"People": "RTLPeopleInfo",
+	"Laws": "LawsInfo"
+}
 
 #endregion
 
@@ -25,16 +29,16 @@ extends Control
 #region ON READY
 
 func _ready() -> void:
-	# Get references to UI elements
-	var btn_people: Button = %btn_people
-	var btn_laws: Button = %btn_laws
-
 	# Connect button signals
-	btn_people.sidebar_button_pressed.connect(_on_sidebar_button_pressed)
-	btn_laws.sidebar_button_pressed.connect(_on_sidebar_button_pressed)
+	for button_name in VIEWS.keys():
+		var button = get_node_or_null("HBoxContainer/Sidebar/MarginContainer/VBoxContainer/btn_" + button_name.to_lower())
+		if button:
+			button.sidebar_button_pressed.connect(_on_sidebar_button_pressed)
+		else:
+			push_error("Button not found: " + button_name)
 
-	# Show people info by default
-	_show_people_info()
+	# Show default view
+	_show_view("People")
 
 
 #endregion
@@ -49,36 +53,33 @@ func _ready() -> void:
 #region PRIVATE FUNCTIONS
 
 func _on_sidebar_button_pressed(button_text: String) -> void:
-	match button_text:
-		"People":
-			_show_people_info()
-		"Laws":
-			_show_laws_info()
+	_show_view(button_text)
 
-func _show_people_info() -> void:
-	# Hide laws info if it exists
-	var existing_laws = $CentrePanel/ScrollContainer.get_node_or_null("RTLLawsInfo")
-	if existing_laws:
-		existing_laws.queue_free()
 
-	# Show people info
-	var people_info = $CentrePanel/ScrollContainer/RTLPeopleInfo
-	people_info.visible = true
-	people_info.update_info()
+func _show_view(view_name: String) -> void:
+	if not VIEWS.has(view_name):
+		push_error("Invalid view name: " + view_name)
+		return
 
-func _show_laws_info() -> void:
-	# Hide people info
-	var people_info = $CentrePanel/ScrollContainer/RTLPeopleInfo
-	people_info.visible = false
+	var container = $CentrePanel/ScrollContainer
+	if not container:
+		push_error("ScrollContainer not found!")
+		return
 
-	# Show laws info
-	var existing_laws = $CentrePanel/ScrollContainer.get_node_or_null("RTLLawsInfo")
-	if not existing_laws:
-		var laws_info = preload("res://scripts/ui/rtl_laws_info.gd").new()
-		laws_info.name = "RTLLawsInfo"
-		laws_info.custom_minimum_size = Vector2(580, 0)
-		laws_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		$CentrePanel/ScrollContainer.add_child(laws_info)
+	# Hide all views first
+	for view in VIEWS.values():
+		var node = container.get_node_or_null(view)
+		if node:
+			node.visible = false
+
+	# Show and update the requested view
+	var target_view = container.get_node_or_null(VIEWS[view_name])
+	if target_view:
+		target_view.visible = true
+		if target_view.has_method("update_info"):
+			target_view.update_info()
+	else:
+		push_error("View not found: " + VIEWS[view_name])
 
 
 #endregion

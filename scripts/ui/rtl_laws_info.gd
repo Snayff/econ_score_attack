@@ -1,7 +1,8 @@
-extends RichTextLabel
+extends Control
 
 ## Displays information about all possible laws in the demesne.
-## in the format of
+## Shows laws grouped by category, with options to enact/repeal and modify parameters.
+## in the format of:
 ## Law | Description | [enact] [repeal]
 ## 		Option Desc: [option1], [option2]
 ## Example:
@@ -36,9 +37,11 @@ const PARAMETER_VALUES = {
 
 #region ON READY
 
+@onready var laws_container: VBoxContainer = %LawsContainer
+
 func _ready() -> void:
-	bbcode_enabled = true
-	fit_content = true
+	# Ensure we have our required nodes
+	assert(laws_container != null, "LawsContainer node not found!")
 
 	# Find the Sim node if not provided
 	if not sim:
@@ -71,23 +74,37 @@ func _on_sim_initialized() -> void:
 		sim.demesne.law_repealed.connect(_on_law_repealed)
 	update_info()
 
+
 func _on_law_enacted(law: Law) -> void:
 	update_info()
+
 
 func _on_law_repealed(law_id: String) -> void:
 	update_info()
 
+
 func _update_info() -> void:
+	# Safety check for our container
+	if not laws_container:
+		push_error("LawsContainer node not found!")
+		return
+
+	# Clear existing laws
+	for child in laws_container.get_children():
+		child.queue_free()
+
 	if not sim or not sim.demesne:
-		text = "No simulation data available"
+		var label = Label.new()
+		label.text = "No simulation data available"
+		laws_container.add_child(label)
 		return
 
 	var law_config = Library.get_config("laws")
 	if not law_config:
-		text = "No laws configuration available"
+		var label = Label.new()
+		label.text = "No laws configuration available"
+		laws_container.add_child(label)
 		return
-
-	text = "[center][b]Available Laws[/b][/center]\n\n"
 
 	# Group laws by category
 	var laws_by_category = {}
@@ -99,98 +116,107 @@ func _update_info() -> void:
 
 	# Display laws by category
 	for category in laws_by_category.keys():
-		text += "[b]%s Laws[/b]\n" % category
+		# Add category header
+		var category_label = Label.new()
+		category_label.text = "%s Laws" % category
+		category_label.add_theme_font_size_override("font_size", 20)
+		laws_container.add_child(category_label)
 
+		# Add laws in this category
 		for law_data in laws_by_category[category]:
 			var law_id = law_data.get("id")
 			var is_active = sim.demesne.is_law_active(law_id)
 
-			# Create a VBoxContainer for this law's info and controls
-			var law_vbox = VBoxContainer.new()
-			law_vbox.custom_minimum_size.y = 80
-			add_child(law_vbox)
+			# Create law panel
+			var law_panel = _create_law_panel(law_data, is_active)
+			laws_container.add_child(law_panel)
 
-			# Top row: Law name, description, and buttons
-			var top_row = HBoxContainer.new()
-			top_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			law_vbox.add_child(top_row)
 
-			# Add law name
-			var name_label = Label.new()
-			name_label.text = law_data.get("name")
-			name_label.custom_minimum_size.x = 120
-			top_row.add_child(name_label)
+func _create_law_panel(law_data: Dictionary, is_active: bool) -> PanelContainer:
+	var law_id = law_data.get("id")
 
-			# Add description
-			var description_label = Label.new()
-			description_label.text = law_data.get("description")
-			description_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			top_row.add_child(description_label)
+	# Create the panel
+	var panel = PanelContainer.new()
 
-			# Add buttons container
-			var button_container = HBoxContainer.new()
-			button_container.custom_minimum_size.x = 170
-			top_row.add_child(button_container)
+	# Main VBox for law content
+	var vbox = VBoxContainer.new()
+	panel.add_child(vbox)
 
-			# Add enact button
-			var enact_button = Button.new()
-			enact_button.text = "Enact"
-			enact_button.custom_minimum_size = Vector2(80, 30)
-			enact_button.disabled = is_active
-			enact_button.pressed.connect(_on_law_button_pressed.bind(law_id, false))
-			button_container.add_child(enact_button)
+	# Top row with name, description, and buttons
+	var top_row = HBoxContainer.new()
+	vbox.add_child(top_row)
 
-			# Add repeal button
-			var repeal_button = Button.new()
-			repeal_button.text = "Repeal"
-			repeal_button.custom_minimum_size = Vector2(80, 30)
-			repeal_button.disabled = not is_active
-			repeal_button.pressed.connect(_on_law_button_pressed.bind(law_id, true))
-			button_container.add_child(repeal_button)
+	# Law name
+	var name_label = Label.new()
+	name_label.text = law_data.get("name")
+	name_label.custom_minimum_size.x = 120
+	top_row.add_child(name_label)
 
-			# Add parameter controls if the law has parameters
-			var parameters = law_data.get("parameters", {})
-			if not parameters.is_empty():
-				var param_container = HBoxContainer.new()
-				param_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				law_vbox.add_child(param_container)
+	# Description
+	var description_label = Label.new()
+	description_label.text = law_data.get("description")
+	description_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	top_row.add_child(description_label)
 
-				# Add some indentation
-				var spacer = Control.new()
-				spacer.custom_minimum_size.x = 40
-				param_container.add_child(spacer)
+	# Buttons
+	var button_container = HBoxContainer.new()
+	button_container.custom_minimum_size.x = 170
+	top_row.add_child(button_container)
 
-				# Add parameter controls
-				for param_name in parameters:
-					var param_info = parameters[param_name]
-					var options = sim.demesne.law_registry.get_parameter_options(law_id, param_name)
-					if not options.is_empty():
-						var current_value = param_info.default
-						if is_active:
-							var law = sim.demesne.get_law(law_id)
-							if law:
-								current_value = law.get_parameter(param_name)
+	var enact_button = Button.new()
+	enact_button.text = "Enact"
+	enact_button.custom_minimum_size = Vector2(80, 30)
+	enact_button.disabled = is_active
+	enact_button.pressed.connect(_on_law_button_pressed.bind(law_id, false))
+	button_container.add_child(enact_button)
 
-						# Add parameter label
-						var param_label = Label.new()
-						param_label.text = param_info.name + ": "
-						param_container.add_child(param_label)
+	var repeal_button = Button.new()
+	repeal_button.text = "Repeal"
+	repeal_button.custom_minimum_size = Vector2(80, 30)
+	repeal_button.disabled = not is_active
+	repeal_button.pressed.connect(_on_law_button_pressed.bind(law_id, true))
+	button_container.add_child(repeal_button)
 
-						# Add value buttons
-						for value in options:
-							var value_button = Button.new()
-							value_button.text = str(value) + "%"
-							value_button.toggle_mode = true
-							value_button.button_pressed = is_active and is_equal_approx(value, current_value)
-							value_button.disabled = not is_active
-							value_button.custom_minimum_size = Vector2(50, 30)
-							value_button.pressed.connect(_on_parameter_button_pressed.bind(law_id, param_name, value))
-							param_container.add_child(value_button)
+	# Add parameters if any
+	var parameters = law_data.get("parameters", {})
+	if not parameters.is_empty():
+		var param_container = HBoxContainer.new()
+		vbox.add_child(param_container)
 
-			text += "\n\n"
+		# Add indentation
+		var spacer = Control.new()
+		spacer.custom_minimum_size.x = 40
+		param_container.add_child(spacer)
 
-		text += "\n"
+		# Add parameter controls
+		for param_name in parameters:
+			var param_info = parameters[param_name]
+			var options = sim.demesne.law_registry.get_parameter_options(law_id, param_name)
+			if not options.is_empty():
+				var current_value = param_info.default
+				if is_active:
+					var law = sim.demesne.get_law(law_id)
+					if law:
+						current_value = law.get_parameter(param_name)
+
+				# Parameter label
+				var param_label = Label.new()
+				param_label.text = param_info.name + ": "
+				param_container.add_child(param_label)
+
+				# Value buttons
+				for value in options:
+					var value_button = Button.new()
+					value_button.text = str(value) + "%"
+					value_button.toggle_mode = true
+					value_button.button_pressed = is_active and is_equal_approx(value, current_value)
+					value_button.disabled = not is_active
+					value_button.custom_minimum_size = Vector2(50, 30)
+					value_button.pressed.connect(_on_parameter_button_pressed.bind(law_id, param_name, value))
+					param_container.add_child(value_button)
+
+	return panel
 
 
 func _on_law_button_pressed(law_id: String, is_active: bool) -> void:

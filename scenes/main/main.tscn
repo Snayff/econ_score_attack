@@ -21,6 +21,10 @@ script = ExtResource("4_272bh")
 [node name="RTLDemesneStockpile" parent="UI/TopBar" index="0" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../Sim")
 
+[node name="RTLPeopleInfo" parent="UI/CentrePanel/ScrollContainer" index="0"]
+unique_name_in_owner = false
+visible = true
+
 [node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
 text = "Progress"
 

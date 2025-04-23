@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cmkfp7f7dii75"]
+[gd_scene load_steps=10 format=3 uid="uid://cmkfp7f7dii75"]
 
 [ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://scripts/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://scripts/ui/btn_sidebar_button.gd" id="1_4yfr8"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://scripts/ui/rtl_people_info.gd" id="3_b1beo"]
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="5_oxwcw"]
+[ext_resource type="Script" uid="uid://bpkg5efx4n6h6" path="res://scripts/ui/rtl_laws_info.gd" id="7_xxxxx"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
 device = -1
@@ -103,6 +104,7 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="RTLPeopleInfo" type="RichTextLabel" parent="CentrePanel/ScrollContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(580, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -110,6 +112,45 @@ bbcode_enabled = true
 text = "RTLPeopleInfo"
 fit_content = true
 script = ExtResource("3_b1beo")
+
+[node name="LawsInfo" type="Control" parent="CentrePanel/ScrollContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("7_xxxxx")
+
+[node name="MarginContainer" type="MarginContainer" parent="CentrePanel/ScrollContainer/LawsInfo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CentrePanel/ScrollContainer/LawsInfo/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CentrePanel/ScrollContainer/LawsInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Laws"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CentrePanel/ScrollContainer/LawsInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LawsContainer" type="VBoxContainer" parent="CentrePanel/ScrollContainer/LawsInfo/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
 
 [node name="HBoxTime" type="HBoxContainer" parent="."]
 layout_mode = 1
