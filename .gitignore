@@ -1,4 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-dev/
+dev/designs/
+dev/logs/
+dev/performance_results/
+dev/test_results/
