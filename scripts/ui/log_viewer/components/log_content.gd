@@ -8,6 +8,8 @@ const LogEntryScene := preload("res://scenes/ui/log_viewer/components/log_entry.
 #region SIGNALS
 
 signal entries_updated(entries: Array[DataLogEntry])
+signal entry_selected(entry: DataLogEntry)
+signal copy_requested(entry: DataLogEntry)
 
 #endregion
 
@@ -78,6 +80,10 @@ func _exit_tree() -> void:
 
 #region PUBLIC FUNCTIONS
 
+## Gets the currently filtered entries
+func get_filtered_entries() -> Array[DataLogEntry]:
+	return _filtered_entries
+
 ## Loads and displays the content of a log file
 func load_file(file_path: String) -> void:
 	# Clear existing content
@@ -118,6 +124,8 @@ func _init_virtual_scroll() -> void:
 	for i in POOL_SIZE:
 		var entry_node: Control = LogEntryScene.instantiate()
 		entry_node.hide()
+		entry_node.entry_selected.connect(_on_entry_selected)
+		entry_node.copy_requested.connect(_on_copy_requested)
 		_entry_pool.append(entry_node)
 		%ContentContainer.add_child(entry_node)
 
@@ -129,6 +137,8 @@ func _get_entry_node() -> Control:
 
 	# If no nodes available in pool, create a new one
 	var new_node: Control = LogEntryScene.instantiate()
+	new_node.entry_selected.connect(_on_entry_selected)
+	new_node.copy_requested.connect(_on_copy_requested)
 	_entry_pool.append(new_node)
 	%ContentContainer.add_child(new_node)
 	return new_node
@@ -314,6 +324,28 @@ func _entry_matches_filters(entry: DataLogEntry) -> bool:
 		if not (message_matches or source_matches):
 			return false
 
+	# Check source filter
+	if not _current_filter_state.source_filter.is_empty():
+		var source_filter: String = _current_filter_state.source_filter.to_lower()
+		if not entry.source.to_lower().contains(source_filter):
+			return false
+
+	# Check timestamp range
+	if not _current_filter_state.timestamp_from.is_empty():
+		if entry.timestamp < _current_filter_state.timestamp_from:
+			return false
+	if not _current_filter_state.timestamp_to.is_empty():
+		if entry.timestamp > _current_filter_state.timestamp_to:
+			return false
+
 	return true
+
+## Handles entry selection
+func _on_entry_selected(entry: DataLogEntry) -> void:
+	entry_selected.emit(entry)
+
+## Handles copy requests
+func _on_copy_requested(entry: DataLogEntry) -> void:
+	copy_requested.emit(entry)
 
 #endregion
