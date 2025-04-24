@@ -35,13 +35,13 @@ func _ready() -> void:
 #region PUBLIC FUNCTIONS
 
 var _entries: Array[DataLogEntry] = []
+var _filtered_entries: Array[DataLogEntry] = []
+var _current_filter_state: Dictionary = {}
 
 ## Loads and displays the content of a log file
 func load_file(file_path: String) -> void:
 	# Clear existing content
-	for child in %ContentContainer.get_children():
-		child.queue_free()
-	_entries.clear()
+	_clear_content()
 
 	# Read and parse file
 	var file := FileAccess.open(file_path, FileAccess.READ)
@@ -57,9 +57,15 @@ func load_file(file_path: String) -> void:
 
 		var entry := DataLogEntry.from_line(line)
 		_entries.append(entry)
-		_add_entry_node(entry)
 
+	# Apply current filters and display
+	_apply_filters()
 	entries_updated.emit(_entries)
+
+## Updates the filter state and refreshes the display
+func update_filters(filter_state: Dictionary) -> void:
+	_current_filter_state = filter_state
+	_apply_filters()
 
 #endregion
 
@@ -76,7 +82,8 @@ func _display_error(message: String) -> void:
 	entry.raw_text = message
 
 	_entries = [entry]
-	_add_entry_node(entry)
+	_filtered_entries = _entries.duplicate()
+	_display_entries(_filtered_entries)
 	entries_updated.emit(_entries)
 
 ## Adds a new entry node to the content container
@@ -84,5 +91,54 @@ func _add_entry_node(entry: DataLogEntry) -> void:
 	var entry_node: Node = LogEntryScene.instantiate()
 	%ContentContainer.add_child(entry_node)
 	entry_node.display_entry(entry)
+
+## Clears all content from the container
+func _clear_content() -> void:
+	for child in %ContentContainer.get_children():
+		child.queue_free()
+	_entries.clear()
+	_filtered_entries.clear()
+
+## Applies current filters and updates display
+func _apply_filters() -> void:
+	if _current_filter_state.is_empty():
+		_filtered_entries = _entries.duplicate()
+	else:
+		_filtered_entries.clear()
+		for entry in _entries:
+			if _entry_matches_filters(entry):
+				_filtered_entries.append(entry)
+
+	_display_entries(_filtered_entries)
+
+## Displays the given entries in the content container
+func _display_entries(entries: Array[DataLogEntry]) -> void:
+	# Clear existing display
+	for child in %ContentContainer.get_children():
+		child.queue_free()
+
+	# Add filtered entries
+	for entry in entries:
+		_add_entry_node(entry)
+
+## Checks if an entry matches the current filters
+func _entry_matches_filters(entry: DataLogEntry) -> bool:
+	if _current_filter_state.is_empty():
+		return true
+
+	# Check log level
+	if not entry.level in _current_filter_state.levels:
+		return false
+
+	# Check search text
+	if not _current_filter_state.search_text.is_empty():
+		var search_text: String = _current_filter_state.search_text.to_lower()
+		var message_matches := entry.message.to_lower().contains(search_text)
+		var source_matches := entry.source.to_lower().contains(search_text)
+
+		if not (message_matches or source_matches):
+			return false
+
+	return true
 
 #endregion

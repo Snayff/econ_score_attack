@@ -24,9 +24,11 @@ func _ready() -> void:
 	assert(%FileSelector != null, "FileSelector node not found")
 	assert(%LogContent != null, "LogContent node not found")
 	assert(%LogHeader != null, "LogHeader node not found")
+	assert(%LogFilters != null, "LogFilters node not found")
 
 	%FileSelector.file_selected.connect(_on_file_selected)
 	%LogContent.entries_updated.connect(_on_entries_updated)
+	%LogFilters.filters_changed.connect(_on_filters_changed)
 
 #endregion
 
@@ -50,5 +52,8 @@ func _on_file_selected(file_path: String) -> void:
 
 func _on_entries_updated(entries: Array[DataLogEntry]) -> void:
 	%LogHeader.update_statistics(entries)
+
+func _on_filters_changed(filter_state: Dictionary) -> void:
+	%LogContent.update_filters(filter_state)
 
 #endregion
