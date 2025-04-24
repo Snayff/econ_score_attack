@@ -15,7 +15,7 @@ signal entries_updated(entries: Array[DataLogEntry])
 #region CONSTANTS
 
 const BUFFER_SIZE := 5  # Number of extra entries to keep above and below visible area
-const ENTRY_HEIGHT := 40  # Estimated height of each entry in pixels
+const MIN_ENTRY_HEIGHT := 40  # Minimum height of each entry in pixels
 const POOL_SIZE := 50  # Maximum number of entry nodes to keep in memory
 const UPDATE_INTERVAL := 0.1  # Seconds between scroll position checks
 
@@ -31,13 +31,21 @@ var _current_filter_state: Dictionary = {}
 # Virtual scrolling variables
 var _entry_pool: Array[Node] = []
 var _visible_entries: Dictionary = {}  # Dictionary[int, Node]
+var _entry_heights: Array[float] = []  # Array of calculated entry heights
+var _cumulative_heights: Array[float] = []  # Array of cumulative heights for quick position lookup
 var _first_visible_index: int = 0
 var _last_visible_index: int = 0
 var _total_height: float = 0.0
 var _update_timer: Timer
+var _temp_entry: Control  # Used for height calculation
 
 func _ready() -> void:
 	assert(%ContentContainer != null, "ContentContainer node not found")
+
+	# Create temporary entry for height calculation
+	_temp_entry = LogEntryScene.instantiate()
+	add_child(_temp_entry)
+	_temp_entry.hide()
 
 	# Initialize virtual scrolling
 	_init_virtual_scroll()
@@ -56,6 +64,8 @@ func _exit_tree() -> void:
 	if _update_timer:
 		_update_timer.stop()
 		_update_timer.queue_free()
+	if _temp_entry:
+		_temp_entry.queue_free()
 
 #endregion
 
@@ -123,21 +133,40 @@ func _get_entry_node() -> Control:
 	%ContentContainer.add_child(new_node)
 	return new_node
 
+## Calculates the height needed for a log entry
+func _calculate_entry_height(entry: DataLogEntry) -> float:
+	_temp_entry.display_entry(entry)
+	await get_tree().process_frame  # Allow the entry to update its size
+	var height := maxf(_temp_entry.size.y, MIN_ENTRY_HEIGHT)
+	return height
+
 ## Updates visible entries based on scroll position
 func _update_visible_entries() -> void:
-	if _filtered_entries.is_empty():
+	if _filtered_entries.is_empty() or _cumulative_heights.is_empty():
 		return
 
 	var scroll_pos := get_v_scroll_bar().value
 	var visible_height := size.y
 
-	# Calculate visible range
-	var first_visible := int(scroll_pos / ENTRY_HEIGHT) - BUFFER_SIZE
-	var last_visible := int((scroll_pos + visible_height) / ENTRY_HEIGHT) + BUFFER_SIZE
+	# Find the first visible index using cumulative heights
+	var first_visible := 0
+	while first_visible < _cumulative_heights.size() and _cumulative_heights[first_visible] <= scroll_pos:
+		first_visible += 1
 
-	# Ensure we don't go out of bounds
-	first_visible = maxi(0, first_visible)
-	last_visible = mini(last_visible, _filtered_entries.size() - 1)
+	# Adjust if we went too far
+	first_visible = mini(first_visible, _cumulative_heights.size() - 1)
+
+	# Find the last visible index
+	var last_visible := first_visible
+	while last_visible < _cumulative_heights.size() and _cumulative_heights[last_visible] <= scroll_pos + visible_height:
+		last_visible += 1
+
+	# Adjust if we went too far
+	last_visible = mini(last_visible, _cumulative_heights.size() - 1)
+
+	# Add buffer while ensuring we stay within bounds
+	first_visible = maxi(0, first_visible - BUFFER_SIZE)
+	last_visible = mini(last_visible + BUFFER_SIZE, _filtered_entries.size() - 1)
 
 	# Hide entries that are no longer visible
 	for idx in _visible_entries.keys():
@@ -147,15 +176,29 @@ func _update_visible_entries() -> void:
 
 	# Show entries that should be visible
 	for idx in range(first_visible, last_visible + 1):
-		if not _visible_entries.has(idx):
+		if not _visible_entries.has(idx) and idx < _filtered_entries.size() and idx < _entry_heights.size() and idx < _cumulative_heights.size():
 			var node := _get_entry_node()
 			node.show()
-			node.custom_minimum_size.y = ENTRY_HEIGHT
+			node.custom_minimum_size.y = _entry_heights[idx]
 			node.set("layout_mode", 1)  # CONTAINER_LAYOUT_MODE_ANCHORS
-			node.set("anchor_top", float(idx * ENTRY_HEIGHT) / _total_height)
-			node.set("anchor_bottom", float((idx + 1) * ENTRY_HEIGHT) / _total_height)
+
+			# Calculate positions with bounds checking
+			var top_pos := 0.0
+			if idx > 0 and idx - 1 < _cumulative_heights.size():
+				top_pos = _cumulative_heights[idx - 1]
+
+			var bottom_pos := _cumulative_heights[idx]
+
+			if _total_height > 0:  # Prevent division by zero
+				node.set("anchor_top", top_pos / _total_height)
+				node.set("anchor_bottom", bottom_pos / _total_height)
+			else:
+				node.set("anchor_top", 0.0)
+				node.set("anchor_bottom", 1.0)
+
 			node.set("offset_top", 0)
-			node.set("offset_bottom", ENTRY_HEIGHT)
+			node.set("offset_bottom", _entry_heights[idx])
+
 			node.display_entry(_filtered_entries[idx])
 			_visible_entries[idx] = node
 
@@ -180,9 +223,13 @@ func _display_error(message: String) -> void:
 	_entries = [entry]
 	_filtered_entries = _entries.duplicate()
 
-	# Update total height and container size
-	_total_height = _filtered_entries.size() * ENTRY_HEIGHT
-	%ContentContainer.custom_minimum_size.y = _total_height
+	# Calculate heights
+	_entry_heights.clear()
+	_cumulative_heights.clear()
+	var height := await _calculate_entry_height(entry)
+	_entry_heights.append(height)
+	_cumulative_heights.append(height)
+	_total_height = height
 
 	# Reset visible entries
 	for visible_entry in _visible_entries.values():
@@ -201,6 +248,8 @@ func _clear_content() -> void:
 	_visible_entries.clear()
 	_entries.clear()
 	_filtered_entries.clear()
+	_entry_heights.clear()
+	_cumulative_heights.clear()
 	_total_height = 0.0
 	%ContentContainer.custom_minimum_size.y = 0
 
@@ -214,8 +263,29 @@ func _apply_filters() -> void:
 			if _entry_matches_filters(entry):
 				_filtered_entries.append(entry)
 
-	# Update total height and container size
-	_total_height = _filtered_entries.size() * ENTRY_HEIGHT
+	# Calculate heights for all filtered entries
+	_entry_heights.clear()
+	_cumulative_heights.clear()
+	_total_height = 0.0
+
+	# Process entries in batches to prevent freezing on large files
+	const BATCH_SIZE := 50
+	var current_batch := 0
+
+	while current_batch < _filtered_entries.size():
+		var batch_end := mini(current_batch + BATCH_SIZE, _filtered_entries.size())
+
+		for i in range(current_batch, batch_end):
+			if i < _filtered_entries.size():  # Extra safety check
+				var height := await _calculate_entry_height(_filtered_entries[i])
+				_entry_heights.append(height)
+				_total_height += height
+				_cumulative_heights.append(_total_height)
+
+		current_batch = batch_end
+		await get_tree().process_frame  # Allow other processing
+
+	# Update container size
 	%ContentContainer.custom_minimum_size.y = _total_height
 
 	# Reset visible entries
