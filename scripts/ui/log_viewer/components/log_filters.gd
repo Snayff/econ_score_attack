@@ -21,6 +21,8 @@ const SEARCH_DEBOUNCE_TIME := 0.3  # Seconds to wait before applying search filt
 
 #region ON READY
 
+var _search_timer: SceneTreeTimer
+
 func _ready() -> void:
 	assert(%chk_Debug != null, "Debug checkbox not found")
 	assert(%chk_Info != null, "Info checkbox not found")
@@ -72,8 +74,6 @@ func apply_filters(entries: Array[DataLogEntry]) -> Array[DataLogEntry]:
 
 #region PRIVATE FUNCTIONS
 
-var _search_timer: SceneTreeTimer
-
 ## Returns array of active log levels
 func _get_active_levels() -> Array[DataLogEntry.Level]:
 	var levels: Array[DataLogEntry.Level] = []
@@ -116,10 +116,10 @@ func _on_filter_changed(_toggled: bool) -> void:
 
 ## Called when search text changes
 func _on_search_changed(_new_text: String) -> void:
-	# Cancel previous timer if it exists
+	# If there's an existing timer and it hasn't triggered yet, disconnect it
 	if _search_timer and not _search_timer.is_queued_for_deletion():
-		_search_timer.timeout.disconnect(_emit_current_filter_state)
-		_search_timer.queue_free()
+		if _search_timer.timeout.is_connected(_emit_current_filter_state):
+			_search_timer.timeout.disconnect(_emit_current_filter_state)
 
 	# Start new timer
 	_search_timer = get_tree().create_timer(SEARCH_DEBOUNCE_TIME)
