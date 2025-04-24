@@ -129,8 +129,157 @@ The economic system forms the core of gameplay, implementing a closed-loop econo
    - Business failures and unemployment
    - Loss of essential services
 
+## Generated Ideas
+
+### Banking System Mechanics
+1. **Bank Creation and Management**
+   - Players can establish multiple banks with different specializations
+   - Banks require physical buildings and staff
+   - Each bank can set its own interest rates and lending policies
+   - Banks compete for population deposits
+   - Bank reputation system affects deposit attraction
+
+2. **Lending Mechanics**
+   - Different loan types (business, personal, construction)
+   - Collateral requirements based on loan size
+   - Credit rating system for population and businesses
+   - Loan default mechanics with property seizure
+   - Debt restructuring options
+
+3. **Market Manipulation Examples**
+   - Create artificial shortages by buying up essential goods
+   - Establish monopolies in key industries
+   - Use insider knowledge from government position
+   - Manipulate currency value through policy
+   - Control resource access points
+
+4. **Black Market Dynamics**
+   - Emerges automatically when price controls are too restrictive
+   - Operates in physical locations that must be discovered
+   - Can be raided by authorities (player choice)
+   - Provides alternative revenue streams
+   - Increases unrest if too prevalent
+
+5. **Currency Management Mini-game**
+   - Visual interface for money supply control
+   - Real-time inflation/deflation effects
+   - Currency stability indicators
+   - Foreign exchange mechanics (within demesne regions)
+   - Emergency currency controls
+
+6. **Trade Route Strategy**
+   - Physical route planning on the map
+   - Transport cost optimization
+   - Route security considerations
+   - Weather and seasonal effects
+   - Infrastructure requirements
+
+## UI/UX Ideas
+
+### Interface Layout
+```
++------------------------------------------+
+|   Market Overview    |    Trade Panel    |
+| [Price Trends ↑↓→]  | [Quick Trade]     |
+| [Supply/Demand]     | [Recent Orders]   |
+| [Market Health]     |                   |
++--------------------+-------------------+
+|   Resource List    |    Details       |
+| * Food      [###]  | Selected Item:   |
+| * Wood      [###]  | [Price Chart]    |
+| * Stone     [###]  | [Trade Options]  |
+| * Iron      [###]  | [Market Status]  |
++------------------------------------------+
+```
+
+### 1. Market Overview Dashboard
+- **Core Display (Always Available)**
+  - Simple price trend arrows (↑↓→)
+  - Basic supply/demand bars (0-100%)
+  - Color-coded market health indicator (Red/Yellow/Green)
+  - Three most important resources highlighted
+  - Emergency alerts for critical shortages
+
+- **Advanced Features (Technology Unlocks)**
+  - Historical trend graphs
+  - Market prediction bands
+  - Supply chain visualisation
+  - Risk assessment indicators
+  - AI-driven market analysis
+
+### 2. Banking Interface
+- **Basic Banking (Initial Access)**
+  - Personal wealth indicator (progress bar)
+  - Simple loan status cards
+  - Basic interest rate display
+  - Bank stability rating (★★★☆☆)
+  - Quick action radial menu
+
+- **Advanced Banking (Law/Tech Dependent)**
+  - Multi-bank comparison tools
+  - Loan portfolio management
+  - Risk assessment heat maps
+  - Automated banking alerts
+  - Market manipulation tools
+
+### 3. Resource Trading
+- **Quick Trade Interface**
+  - Radial menu for resource selection
+  - Slider bar for quantity
+  - Single-button confirmation
+  - Immediate price feedback
+  - Simple profit/loss indicator
+
+- **Advanced Trading (Unlockable)**
+  - Order scheduling system
+  - Price threshold automation
+  - Market depth visualization
+  - Trade route optimization
+  - Strategic stockpile management
+
+### 4. Control Scheme
+- **Resource Management**
+  - D-pad/Arrows: Navigate resources
+  - A/Left-click: Select resource
+  - Triggers/Scroll: Adjust quantities
+  - X/Middle-click: Quick buy/sell
+  - Y/Shift-click: Resource details
+
+- **Market Analysis**
+  - Shoulder buttons: Switch market views
+  - Start: Economic overview
+  - Select: Context help
+  - B/Right-click: Back/Cancel
+  - Stick/Mouse: Pan market view
+
+### 5. Emergency Controls
+- **Crisis Management**
+  - One-button price controls
+  - Quick market interventions
+  - Emergency loan access
+  - Instant trade restrictions
+  - Crisis response options
+
+### 6. Information Access
+- **Basic Information**
+  - Three key economic indicators
+  - Simple status cards
+  - Basic trend information
+  - Essential market data
+  - Quick help system
+
+- **Advanced Information (Progressive)**
+  - Detailed economic reports
+  - Custom data dashboards
+  - Predictive modeling
+  - Cross-system impact analysis
+  - Economic advisor AI
+
 ## Implementation Notes
-- All economic calculations must maintain system closure
-- Regular economic state validation checks
-- Performance optimization for large-scale simulations
-- Clear feedback mechanisms for player decisions 
+- Follow color scheme (Gold/Yellow for economic system)
+- Maintain consistent control mapping
+- Ensure all features work with all input methods
+- Progressive complexity through unlocks
+- Clear visual feedback for all actions
+- Regular validation of information density
+- Accessibility options for all features 
