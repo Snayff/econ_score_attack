@@ -22,6 +22,11 @@ alwaysApply: true
   - If you think there might not be a correct answer, you say so.
   - If you do not know the answer, say so, instead of guessing.
   - If you think what you are being asked to do contradicts best practice or the project rules, say so before taking action and explain why you think that is the case. 
+  - Never try to edit the entire scene file at once. This is error-prone and can lead to lost nodes.
+  - Make minimal, targeted changes instead of wholesale replacements.
+  - When fixing node names, verify the naming convention by looking at the existing code and structure.
+  - Always check the script's expectations before making scene changes.
+  - When adding new functionality, update both the scene AND the script.
 
 
   Coding Architecture & Approach
@@ -41,6 +46,8 @@ alwaysApply: true
   - Configs and other static referenced data are all held externally in .json files. 
   - Use data classes for complex data structures. 
   - 1 class definition per file. 
+  - when data needs to be passed around after being held externally, use data classes. 
+  - UI to be as decoupled as possible from game logic. use signals for communication, not direct links to nodes, wherever possible. 
 
 
   GDScript 2.0/Godot
@@ -66,7 +73,6 @@ alwaysApply: true
   - Any abstract base class should have their name prefixed with "ABC".
   - UI components must use a 3-letter type prefix (e.g., lbl_ for Label, rtl_ for RichTextLabel) in their name.
   - For function arguments, if we need to differentiate between an argument name and an existing variable name, use a trailing underscore "_". 
-  
 
 
   Documentation
