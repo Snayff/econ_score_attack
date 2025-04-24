@@ -19,10 +19,10 @@ const DataLogEntry := preload("res://scripts/ui/log_viewer/components/data_log_e
 #region ON READY
 
 func _ready() -> void:
-	assert(%lbl_Timestamp != null, "Timestamp label not found")
-	assert(%lbl_Level != null, "Level label not found")
-	assert(%lbl_Source != null, "Source label not found")
-	assert(%lbl_Message != null, "Message label not found")
+	assert(%Timestamp != null, "Timestamp label not found")
+	assert(%Level != null, "Level label not found")
+	assert(%Source != null, "Source label not found")
+	assert(%Message != null, "Message label not found")
 
 #endregion
 
@@ -37,14 +37,14 @@ func _ready() -> void:
 
 ## Updates the entry display with data from a LogEntry
 func display_entry(entry: DataLogEntry) -> void:
-	%lbl_Timestamp.text = entry.timestamp
-	%lbl_Level.text = DataLogEntry.Level.keys()[entry.level]
-	%lbl_Source.text = entry.source
-	%lbl_Message.text = entry.message
+	%Timestamp.text = entry.timestamp
+	%Level.text = DataLogEntry.Level.keys()[entry.level]
+	%Source.text = entry.source
+	%Message.text = entry.message
 	
 	# Set colours based on log level
-	%lbl_Level.modulate = entry.get_colour()
-	%lbl_Message.modulate = entry.get_colour()
+	%Level.modulate = entry.get_colour()
+	%Message.modulate = entry.get_colour()
 
 #endregion
 

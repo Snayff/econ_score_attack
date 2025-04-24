@@ -13,10 +13,10 @@ enum Level {
 }
 
 const LEVEL_COLOURS := {
-	Level.DEBUG: Color.DARK_GRAY,
-	Level.INFO: Color.WHITE,
-	Level.WARNING: Color.YELLOW,
-	Level.ERROR: Color.RED
+	Level.DEBUG: Color(0.5, 0.5, 0.5),
+	Level.INFO: Color(1, 1, 1),
+	Level.WARNING: Color(1, 0.8, 0),
+	Level.ERROR: Color(1, 0, 0)
 }
 
 #endregion
@@ -53,22 +53,20 @@ static func from_line(line: String) -> DataLogEntry:
 	var entry := DataLogEntry.new()
 	entry.raw_text = line
 	
-	# Expected format: [TIMESTAMP] [LEVEL] [SOURCE] MESSAGE
-	var regex := RegEx.new()
-	regex.compile("\\[(.*?)\\]\\s*\\[(.*?)\\]\\s*\\[(.*?)\\]\\s*(.*)")
+	# Split on pipe delimiter with whitespace trimming
+	var parts := Array(line.split(" | ")).map(func(p): return p.strip_edges())
 	
-	var result := regex.search(line)
-	if result:
-		entry.timestamp = result.get_string(1).strip_edges()
-		entry.level = _parse_level(result.get_string(2).strip_edges())
-		entry.source = result.get_string(3).strip_edges()
-		entry.message = result.get_string(4).strip_edges()
-	else:
-		# If parsing fails, treat the whole line as a message
-		entry.timestamp = ""
-		entry.level = Level.INFO
-		entry.source = "Unknown"
-		entry.message = line
+	if parts.size() >= 3:
+		entry.timestamp = parts[0]
+		entry.level = _parse_level(parts[1])
+		
+		# Handle source if present (parts[2] if 4 parts, otherwise empty)
+		if parts.size() >= 4:
+			entry.source = parts[2]
+			entry.message = parts[3]
+		else:
+			entry.source = ""
+			entry.message = parts[2]
 	
 	return entry
 
