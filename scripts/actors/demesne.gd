@@ -8,6 +8,7 @@ extends Node
 const Law = preload("res://scripts/laws/law.gd")
 const LawRegistry = preload("res://scripts/laws/law_registry.gd")
 const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
+const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
@@ -15,6 +16,7 @@ signal person_added(person: Person)
 signal person_removed(person: Person)
 signal law_enacted(law: Law)
 signal law_repealed(law_id: String)
+signal parcel_updated(x: int, y: int, parcel: DataLandParcel)
 #endregion
 
 
@@ -33,6 +35,15 @@ var laws: Dictionary = {}
 
 ## Registry of available law types
 var law_registry: LawRegistry
+
+## Grid of land parcels
+var land_grid: Array[Array] = []
+
+## Width of the land grid
+var grid_width: int = 0
+
+## Height of the land grid
+var grid_height: int = 0
 #endregion
 
 
@@ -45,6 +56,7 @@ func _init(demesne_name_: String) -> void:
 	demesne_name = demesne_name_
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
+	_initialise_land_grid()
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
@@ -65,6 +77,78 @@ func _initialise_stockpile() -> void:
 		"wood": 0,
 		"bureaucracy": 0
 	}
+
+## Initialises the land grid with default size and terrain
+func _initialise_land_grid() -> void:
+	var land_config = Library.get_config("land")
+	if not land_config:
+		Logger.error("Failed to load land configuration", "Demesne")
+		return
+
+	var default_size = land_config.get("grid", {}).get("default_size", {"width": 10, "height": 10})
+	grid_width = default_size.width
+	grid_height = default_size.height
+
+	Logger.log_event("land_grid_initialised", {
+		"width": grid_width,
+		"height": grid_height,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
+	# Create empty grid
+	land_grid.clear()
+	for x in range(grid_width):
+		var column: Array[DataLandParcel] = []
+		for y in range(grid_height):
+			var terrain_type = "plains"  # Default terrain type
+			var parcel = DataLandParcel.new(x, y, terrain_type)
+			column.append(parcel)
+		land_grid.append(column)
+
+## Gets a land parcel at the specified coordinates
+## @param x: X coordinate in the grid
+## @param y: Y coordinate in the grid
+## @return: The land parcel at the coordinates or null if invalid
+func get_parcel(x: int, y: int) -> DataLandParcel:
+	if not _is_valid_coordinates(x, y):
+		Logger.error("Invalid coordinates (%d, %d)" % [x, y], "Demesne")
+		return null
+	return land_grid[x][y]
+
+## Sets a land parcel at the specified coordinates
+## @param x: X coordinate in the grid
+## @param y: Y coordinate in the grid
+## @param parcel: The land parcel to set
+## @return: bool indicating if the operation was successful
+func set_parcel(x: int, y: int, parcel: DataLandParcel) -> bool:
+	if not _is_valid_coordinates(x, y):
+		Logger.error("Invalid coordinates (%d, %d)" % [x, y], "Demesne")
+		return false
+	if parcel.x != x or parcel.y != y:
+		Logger.error("Parcel coordinates (%d, %d) don't match target position (%d, %d)" % [parcel.x, parcel.y, x, y], "Demesne")
+		return false
+	
+	land_grid[x][y] = parcel
+	emit_signal("parcel_updated", x, y, parcel)
+	Logger.log_event("parcel_updated", {
+		"x": x,
+		"y": y,
+		"terrain_type": parcel.terrain_type,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+	return true
+
+## Checks if the coordinates are within the grid bounds
+## @param x: X coordinate to check
+## @param y: Y coordinate to check
+## @return: bool indicating if the coordinates are valid
+func _is_valid_coordinates(x: int, y: int) -> bool:
+	return x >= 0 and x < grid_width and y >= 0 and y < grid_height
+
+## Gets the dimensions of the land grid
+## @return: Vector2i containing the width and height of the grid
+func get_grid_dimensions() -> Vector2i:
+	return Vector2i(grid_width, grid_height)
 
 ## Processes production for all people in the demesne
 func process_production() -> void:

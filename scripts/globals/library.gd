@@ -16,6 +16,7 @@ func _ready() -> void:
 	_load_config("goods")
 	_load_config("consumption_rules")
 	_load_config("laws")
+	_load_config("land")
 #endregion
 
 
@@ -36,7 +37,8 @@ const _CONFIG_FILES: Dictionary = {
 	"demesne": "demesne.json",
 	"goods": "goods.json",
 	"consumption_rules": "rules/consumption_rules.json",
-	"laws": "rules/laws.json"
+	"laws": "rules/laws.json",
+	"land": "land_config.json"
 }
 
 ## Default values by config type
@@ -117,6 +119,66 @@ const _DEFAULT_CONFIGS: Dictionary = {
 				"consumption_failure_cost": 1
 			}
 		]
+	},
+	"land": {
+		"terrain_types": {
+			"plains": {
+				"base_fertility": 1.0,
+				"movement_cost": 1.0,
+				"resource_modifiers": {
+					"grain": 1.0,
+					"wood": 0.5
+				}
+			},
+			"forest": {
+				"base_fertility": 0.8,
+				"movement_cost": 1.5,
+				"resource_modifiers": {
+					"grain": 0.5,
+					"wood": 2.0
+				}
+			},
+			"mountains": {
+				"base_fertility": 0.4,
+				"movement_cost": 2.0,
+				"resource_modifiers": {
+					"grain": 0.2,
+					"wood": 0.3
+				}
+			}
+		},
+		"improvements": {
+			"road": {
+				"movement_cost_multiplier": 0.75,
+				"max_level": 3,
+				"cost": {
+					"wood": 10,
+					"money": 50
+				}
+			},
+			"irrigation": {
+				"fertility_multiplier": 1.25,
+				"max_level": 2,
+				"cost": {
+					"wood": 5,
+					"money": 30
+				}
+			}
+		},
+		"grid": {
+			"default_size": {
+				"width": 10,
+				"height": 10
+			},
+			"min_size": {
+				"width": 5,
+				"height": 5
+			},
+			"max_size": {
+				"width": 50,
+				"height": 50
+			}
+		}
 	}
 }
 #endregion
