@@ -1,0 +1,61 @@
+{
+    "seasons": {
+        "spring": {
+            "resource_modifier": 1.2,
+            "pollution_decay_modifier": 1.1,
+            "disaster_chance": 0.1
+        },
+        "summer": {
+            "resource_modifier": 1.0,
+            "pollution_decay_modifier": 1.0,
+            "disaster_chance": 0.2
+        },
+        "autumn": {
+            "resource_modifier": 0.8,
+            "pollution_decay_modifier": 0.9,
+            "disaster_chance": 0.15
+        },
+        "winter": {
+            "resource_modifier": 0.5,
+            "pollution_decay_modifier": 0.7,
+            "disaster_chance": 0.05
+        }
+    },
+    "disasters": {
+        "flood": {
+            "radius": 3,
+            "duration": 30.0,
+            "resource_modifier": 0.5,
+            "pollution_increase": 0.2,
+            "spread_chance": 0.3
+        },
+        "drought": {
+            "radius": 5,
+            "duration": 60.0,
+            "resource_modifier": 0.4,
+            "pollution_increase": 0.0,
+            "spread_chance": 0.1
+        },
+        "fire": {
+            "radius": 2,
+            "duration": 15.0,
+            "resource_modifier": 0.2,
+            "pollution_increase": 0.4,
+            "spread_chance": 0.5
+        },
+        "storm": {
+            "radius": 4,
+            "duration": 10.0,
+            "resource_modifier": 0.7,
+            "pollution_increase": 0.1,
+            "spread_chance": 0.2
+        }
+    },
+    "pollution": {
+        "spread_radius": 1,
+        "base_decay_rate": 0.05,
+        "min_level": 0.01,
+        "spread_rate": 0.2,
+        "max_level": 1.0
+    }
+} 
