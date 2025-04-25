@@ -10,6 +10,7 @@ const LawRegistry = preload("res://scripts/laws/law_registry.gd")
 const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
 const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
 const ResourceGenerator = preload("res://scripts/actors/actor_components/resource_generator.gd")
+const PathfindingSystem = preload("res://scripts/core/pathfinding_system.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
@@ -18,6 +19,8 @@ signal person_removed(person: Person)
 signal law_enacted(law: Law)
 signal law_repealed(law_id: String)
 signal parcel_updated(x: int, y: int, parcel: DataLandParcel)
+signal path_found(start: Vector2i, end: Vector2i, path: Array[Vector2i])
+signal path_failed(start: Vector2i, end: Vector2i, reason: String)
 #endregion
 
 
@@ -48,6 +51,9 @@ var grid_height: int = 0
 
 ## Resource generator component
 var _resource_generator: ResourceGenerator
+
+## Pathfinding system component
+var _pathfinding: PathfindingSystem
 #endregion
 
 
@@ -62,6 +68,7 @@ func _init(demesne_name_: String) -> void:
 	_initialise_stockpile()
 	_initialise_land_grid()
 	_setup_resource_generator()
+	_setup_pathfinding()
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
@@ -123,6 +130,44 @@ func _setup_resource_generator() -> void:
 	for x in range(grid_width):
 		for y in range(grid_height):
 			_resource_generator.initialise_resources(land_grid[x][y])
+
+## Sets up the pathfinding system component
+func _setup_pathfinding() -> void:
+	_pathfinding = PathfindingSystem.new()
+	add_child(_pathfinding)
+	_pathfinding.initialize(land_grid)
+	
+	# Connect signals
+	_pathfinding.path_found.connect(_on_path_found)
+	_pathfinding.path_failed.connect(_on_path_failed)
+
+## Finds a path between two points in the demesne
+## @param start: Starting coordinates
+## @param end: Target coordinates
+## @return: Array of coordinates representing the path, or empty array if no path found
+func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
+	return _pathfinding.find_path(start, end)
+
+## Gets the movement cost between two adjacent tiles
+## @param from: Starting coordinates
+## @param to: Target coordinates
+## @return: Movement cost between the tiles
+func get_movement_cost(from: Vector2i, to: Vector2i) -> float:
+	return _pathfinding.get_movement_cost(from, to)
+
+## Handles path found signal from pathfinding system
+## @param start: Starting coordinates
+## @param end: Target coordinates
+## @param path: Found path
+func _on_path_found(start: Vector2i, end: Vector2i, path: Array[Vector2i]) -> void:
+	path_found.emit(start, end, path)
+
+## Handles path failed signal from pathfinding system
+## @param start: Starting coordinates
+## @param end: Target coordinates
+## @param reason: Reason for failure
+func _on_path_failed(start: Vector2i, end: Vector2i, reason: String) -> void:
+	path_failed.emit(start, end, reason)
 
 ## Gets a land parcel at the specified coordinates
 ## @param x: X coordinate in the grid

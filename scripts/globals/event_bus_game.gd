@@ -46,4 +46,20 @@ signal pollution_updated(coords: Vector2i, new_level: float)
 @warning_ignore("unused_signal")
 signal effect_applied(effect_id: String, coords: Vector2i, duration: float)
 
+## Emitted when a path is found between two points
+@warning_ignore("unused_signal")
+signal path_found(demesne_id: String, start: Vector2i, end: Vector2i, path: Array[Vector2i])
+
+## Emitted when path finding fails
+@warning_ignore("unused_signal")
+signal path_failed(demesne_id: String, start: Vector2i, end: Vector2i, reason: String)
+
+## Emitted when a road improvement is added or upgraded
+@warning_ignore("unused_signal")
+signal road_improved(demesne_id: String, x: int, y: int, level: int)
+
+## Emitted when movement costs are updated due to improvements
+@warning_ignore("unused_signal")
+signal movement_costs_updated(demesne_id: String, affected_coordinates: Array[Vector2i])
+
 #endregion 

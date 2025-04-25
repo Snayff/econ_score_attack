@@ -279,4 +279,93 @@ func test_resource_generation_rates() -> void:
 	assert_true(
 		grain_increase > wood_increase,
 		"Plains should generate grain faster than wood"
+	)
+
+func test_pathfinding_integration() -> void:
+	var start := Vector2i(0, 0)
+	var end := Vector2i(1, 1)
+	var path := _demesne.find_path(start, end)
+	
+	assert_true(
+		path.size() > 0,
+		"Should find a path between valid coordinates"
+	)
+	assert_eq(
+		path[0],
+		start,
+		"Path should start at start position"
+	)
+	assert_eq(
+		path[-1],
+		end,
+		"Path should end at end position"
+	)
+
+func test_movement_cost_calculation() -> void:
+	var start := Vector2i(0, 0)
+	var end := Vector2i(1, 0)
+	var cost := _demesne.get_movement_cost(start, end)
+	
+	var land_config := Library.get_config("land")
+	var expected_cost: float = land_config.terrain_types["plains"].movement_cost
+	
+	assert_eq(
+		cost,
+		expected_cost,
+		"Movement cost should match terrain cost for plains"
+	)
+
+func test_pathfinding_with_road() -> void:
+	var start := Vector2i(0, 0)
+	var end := Vector2i(1, 0)
+	
+	# Add road improvement
+	var parcel1: DataLandParcel = _demesne.get_parcel(0, 0)
+	var parcel2: DataLandParcel = _demesne.get_parcel(1, 0)
+	parcel1.improvements["road"] = 1
+	parcel2.improvements["road"] = 1
+	
+	var cost := _demesne.get_movement_cost(start, end)
+	var land_config := Library.get_config("land")
+	var expected_cost: float = land_config.terrain_types["plains"].movement_cost * \
+							  land_config.improvements.road.movement_cost_multiplier * \
+							  land_config.improvements.road.movement_cost_multiplier
+	
+	assert_eq(
+		cost,
+		expected_cost,
+		"Movement cost should be reduced by road improvements"
+	)
+
+func test_pathfinding_signals() -> void:
+	var path_found_emitted := false
+	var path_failed_emitted := false
+	
+	# Connect to signals
+	_demesne.path_found.connect(
+		func(start: Vector2i, end: Vector2i, path: Array[Vector2i]) -> void:
+			path_found_emitted = true
+	)
+	_demesne.path_failed.connect(
+		func(start: Vector2i, end: Vector2i, reason: String) -> void:
+			path_failed_emitted = true
+	)
+	
+	# Test valid path
+	var start := Vector2i(0, 0)
+	var end := Vector2i(1, 1)
+	_demesne.find_path(start, end)
+	
+	assert_true(
+		path_found_emitted,
+		"Should emit path_found signal for valid path"
+	)
+	
+	# Test invalid path
+	start = Vector2i(-1, -1)
+	_demesne.find_path(start, end)
+	
+	assert_true(
+		path_failed_emitted,
+		"Should emit path_failed signal for invalid path"
 	) 
