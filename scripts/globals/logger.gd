@@ -381,28 +381,43 @@ func _cleanup_old_logs() -> void:
 		return
 	
 	var files: Array = []
-	dir.list_dir_begin()
-	var file_name: String = dir.get_next()
 	
-	while file_name != "":
+	# Use proper error handling for directory listing
+	var list_result = dir.list_dir_begin()
+	if list_result != OK:
+		error("Failed to begin listing directory: " + log_directory)
+		return
+		
+	while true:
+		var file_name: String = dir.get_next()
+		if file_name == "":
+			break
+			
 		if not dir.current_is_dir() and file_name.ends_with(".log"):
+			var full_path = log_directory.path_join(file_name)
+			# Convert to absolute path for removal
+			var absolute_path = ProjectSettings.globalize_path(full_path)
 			files.append({
-				"path": log_directory.path_join(file_name),
-				"name": file_name
+				"path": absolute_path,
+				"name": file_name,
+				"modified": FileAccess.get_modified_time(full_path)
 			})
-		file_name = dir.get_next()
 	
 	dir.list_dir_end()
 	
 	if files.size() > max_log_files:
-		# Sort by name (which will be by date due to ISO format)
-		files.sort_custom(func(a, b): return a["name"] < b["name"])
+		# Sort by modification time instead of name
+		files.sort_custom(func(a, b): return a["modified"] < b["modified"])
 		
 		# Delete oldest files until we're at max_log_files
 		var files_to_delete: int = files.size() - max_log_files
 		for i in range(files_to_delete):
 			var file_to_delete: String = files[i]["path"]
-			dir.remove(file_to_delete)
+			var err = DirAccess.remove_absolute(file_to_delete)
+			if err != OK:
+				error("Failed to delete old log file: " + file_to_delete)
+			else:
+				debug("Deleted old log file: " + file_to_delete, "Logger")
 
 ## Close the log file
 func _close_log_file() -> void:
