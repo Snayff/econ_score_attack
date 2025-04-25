@@ -1,7 +1,7 @@
 ## Component for managing log filtering options.
 extends PanelContainer
 
-const DataLogEntry := preload("res://scripts/ui/log_viewer/components/data_log_entry.gd")
+const DataLogEntry := preload("res://dev_tools/logger/ui/components/data_log_entry.gd")
 
 
 #region SIGNALS
@@ -184,4 +184,4 @@ func _debounce_filter_change(timer: SceneTreeTimer) -> void:
 	timer = get_tree().create_timer(SEARCH_DEBOUNCE_TIME)
 	timer.timeout.connect(_emit_current_filter_state)
 
-#endregion
+#endregion 

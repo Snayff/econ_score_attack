@@ -1,0 +1,17 @@
+{
+  "log_level": "DEBUG",
+  "output": {
+    "console": true,
+    "file": true,
+    "file_path": "dev/logs",
+    "max_log_files": 7
+  },
+  "formatting": {
+    "show_timestamps": true,
+    "show_levels": true,
+    "show_source": true
+  },
+  "signals": {
+    "emit_signals": true
+  }
+} 

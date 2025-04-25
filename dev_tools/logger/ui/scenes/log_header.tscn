@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ceucr0l84tu51"]
 
-[ext_resource type="Script" path="res://scripts/ui/log_viewer/components/log_header.gd" id="1_xxxxx"]
+[ext_resource type="Script" path="res://dev_tools/logger/ui/components/log_header.gd" id="1_script"]
 
 [node name="LogHeader" type="PanelContainer"]
 anchors_preset = 15
@@ -8,7 +8,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_xxxxx")
+script = ExtResource("1_script")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

@@ -1,7 +1,7 @@
 ## A component that displays statistics about the current log entries.
 extends PanelContainer
 
-const DataLogEntry := preload("res://scripts/ui/log_viewer/components/data_log_entry.gd")
+const DataLogEntry := preload("res://dev_tools/logger/ui/components/data_log_entry.gd")
 
 
 #region SIGNALS

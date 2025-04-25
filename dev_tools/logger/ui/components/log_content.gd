@@ -1,8 +1,8 @@
 ## Component for displaying log file content with virtual scrolling.
 extends ScrollContainer
 
-const DataLogEntry := preload("res://scripts/ui/log_viewer/components/data_log_entry.gd")
-const LogEntryScene := preload("res://scenes/ui/log_viewer/components/log_entry.tscn")
+const DataLogEntry := preload("res://dev_tools/logger/ui/components/data_log_entry.gd")
+const LogEntryScene := preload("res://dev_tools/logger/ui/scenes/log_entry.tscn")
 
 
 #region SIGNALS
@@ -348,4 +348,4 @@ func _on_entry_selected(entry: DataLogEntry) -> void:
 func _on_copy_requested(entry: DataLogEntry) -> void:
 	copy_requested.emit(entry)
 
-#endregion
+#endregion 

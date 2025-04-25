@@ -2,7 +2,7 @@
 ## This is the main control node that coordinates all log viewer components.
 extends Control
 
-const DataLogEntry := preload("res://scripts/ui/log_viewer/components/data_log_entry.gd")
+const DataLogEntry := preload("res://dev_tools/logger/ui/components/data_log_entry.gd")
 
 
 #region SIGNALS
@@ -114,4 +114,4 @@ func _on_copy_requested(entry: DataLogEntry) -> void:
 func _on_auto_refresh_timeout() -> void:
 	%FileSelector.refresh_file_list()
 
-#endregion
+#endregion 

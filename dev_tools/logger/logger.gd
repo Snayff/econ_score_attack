@@ -94,7 +94,7 @@ const LEVEL_COLORS: Dictionary = {
 }
 
 ## Configuration file path
-const CONFIG_PATH: String = "res://config/logger_config.json"
+const CONFIG_PATH: String = "res://dev_tools/logger/config/logger_config.json"
 #endregion
 
 
