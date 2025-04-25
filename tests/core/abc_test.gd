@@ -66,6 +66,13 @@ func assert_true(condition: bool, message: String = "") -> void:
         _pass()
 
 
+func assert_gt(actual: Variant, expected: Variant, message: String = "") -> void:
+    if not (actual > expected):
+        _fail("Expected %s to be greater than %s. %s" % [str(actual), str(expected), message])
+    else:
+        _pass()
+
+
 #endregion
 
 

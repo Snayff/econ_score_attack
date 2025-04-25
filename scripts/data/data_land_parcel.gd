@@ -11,15 +11,24 @@ extends RefCounted
 
 
 #region CONSTANTS
+## Default resource generation rate multiplier
+const DEFAULT_GENERATION_RATE: float = 1.0
+
+## Default resource amount when discovered
+const DEFAULT_RESOURCE_AMOUNT: float = 100.0
+#endregion
 
 
 #region SIGNALS
+#endregion
 
 
 #region ON READY
+#endregion
 
 
 #region EXPORTS
+#endregion
 
 
 #region PUBLIC FUNCTIONS
@@ -51,8 +60,61 @@ func get_properties() -> Dictionary:
         "improvements": improvements.duplicate(),
         "fertility": fertility,
         "pollution_level": pollution_level,
-        "is_surveyed": is_surveyed
+        "is_surveyed": is_surveyed,
+        "resources": resources.duplicate(),
+        "resource_generation_rate": resource_generation_rate
     }
+
+
+## Adds a resource to the parcel
+## @param resource_id: The identifier of the resource
+## @param amount: The amount of resource to add
+## @param discovered: Whether the resource is discovered
+func add_resource(resource_id: String, amount: float = DEFAULT_RESOURCE_AMOUNT, discovered: bool = false) -> void:
+    resources[resource_id] = {
+        "amount": amount,
+        "discovered": discovered
+    }
+
+
+## Gets the amount of a specific resource
+## @param resource_id: The identifier of the resource
+## @return: The amount of the resource, or 0 if not present
+func get_resource_amount(resource_id: String) -> float:
+    if not resources.has(resource_id):
+        return 0.0
+    return resources[resource_id].amount
+
+
+## Checks if a specific resource is discovered
+## @param resource_id: The identifier of the resource
+## @return: Whether the resource is discovered
+func is_resource_discovered(resource_id: String) -> bool:
+    if not resources.has(resource_id):
+        return false
+    return resources[resource_id].discovered
+
+
+## Discovers a resource on the parcel
+## @param resource_id: The identifier of the resource to discover
+## @return: Whether the resource was discovered (false if already discovered or not present)
+func discover_resource(resource_id: String) -> bool:
+    if not resources.has(resource_id) or resources[resource_id].discovered:
+        return false
+    resources[resource_id].discovered = true
+    return true
+
+
+## Updates resource amounts based on generation rate
+## @param delta: Time elapsed since last update
+func update_resources(delta: float) -> void:
+    for resource_id in resources:
+        if not resources[resource_id].discovered:
+            continue
+        var base_rate = resource_generation_rate * DEFAULT_GENERATION_RATE
+        var terrain_modifiers = Library.get_config("land").terrain_types[terrain_type].resource_modifiers
+        var modifier = terrain_modifiers.get(resource_id, 1.0)
+        resources[resource_id].amount += base_rate * modifier * delta
 #endregion
 
 
@@ -64,6 +126,8 @@ func _initialise_properties() -> void:
     fertility = 1.0
     pollution_level = 0.0
     is_surveyed = false
+    resources = {}
+    resource_generation_rate = DEFAULT_GENERATION_RATE
 #endregion
 
 
@@ -123,4 +187,18 @@ var is_surveyed: bool:
         return is_surveyed
     set(value):
         is_surveyed = value
+
+## Dictionary of resources and their properties
+var resources: Dictionary:
+    get:
+        return resources
+    set(value):
+        resources = value
+
+## Base rate at which resources generate
+var resource_generation_rate: float:
+    get:
+        return resource_generation_rate
+    set(value):
+        resource_generation_rate = value
 #endregion 

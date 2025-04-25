@@ -4,8 +4,10 @@
             "base_fertility": 1.0,
             "movement_cost": 1.0,
             "resource_modifiers": {
-                "grain": 1.0,
-                "wood": 0.5
+                "grain": 1.5,
+                "wood": 0.5,
+                "stone": 0.3,
+                "water": 1.0
             }
         },
         "forest": {
@@ -13,7 +15,9 @@
             "movement_cost": 1.5,
             "resource_modifiers": {
                 "grain": 0.5,
-                "wood": 2.0
+                "wood": 2.0,
+                "stone": 0.5,
+                "water": 1.2
             }
         },
         "mountains": {
@@ -21,8 +25,32 @@
             "movement_cost": 2.0,
             "resource_modifiers": {
                 "grain": 0.2,
-                "wood": 0.3
+                "wood": 0.3,
+                "stone": 2.0,
+                "water": 0.8
             }
+        }
+    },
+    "resources": {
+        "grain": {
+            "base_generation_rate": 1.0,
+            "discovery_modifier": 1.2,
+            "max_amount": 1000.0
+        },
+        "wood": {
+            "base_generation_rate": 0.8,
+            "discovery_modifier": 1.0,
+            "max_amount": 2000.0
+        },
+        "stone": {
+            "base_generation_rate": 0.5,
+            "discovery_modifier": 0.8,
+            "max_amount": 5000.0
+        },
+        "water": {
+            "base_generation_rate": 1.5,
+            "discovery_modifier": 1.5,
+            "max_amount": 1500.0
         }
     },
     "improvements": {
@@ -31,6 +59,7 @@
             "max_level": 3,
             "cost": {
                 "wood": 10,
+                "stone": 5,
                 "money": 50
             }
         },
@@ -39,6 +68,7 @@
             "max_level": 2,
             "cost": {
                 "wood": 5,
+                "stone": 2,
                 "money": 30
             }
         }

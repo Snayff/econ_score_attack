@@ -9,6 +9,7 @@ const Law = preload("res://scripts/laws/law.gd")
 const LawRegistry = preload("res://scripts/laws/law_registry.gd")
 const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
 const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
+const ResourceGenerator = preload("res://scripts/actors/actor_components/resource_generator.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
@@ -44,6 +45,9 @@ var grid_width: int = 0
 
 ## Height of the land grid
 var grid_height: int = 0
+
+## Resource generator component
+var _resource_generator: ResourceGenerator
 #endregion
 
 
@@ -57,6 +61,7 @@ func _init(demesne_name_: String) -> void:
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
 	_initialise_land_grid()
+	_setup_resource_generator()
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
@@ -104,6 +109,20 @@ func _initialise_land_grid() -> void:
 			var parcel = DataLandParcel.new(x, y, terrain_type)
 			column.append(parcel)
 		land_grid.append(column)
+
+## Sets up the resource generator component
+func _setup_resource_generator() -> void:
+	_resource_generator = ResourceGenerator.new()
+	add_child(_resource_generator)
+	
+	# Connect signals
+	_resource_generator.resource_discovered.connect(_on_resource_discovered)
+	_resource_generator.resources_updated.connect(_on_resources_updated)
+	
+	# Initialize resources for all parcels
+	for x in range(grid_width):
+		for y in range(grid_height):
+			_resource_generator.initialise_resources(land_grid[x][y])
 
 ## Gets a land parcel at the specified coordinates
 ## @param x: X coordinate in the grid
@@ -158,6 +177,11 @@ func process_production() -> void:
 		"alive_count": people.filter(func(p): return p.is_alive).size(),
 		"timestamp": Time.get_unix_time_from_system()
 	}, "Demesne")
+
+	# Update resources in all parcels
+	for x in range(grid_width):
+		for y in range(grid_height):
+			_resource_generator.update(land_grid[x][y], 1.0)  # Update with 1 second delta
 
 	for person in people:
 		if not person.is_alive:
@@ -382,4 +406,37 @@ func get_people() -> Array[Person]:
 ## @return: Dictionary of laws
 func get_laws() -> Dictionary:
 	return laws.duplicate(true)
+
+## Surveys a land parcel for resources
+## @param x: X coordinate of the parcel
+## @param y: Y coordinate of the parcel
+## @return: Array of discovered resource IDs
+func survey_parcel(x: int, y: int) -> Array[String]:
+	var parcel = get_parcel(x, y)
+	if not parcel:
+		return []
+	return _resource_generator.survey_parcel(parcel)
+
+## Handles resource discovery events
+## @param x: X coordinate of the parcel
+## @param y: Y coordinate of the parcel
+## @param resource_id: ID of the discovered resource
+## @param amount: Amount of resource discovered
+func _on_resource_discovered(x: int, y: int, resource_id: String, amount: float) -> void:
+	EventBusGame.emit_signal("resource_discovered", x, y, resource_id, amount)
+	Logger.log_event("resource_discovered", {
+		"x": x,
+		"y": y,
+		"resource_id": resource_id,
+		"amount": amount,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
+## Handles resource update events
+## @param x: X coordinate of the parcel
+## @param y: Y coordinate of the parcel
+## @param resources: Updated resource dictionary
+func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
+	EventBusGame.emit_signal("resources_updated", x, y, resources)
+	emit_signal("parcel_updated", x, y, land_grid[x][y])
 #endregion
