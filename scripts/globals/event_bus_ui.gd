@@ -9,6 +9,18 @@ extends Node
 @warning_ignore("unused_signal")
 signal toggle_turn_timer
 
+## Emitted when the land grid data is updated
+@warning_ignore("unused_signal")
+signal land_grid_updated(parcel_data: DataLandParcel)
+
+## Emitted when visual feedback needs to be shown
+@warning_ignore("unused_signal")
+signal show_visual_feedback(message: String, position: Vector2)
+
+## Emitted when a notification needs to be shown
+@warning_ignore("unused_signal")
+signal show_notification(message: String, type: String)
+
 #endregion
 
 

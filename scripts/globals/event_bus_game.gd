@@ -62,4 +62,20 @@ signal road_improved(demesne_id: String, x: int, y: int, level: int)
 @warning_ignore("unused_signal")
 signal movement_costs_updated(demesne_id: String, affected_coordinates: Array[Vector2i])
 
+## Emitted when parcel data is requested
+@warning_ignore("unused_signal")
+signal request_parcel_data(x: int, y: int)
+
+## Emitted when a parcel improvement is requested
+@warning_ignore("unused_signal")
+signal request_improvement(x: int, y: int, improvement_id: String)
+
+## Emitted when a parcel survey is requested
+@warning_ignore("unused_signal")
+signal request_survey(x: int, y: int)
+
+## Emitted when a building placement is requested
+@warning_ignore("unused_signal")
+signal request_build(x: int, y: int, building_id: String)
+
 #endregion 
