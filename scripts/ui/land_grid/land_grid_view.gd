@@ -48,6 +48,8 @@ func _ready() -> void:
     
     EventBusUI.land_grid_updated.connect(_on_land_grid_updated)
     _initialize_grid()
+    # Always show info for the default parcel (0,0) on startup
+    EventBusGame.request_parcel_data.emit(0, 0)
 
 
 func update_parcel(x: int, y: int, parcel_data: DataLandParcel) -> void:
@@ -94,6 +96,10 @@ func _get_parcel_view(x: int, y: int) -> LandParcelView:
 
 
 func _update_info_panel(parcel_data: DataLandParcel) -> void:
+    if not parcel_data.is_surveyed:
+        _lbl_parcel_info.text = "[b]Unknown[/b]"
+        _control_panel.update_parcel_info(parcel_data)
+        return
     var info_text := "[b]Terrain:[/b] %s\n" % parcel_data.terrain_type
     
     if parcel_data.is_surveyed:

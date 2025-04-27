@@ -30,6 +30,7 @@ signal sim_initialized
 #region VARS
 ## The demesne in the simulation
 var demesne: Demesne
+var land_manager: LandManager
 
 ## Dictionary of good prices in the market
 var good_prices: Dictionary = {}
@@ -64,6 +65,11 @@ func _ready() -> void:
 	var demesne_data = DataDemesne.new()
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	Logger.log_event("Created demesne", {"name": demesne.demesne_name}, "Sim")
+
+	# Add LandManager as a component
+	land_manager = LandManager.new()
+	add_child(land_manager)
+	land_manager.register_demesne(demesne.demesne_name, demesne.land_grid)
 
 	# Enact the sales tax law
 	var sales_tax = demesne.enact_law("sales_tax")

@@ -48,6 +48,8 @@ alwaysApply: true
   - 1 class definition per file. 
   - when data needs to be passed around after being held externally, use data classes. 
   - UI to be as decoupled as possible from game logic. use signals for communication, not direct links to nodes, wherever possible. 
+  - Only use global autoloads for truly global, stateless, or cross-cutting concerns (e.g., event buses, config loaders, constants), or data or services that must be accessible everywhere, regardless of scene or context.
+  - For all classes where there are multiple instances existing at once provide a unique ID, so that it can be more easily referenced. Avoid using names as a unique id.
 
 
   GDScript 2.0/Godot
@@ -67,6 +69,7 @@ alwaysApply: true
   - Avoid scene inheritance where possible, and never go more than 1 level deep. 
   - Remove any unused variables. 
   - Remove any unused function arguments, unless they provide a default value. 
+  - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node.  
   
   
   Naming Conventions

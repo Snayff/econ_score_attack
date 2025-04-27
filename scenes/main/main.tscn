@@ -33,7 +33,4 @@ sim = NodePath("../../../../../../Sim")
 [node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
 text = "Progress"
 
-[node name="NotificationSystem" parent="UI" index="5"]
-layout_mode = 1
-
 [editable path="UI"]
