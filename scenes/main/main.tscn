@@ -27,6 +27,9 @@ sim = NodePath("../../../../../../Sim")
 [node name="ViewLaws" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="1" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../../../../Sim")
 
+[node name="ViewEconomy" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="2" node_paths=PackedStringArray("sim")]
+sim = NodePath("../../../../../../Sim")
+
 [node name="ViewLand" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="3" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../../../../Sim")
 

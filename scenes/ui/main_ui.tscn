@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="Script" uid="uid://bpkg5efx4n6h6" path="res://scripts/ui/rtl_laws_info.gd" id="7_xxxxx"]
-[ext_resource type="PackedScene" uid="uid://dxxxxxxxxxxx" path="res://scenes/ui/view_land.tscn" id="8_b65ll"]
+[ext_resource type="PackedScene" uid="uid://cehbj0wwgyqcm" path="res://scenes/ui/land_grid/land_view_panel.tscn" id="8_oi40j"]
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://scenes/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://scenes/ui/panel_header.tscn" id="10_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://brt22vvn80qvj" path="res://scenes/ui/notification_system.tscn" id="11_notify"]
@@ -40,11 +40,9 @@ color = Color(0.639215, 0.526713, 0.674006, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
 anchor_bottom = 1.0
-offset_top = -1.0
-grow_horizontal = 2
+offset_right = 95.0
 grow_vertical = 2
 
 [node name="Sidebar" type="PanelContainer" parent="HBoxContainer"]
@@ -93,9 +91,10 @@ button_text = "Economy"
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 88.0
-offset_right = -88.0
-offset_bottom = 50.0
+offset_left = 96.0
+offset_top = 1.0
+offset_right = -300.0
+offset_bottom = 51.0
 grow_horizontal = 2
 
 [node name="RTLDemesneStockpile" type="RichTextLabel" parent="TopBar"]
@@ -111,12 +110,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -543.0
-offset_top = -275.0
-offset_right = 553.0
-offset_bottom = 293.0
+offset_left = -540.0
+offset_top = -303.0
+offset_right = 550.0
+offset_bottom = 384.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.08053, 0.960313)
 
 [node name="MarginContainer" type="MarginContainer" parent="CentrePanel"]
 layout_mode = 2
@@ -139,6 +139,7 @@ size_flags_vertical = 3
 
 [node name="ViewPeople" type="Control" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -206,7 +207,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="ViewLand" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_b65ll")]
+[node name="ViewLand" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_oi40j")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -219,9 +220,11 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -297.0
-offset_top = -40.0
+offset_top = -719.0
+offset_bottom = -679.0
 grow_horizontal = 0
 grow_vertical = 0
+scale = Vector2(1, 1.28)
 
 [node name="BtnProgressTurn" type="Button" parent="HBoxTime"]
 custom_minimum_size = Vector2(100, 0)
@@ -234,4 +237,5 @@ layout_mode = 2
 script = ExtResource("5_oxwcw")
 
 [node name="NotificationSystem" parent="." instance=ExtResource("11_notify")]
+visible = false
 layout_mode = 1
