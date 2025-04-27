@@ -28,6 +28,7 @@ func _ready() -> void:
 	# Store for later use if needed
 	self._world_view_panel = world_view_panel
 	self._tile_info_panel = tile_info_panel
+	EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
 #endregion
 
 
@@ -36,6 +37,13 @@ func _ready() -> void:
 
 
 #region PUBLIC FUNCTIONS
+## Sets the land grid and its dimensions, then passes to WorldViewPanel.
+## @param land_grid: Array[Array[DataLandParcel]]
+## @param width: int
+## @param height: int
+func set_land_grid(land_grid: Array, width: int, height: int) -> void:
+	if _world_view_panel:
+		_world_view_panel.set_land_grid(land_grid, width, height)
 #endregion
 
 
@@ -48,6 +56,10 @@ func _on_tile_selected(tile_id: int, tile_data) -> void:
 		_tile_info_panel.update_tile_info(tile_data)
 	else:
 		push_error("LandViewPanel: _tile_info_panel is null!")
+
+func _on_land_grid_updated() -> void:
+	if _world_view_panel:
+		_world_view_panel._update_grid()
 
 var _world_view_panel
 var _tile_info_panel

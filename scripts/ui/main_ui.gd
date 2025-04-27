@@ -65,6 +65,24 @@ func _ready() -> void:
 	# Show a test notification to demonstrate the notification system is working
 	EventBusUI.show_notification.emit("Welcome to your demesne!", "info")
 
+	# Inject real land grid data into LandViewPanel
+	var sim_node = get_node("/root/Main/Sim")
+	if sim_node and sim_node.demesne:
+		var demesne = sim_node.demesne
+		var land_grid = demesne.land_grid
+		var grid_dims = demesne.get_grid_dimensions()
+		_view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
+		EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
+
+func _on_land_grid_updated() -> void:
+	# Refresh the land view when the grid is updated
+	if _view_land:
+		var sim_node = get_node("/root/Main/Sim")
+		if sim_node and sim_node.demesne:
+			var demesne = sim_node.demesne
+			var land_grid = demesne.land_grid
+			var grid_dims = demesne.get_grid_dimensions()
+			_view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
 
 #endregion
 

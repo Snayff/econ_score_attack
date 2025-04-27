@@ -78,4 +78,8 @@ signal request_survey(x: int, y: int)
 @warning_ignore("unused_signal")
 signal request_build(x: int, y: int, building_id: String)
 
+## Emitted when the land grid is updated (e.g., after surveying, building, etc.)
+@warning_ignore("unused_signal")
+signal land_grid_updated()
+
 #endregion 
