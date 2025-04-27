@@ -30,9 +30,6 @@ sim = NodePath("../../../../../../Sim")
 [node name="ViewEconomy" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="2" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../../../../Sim")
 
-[node name="ViewLand" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="3" node_paths=PackedStringArray("sim")]
-sim = NodePath("../../../../../../Sim")
-
 [node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
 text = "Progress"
 

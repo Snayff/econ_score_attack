@@ -24,6 +24,7 @@ const WORLD_HEIGHT: int = 10
 
 
 #region SIGNALS
+signal tile_selected(tile_id: int)
 #endregion
 
 
@@ -43,6 +44,7 @@ const WORLD_HEIGHT: int = 10
 #region VARS
 var viewport_origin: Vector2i = Vector2i(0, 0)
 var _tiles: Array = []
+var _selected_tile_id: int = -1
 #endregion
 
 
@@ -57,6 +59,12 @@ func set_viewport_origin(origin: Vector2i) -> void:
 ## @return: Vector2i
 func get_viewport_origin() -> Vector2i:
 	return viewport_origin
+
+## Sets the selected tile by ID (for test automation or programmatic selection).
+## @param tile_id: int
+func set_selected_tile(tile_id: int) -> void:
+	_selected_tile_id = tile_id
+	_update_grid()
 #endregion
 
 
@@ -111,6 +119,18 @@ func _update_grid() -> void:
 				var idx = world_y * WORLD_WIDTH + world_x
 				btn.text = str(idx)
 				btn.disabled = false
+				btn.pressed.connect(_on_tile_pressed.bind(idx))
+				if idx == _selected_tile_id:
+					btn.add_theme_color_override("font_color", Color(1, 1, 0)) # Highlight selected
+					btn.add_theme_color_override("bg_color", Color(0.8, 0.8, 0.2))
+				else:
+					btn.add_theme_color_override("font_color", Color(1, 1, 1))
+					btn.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2))
 			_grid_container.add_child(btn)
 	print("Grid children count: ", _grid_container.get_child_count())
+
+func _on_tile_pressed(tile_id: int) -> void:
+	_selected_tile_id = tile_id
+	emit_signal("tile_selected", tile_id)
+	_update_grid()
 #endregion
