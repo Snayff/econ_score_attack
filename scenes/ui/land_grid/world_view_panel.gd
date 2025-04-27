@@ -24,7 +24,7 @@ const WORLD_HEIGHT: int = 10
 
 
 #region SIGNALS
-signal tile_selected(tile_id: int)
+signal tile_selected(tile_id: int, tile_data: DataLandParcel)
 #endregion
 
 
@@ -70,14 +70,21 @@ func set_selected_tile(tile_id: int) -> void:
 
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
-	print("[WorldViewPanelUI] _ready() called")
-	print("_grid_container: ", _grid_container)
-	print("_btn_scroll_up: ", _btn_scroll_up)
-	print("_btn_scroll_down: ", _btn_scroll_down)
-	print("_btn_scroll_left: ", _btn_scroll_left)
-	print("_btn_scroll_right: ", _btn_scroll_right)
 	_generate_mock_tiles()
 	_connect_scroll_buttons()
+	# Centre tile coordinates
+	var centre_x = WORLD_WIDTH / 2
+	var centre_y = WORLD_HEIGHT / 2
+	# Set viewport so centre tile is in the middle of the 5x5 grid
+	viewport_origin = Vector2i(centre_x - GRID_SIZE / 2, centre_y - GRID_SIZE / 2)
+	# Clamp viewport to valid range
+	viewport_origin.x = clamp(viewport_origin.x, 0, WORLD_WIDTH - GRID_SIZE)
+	viewport_origin.y = clamp(viewport_origin.y, 0, WORLD_HEIGHT - GRID_SIZE)
+	# Ensure centre tile is surveyed
+	var centre_idx = centre_y * WORLD_WIDTH + centre_x
+	if centre_idx >= 0 and centre_idx < _tiles.size():
+		_tiles[centre_idx].is_surveyed = true
+		_selected_tile_id = centre_idx
 	_update_grid()
 
 func _generate_mock_tiles() -> void:
@@ -87,6 +94,15 @@ func _generate_mock_tiles() -> void:
 		for x in range(WORLD_WIDTH):
 			var idx = y * WORLD_WIDTH + x
 			var parcel = DataLandParcel.new(x, y, "plains")
+			# Mock: every 3rd tile is surveyed, every 5th has a building, every 7th has resources
+			var surveyed = false
+			if idx % 3 == 0:
+				surveyed = true
+			parcel.is_surveyed = surveyed
+			if idx % 5 == 0:
+				parcel.building_id = "building_%d" % idx
+			if idx % 7 == 0:
+				parcel.add_resource("wheat", 120.0, surveyed)
 			_tiles.append(parcel)
 
 func _connect_scroll_buttons() -> void:
@@ -120,17 +136,23 @@ func _update_grid() -> void:
 				btn.text = str(idx)
 				btn.disabled = false
 				btn.pressed.connect(_on_tile_pressed.bind(idx))
+				# Visual cues for surveyed/unsurveyed
+				if _tiles[idx].is_surveyed:
+					btn.add_theme_color_override("bg_color", Color(0.4, 0.7, 0.4)) # Greenish for surveyed
+				else:
+					btn.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2)) # Dark for unsurveyed
 				if idx == _selected_tile_id:
 					btn.add_theme_color_override("font_color", Color(1, 1, 0)) # Highlight selected
-					btn.add_theme_color_override("bg_color", Color(0.8, 0.8, 0.2))
+					btn.add_theme_color_override("outline_color", Color(1, 1, 0))
+					btn.add_theme_constant_override("outline_size", 2)
 				else:
 					btn.add_theme_color_override("font_color", Color(1, 1, 1))
-					btn.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2))
 			_grid_container.add_child(btn)
 	print("Grid children count: ", _grid_container.get_child_count())
 
 func _on_tile_pressed(tile_id: int) -> void:
 	_selected_tile_id = tile_id
-	emit_signal("tile_selected", tile_id)
+	var tile_data = _tiles[tile_id]
+	emit_signal("tile_selected", tile_id, tile_data)
 	_update_grid()
 #endregion

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dxxxxxxxxxxx"]
 
-[ext_resource type="Script" uid="uid://cxv6kf1yb6g6q" path="res://scripts/ui/view_land.gd" id="1_xxxxx"]
-[ext_resource type="PackedScene" uid="uid://bxxxxxxxxxxx" path="res://scenes/ui/land_grid/land_grid_view.tscn" id="2_xxxxx"]
+[ext_resource type="Script" uid="uid://cxv6kf1yb6g6q" path="res://_poss_delete/view_land.gd" id="1_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://bxxxxxxxxxxx" path="res://_poss_delete/land_grid_view.tscn" id="2_xxxxx"]
 
 [node name="ViewLand" type="Control"]
 layout_mode = 3

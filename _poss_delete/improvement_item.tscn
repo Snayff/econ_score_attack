@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://xhpugkfh4a12"]
 
-[ext_resource type="Script" path="res://scripts/ui/land_grid/improvement_item.gd" id="1_xxxxx"]
+[ext_resource type="Script" uid="uid://des4cfdon45qu" path="res://_poss_delete/improvement_item.gd" id="1_xxxxx"]
+
 
 [node name="ImprovementItem" type="HBoxContainer"]
 anchors_preset = 10

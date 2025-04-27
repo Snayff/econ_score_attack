@@ -83,6 +83,7 @@ alwaysApply: true
 
   Documentation
   - Docstring style is as per GDScript best practice, unles sotherwise stated. 
+  - Class Docstrings are noted with "##", meaning each line of the class docstring has the double hash. 
   - All classes should begin with a docstring explaining the purpose and intent of that class. An example of usage should also be included. 
   - A class should begin with the Docstring, then be followed by the classname (if the class needs to be referred to elsewhere), then finally the extends keyword, defining any base class. 
   - Documenation should always be kept up to date. 

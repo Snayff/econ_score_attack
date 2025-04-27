@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cehbj0wwgyqcm"]
+[gd_scene load_steps=5 format=3 uid="uid://cehbj0wwgyqcm"]
 
 [ext_resource type="PackedScene" uid="uid://bn2f4bby2e6wb" path="res://scenes/ui/land_grid/tile_interaction_panel.tscn" id="1"]
+[ext_resource type="Script" uid="uid://drw3cfya4tybr" path="res://scenes/ui/land_grid/land_view_panel.gd" id="1_1vomj"]
 [ext_resource type="PackedScene" uid="uid://be338px6n6hy4" path="res://scenes/ui/land_grid/world_view_panel.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://bvysdiib6f0vw" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="3"]
 
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_1vomj")
 
 [node name="TileInteractionPanel" parent="." instance=ExtResource("1")]
 custom_minimum_size = Vector2(160, 0)

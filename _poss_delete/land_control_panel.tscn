@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://v7p06rgan5b"]
 
-[ext_resource type="Script" path="res://scripts/ui/land_grid/land_control_panel.gd" id="1_xxxxx"]
+[ext_resource type="Script" uid="uid://cfh7qs35hyegy" path="res://_poss_delete/land_control_panel.gd" id="1_xxxxx"]
+
 
 [node name="LandControlPanel" type="Panel"]
 custom_minimum_size = Vector2(200, 0)

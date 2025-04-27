@@ -15,9 +15,10 @@ You always ensure new files and functionality is added in keeping with a logical
   - External data files are held in "data/" folder.
   - Autloads/globals are held in "globals/" folder. 
   - The game begins with "scenes/main/main.tscn". There should only ever be 1 main.tscn and it should always be in that folder location. 
+  - "scenes/" holds all scenes and that scenes script file, if they share the same name (excluding the file extension).
+  - "scripts/" holds standalone, or reused, scripts, that do not fit another description.
 
 
 
   Storing New Functionality
-
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
