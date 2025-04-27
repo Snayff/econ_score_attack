@@ -1,8 +1,45 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3 uid="uid://be338px6n6hy4"]
+
+[ext_resource type="Script" uid="uid://du851jdgu87qs" path="res://scripts/ui/land_grid/world_view_panel.gd" id="1_y3pvl"]
 
 [node name="WorldViewPanel" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_y3pvl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="lbl_placeholder" type="Label" parent="VBoxContainer"]
-text = "World View Placeholder" 
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer_Top" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="btn_scroll_up" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer_Top"]
+layout_mode = 2
+text = "↑"
+
+[node name="HBoxContainer_Middle" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="btn_scroll_left" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer_Middle"]
+layout_mode = 2
+text = "←"
+
+[node name="btn_scroll_right" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer_Middle"]
+layout_mode = 2
+text = "→"
+
+[node name="HBoxContainer_Bottom" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="btn_scroll_down" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer_Bottom"]
+layout_mode = 2
+text = "↓"
+
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 5
