@@ -24,6 +24,9 @@ const WORLD_HEIGHT: int = 10
 
 
 #region SIGNALS
+## Emitted when a tile is selected in the grid.
+## @param tile_id: int, the selected tile's id
+## @param tile_data: DataLandParcel, the selected tile's data
 signal tile_selected(tile_id: int, tile_data: DataLandParcel)
 #endregion
 
@@ -87,6 +90,7 @@ func _ready() -> void:
 		_selected_tile_id = centre_idx
 	_update_grid()
 
+## Generates mock tile data for the grid.
 func _generate_mock_tiles() -> void:
 	_tiles.clear()
 	var DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
@@ -119,6 +123,7 @@ func _on_scroll(direction: Vector2i) -> void:
 		viewport_origin = new_origin
 		_update_grid()
 
+## Updates the grid display based on the current viewport and selection.
 func _update_grid() -> void:
 	for child in _grid_container.get_children():
 		child.queue_free()
@@ -150,6 +155,8 @@ func _update_grid() -> void:
 			_grid_container.add_child(btn)
 	print("Grid children count: ", _grid_container.get_child_count())
 
+## Handles tile button press, emits tile_selected signal.
+## @param tile_id: int
 func _on_tile_pressed(tile_id: int) -> void:
 	_selected_tile_id = tile_id
 	var tile_data = _tiles[tile_id]
