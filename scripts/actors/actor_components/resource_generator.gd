@@ -45,11 +45,18 @@ func _ready() -> void:
 func initialise_resources(parcel: DataLandParcel) -> void:
     var land_config = Library.get_config("land")
     var terrain_type = land_config.terrain_types[parcel.terrain_type]
-    
-    # Add potential resources based on terrain modifiers
-    for resource_id in terrain_type.resource_modifiers:
-        if terrain_type.resource_modifiers[resource_id] > 0:
-            parcel.add_resource(resource_id)
+    var resource_modifiers = terrain_type.resource_modifiers
+
+    # Load land aspects from Library (add a helper if needed)
+    var land_aspects = Library.get_land_aspects()
+
+    for aspect in land_aspects:
+        for method in aspect.extraction_methods:
+            var good = method.extracted_good
+            if resource_modifiers.has(good) and resource_modifiers[good] > 0:
+                # Use min_amount if finite, else default
+                var amount = method.is_finite and method.min_amount or DataLandParcel.DEFAULT_RESOURCE_AMOUNT
+                parcel.add_resource(good, amount, false)
 
 
 ## Attempts to discover resources in a parcel through surveying

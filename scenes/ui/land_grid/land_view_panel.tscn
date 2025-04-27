@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://du0hvsy4yir3x"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/tile_interaction_panel.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://d4emrc3ik05b0" path="res://scenes/ui/land_grid/world_view_panel.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="3"]
+
+[node name="LandViewPanel" type="HSplitContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TileInteractionPanel" parent="." instance=ExtResource("1")]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="MiddleRightSplit" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="WorldViewPanel" parent="MiddleRightSplit" instance=ExtResource("2")]
+layout_mode = 2
+
+[node name="TileInfoPanel" parent="MiddleRightSplit" instance=ExtResource("3")]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 8
