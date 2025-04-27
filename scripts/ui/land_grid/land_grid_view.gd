@@ -30,9 +30,10 @@ signal parcel_selected(x: int, y: int)
 
 #region ON READY
 
-@onready var _grid_container: GridContainer = $GridContainer
-@onready var _info_panel: Panel = $InfoPanel
-@onready var _lbl_parcel_info: RichTextLabel = $InfoPanel/lbl_ParcelInfo
+@onready var _grid_container: GridContainer = $HBoxContainer/GridContainer
+@onready var _info_panel: Panel = $HBoxContainer/InfoPanel
+@onready var _lbl_parcel_info: RichTextLabel = $HBoxContainer/InfoPanel/lbl_ParcelInfo
+@onready var _control_panel: LandControlPanel = $HBoxContainer/LandControlPanel
 
 #endregion
 
@@ -43,6 +44,7 @@ func _ready() -> void:
     assert(_grid_container != null, "GridContainer node not found")
     assert(_info_panel != null, "InfoPanel node not found")
     assert(_lbl_parcel_info != null, "ParcelInfo label node not found")
+    assert(_control_panel != null, "Control panel node not found")
     
     EventBusUI.land_grid_updated.connect(_on_land_grid_updated)
     _initialize_grid()
@@ -117,6 +119,7 @@ func _update_info_panel(parcel_data: DataLandParcel) -> void:
     info_text += "Pollution: %.2f" % parcel_data.pollution_level
     
     _lbl_parcel_info.text = info_text
+    _control_panel.update_parcel_info(parcel_data)
 
 
 func _on_parcel_clicked(x: int, y: int) -> void:

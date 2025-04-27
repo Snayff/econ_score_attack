@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bxxxxxxxxxxx"]
+[gd_scene load_steps=3 format=3 uid="uid://bxxxxxxxxxxx"]
 
 [ext_resource type="Script" path="res://scripts/ui/land_grid/land_grid_view.gd" id="1_xxxxx"]
+[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/land_control_panel.tscn" id="2_xxxxx"]
 
 [node name="LandGridView" type="Control"]
 layout_mode = 3
@@ -11,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xxxxx")
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,17 +20,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InfoPanel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -200.0
-grow_horizontal = 0
-grow_vertical = 2
+[node name="LandControlPanel" parent="HBoxContainer" instance=ExtResource("2_xxxxx")]
+layout_mode = 2
 
-[node name="lbl_ParcelInfo" type="RichTextLabel" parent="InfoPanel"]
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InfoPanel" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="lbl_ParcelInfo" type="RichTextLabel" parent="HBoxContainer/InfoPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
