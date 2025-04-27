@@ -14,7 +14,6 @@ size_flags_vertical = 3
 script = ExtResource("1_1vomj")
 
 [node name="TileInteractionPanel" parent="." instance=ExtResource("1")]
-custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
 [node name="MiddleRightSplit" type="HSplitContainer" parent="."]
@@ -26,6 +25,5 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="TileInfoPanel" parent="MiddleRightSplit" instance=ExtResource("3")]
-custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 8

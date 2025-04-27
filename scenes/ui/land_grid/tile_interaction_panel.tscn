@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bn2f4bby2e6wb"]
 
 [node name="TileInteractionPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(220, 0)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
