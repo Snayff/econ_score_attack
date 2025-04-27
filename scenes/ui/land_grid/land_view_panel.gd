@@ -1,11 +1,11 @@
 """
-LandViewPanelUI
+LandViewPanel
 
 Main container for the Land View UI, holding the interaction, world view, and info panels.
 Usage: Attach to LandViewPanel.tscn root node.
 """
 
-class_name LandViewPanelUI
+class_name LandViewPanel
 extends HSplitContainer
 
 #region CONSTANTS
