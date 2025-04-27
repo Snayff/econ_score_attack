@@ -1,4 +1,35 @@
-## A system for displaying notifications and visual feedback to the user
+## Notification System
+##
+## A modular system for displaying notifications and visual feedback to the player.
+##
+## System Overview:
+##   The Notification System provides a centralised, reusable way to display notifications (info, success, warning, error) and floating visual feedback messages in the UI. It is designed to be triggered from anywhere in the game via signals, and is fully decoupled from game logic.
+##
+## Usage:
+##   - To show a notification:
+##       EventBusUI.show_notification.emit("Message", "info")
+##   - To show visual feedback at a position:
+##       EventBusUI.show_visual_feedback.emit("Feedback!", Vector2(100, 200))
+##
+## Integration:
+##   - Instanced as a child of MainUI in main_ui.tscn.
+##   - Signals are connected in _ready().
+##   - Handles display, animation, and removal of messages automatically.
+##
+## Example:
+##   See scripts/ui/main_ui.gd for an example of emitting a notification on startup.
+##
+## Related Files:
+##   - scenes/ui/notification_system.tscn
+##   - scripts/ui/notification_system.gd
+##
+## Extending:
+##   - Add new notification types by extending NOTIFICATION_TYPES.
+##   - Customise appearance by editing _create_notification/_create_feedback.
+##
+## Author: [Your Name]
+## Date: [Date]
+
 class_name NotificationSystem
 extends Control
 
@@ -34,6 +65,10 @@ const NOTIFICATION_TYPES := {
 #region PUBLIC FUNCTIONS
 
 func _ready() -> void:
+    """
+    Initialises the Notification System, connecting required signals and asserting node references.
+    @return void
+    """
     assert(_notification_container != null, "NotificationContainer node not found")
     assert(_feedback_container != null, "FeedbackContainer node not found")
     
@@ -42,6 +77,12 @@ func _ready() -> void:
 
 
 func show_notification(message: String, type: String = "info") -> void:
+    """
+    Displays a notification message in the notification area.
+    @param message: The message to display.
+    @param type: The notification type (info, success, warning, error).
+    @return void
+    """
     var notification := _create_notification(message, type)
     _notification_container.add_child(notification)
     
@@ -51,6 +92,12 @@ func show_notification(message: String, type: String = "info") -> void:
 
 
 func show_visual_feedback(message: String, position: Vector2) -> void:
+    """
+    Displays a floating feedback message at a given position, animating it upwards and fading out.
+    @param message: The feedback message to display.
+    @param position: The screen position to display the feedback.
+    @return void
+    """
     var feedback := _create_feedback(message)
     feedback.position = position
     _feedback_container.add_child(feedback)

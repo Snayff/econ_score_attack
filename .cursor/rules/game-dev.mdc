@@ -86,6 +86,8 @@ alwaysApply: true
   - All functions require comprehensive, but succinct docstrings. Arguments and return types should be documented. 
   - Functions that can return null should include "@null" at the start of their docstring.
   - Documentation within a class, whether for a function or variable, should explain why an action is being taken. 
+  - When adding a new system, make sure to ask if we should create a new documentation file in "dev/docs/docs/systems".
+  - When updating a system, if there is system documentation in "dev/docs/docs/systems" ensure it is updated. 
 
 
   Error Handling and Debugging

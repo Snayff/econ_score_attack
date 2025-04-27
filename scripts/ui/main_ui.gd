@@ -62,6 +62,9 @@ func _ready() -> void:
 	# Start with people view
 	_switch_view(View.PEOPLE)
 
+	# Show a test notification to demonstrate the notification system is working
+	EventBusUI.show_notification.emit("Welcome to your demesne!", "info")
+
 
 #endregion
 

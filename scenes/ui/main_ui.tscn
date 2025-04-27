@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cmkfp7f7dii75"]
+[gd_scene load_steps=14 format=3 uid="uid://cmkfp7f7dii75"]
 
 [ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://scripts/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://scripts/ui/btn_sidebar_button.gd" id="1_4yfr8"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dxxxxxxxxxxx" path="res://scenes/ui/view_land.tscn" id="8_b65ll"]
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://scenes/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://scenes/ui/panel_header.tscn" id="10_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://brt22vvn80qvj" path="res://scenes/ui/notification_system.tscn" id="11_notify"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
 device = -1
@@ -231,3 +232,6 @@ script = ExtResource("4_t0li6")
 [node name="LblTurnInfo" type="Label" parent="HBoxTime"]
 layout_mode = 2
 script = ExtResource("5_oxwcw")
+
+[node name="NotificationSystem" parent="." instance=ExtResource("11_notify")]
+layout_mode = 1
