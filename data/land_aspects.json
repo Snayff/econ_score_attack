@@ -1,0 +1,380 @@
+[
+	{
+	  "aspect_id": "gold_deposit",
+	  "f_name": "Gold Deposit",
+	  "type": "mundane",
+	  "description": "A glimmering seam of gold runs through the earth here.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "gold_ore",
+		  "is_finite": true,
+		  "min_amount": 100,
+		  "max_amount": 500
+		}
+	  ],
+	  "primary_use_note": "Minting currency, crafting fine goods",
+	  "generation_chance": 0.04,
+	  "max_instances": 12
+	},
+	{
+	  "aspect_id": "knotwood_grove",
+	  "f_name": "Knotwood Grove",
+	  "type": "mundane",
+	  "description": "Gnarled trees with wood tough as old boots, twisted by time.",
+	  "extraction_methods": [
+		{
+		  "building": "Lumber Camp",
+		  "extracted_good": "knotwood",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Construction, toolmaking",
+	  "generation_chance": 0.30,
+	  "max_instances": 60
+	},
+	{
+	  "aspect_id": "yattle_herd",
+	  "f_name": "Yattle Herd",
+	  "type": "mundane",
+	  "description": "A herd of two-headed yattle grazes contentedly.",
+	  "extraction_methods": [
+		{
+		  "building": "Farm",
+		  "extracted_good": "yattle",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Food supply, livestock trade",
+	  "generation_chance": 0.18,
+	  "max_instances": 40
+	},
+	{
+	  "aspect_id": "fertile_field",
+	  "f_name": "Fertile Field",
+	  "type": "mundane",
+	  "description": "Rich, dark soil—perfect for growing just about anything.",
+	  "extraction_methods": [
+		{
+		  "building": "Farm",
+		  "extracted_good": "crops",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Food production, trade",
+	  "generation_chance": 0.35,
+	  "max_instances": 80
+	},
+	{
+	  "aspect_id": "stone_outcrop",
+	  "f_name": "Stone Outcrop",
+	  "type": "mundane",
+	  "description": "Jagged stones jut from the ground, promising sturdy building.",
+	  "extraction_methods": [
+		{
+		  "building": "Quarry",
+		  "extracted_good": "stone",
+		  "is_finite": true,
+		  "min_amount": 200,
+		  "max_amount": 1000
+		}
+	  ],
+	  "primary_use_note": "Building materials",
+	  "generation_chance": 0.22,
+	  "max_instances": 35
+	},
+	{
+	  "aspect_id": "salt_flat",
+	  "f_name": "Salt Flat",
+	  "type": "mundane",
+	  "description": "Crusty white salt shimmers under the sun's glare.",
+	  "extraction_methods": [
+		{
+		  "building": "Saltworks",
+		  "extracted_good": "salt",
+		  "is_finite": true,
+		  "min_amount": 150,
+		  "max_amount": 600
+		}
+	  ],
+	  "primary_use_note": "Food preservation, seasoning",
+	  "generation_chance": 0.10,
+	  "max_instances": 18
+	},
+	{
+	  "aspect_id": "bog_iron_patch",
+	  "f_name": "Bog Iron Patch",
+	  "type": "mundane",
+	  "description": "Rusty nodules of iron lie hidden in the marshy earth.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "bog_iron",
+		  "is_finite": true,
+		  "min_amount": 120,
+		  "max_amount": 400
+		}
+	  ],
+	  "primary_use_note": "Tool and weapon production",
+	  "generation_chance": 0.09,
+	  "max_instances": 15
+	},
+	{
+	  "aspect_id": "blue_clay_pit",
+	  "f_name": "Blue Clay Pit",
+	  "type": "mundane",
+	  "description": "Cool, blue clay squelches underfoot, perfect for pottery.",
+	  "extraction_methods": [
+		{
+		  "building": "Quarry",
+		  "extracted_good": "blue_clay",
+		  "is_finite": true,
+		  "min_amount": 100,
+		  "max_amount": 350
+		}
+	  ],
+	  "primary_use_note": "Pottery, construction materials",
+	  "generation_chance": 0.13,
+	  "max_instances": 20
+	},
+	{
+	  "aspect_id": "windberry_thicket",
+	  "f_name": "Windberry Thicket",
+	  "type": "mundane",
+	  "description": "Bushes heavy with plump, floating windberries.",
+	  "extraction_methods": [
+		{
+		  "building": "Farm",
+		  "extracted_good": "windberries",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Food, minor happiness boost",
+	  "generation_chance": 0.16,
+	  "max_instances": 30
+	},
+	{
+	  "aspect_id": "obsidian_seam",
+	  "f_name": "Obsidian Seam",
+	  "type": "mundane",
+	  "description": "A vein of glassy black stone, sharp as a dragon's wit.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "obsidian",
+		  "is_finite": true,
+		  "min_amount": 80,
+		  "max_amount": 300
+		}
+	  ],
+	  "primary_use_note": "Weapon and jewellery crafting",
+	  "generation_chance": 0.07,
+	  "max_instances": 10
+	},
+	{
+	  "aspect_id": "moon_turnip_patch",
+	  "f_name": "Moon Turnip Patch",
+	  "type": "mundane",
+	  "description": "Pale turnips glow faintly, lighting the field at night.",
+	  "extraction_methods": [
+		{
+		  "building": "Farm",
+		  "extracted_good": "moon_turnips",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Food, happiness boost",
+	  "generation_chance": 0.12,
+	  "max_instances": 25
+	},
+	{
+	  "aspect_id": "mana_mushroom_grove",
+	  "f_name": "Mana Mushroom Grove",
+	  "type": "magical",
+	  "description": "Towering mushrooms drift sparkling spores on the breeze.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "mana_mushrooms",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Powering magical buildings, happiness bonus",
+	  "generation_chance": 0.03,
+	  "max_instances": 8
+	},
+	{
+	  "aspect_id": "shimmer_sand_dune",
+	  "f_name": "Shimmer Sand Dune",
+	  "type": "magical",
+	  "description": "Sand here glitters with a strange, inner light.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "shimmer_sand",
+		  "is_finite": true,
+		  "min_amount": 60,
+		  "max_amount": 200
+		}
+	  ],
+	  "primary_use_note": "Enchantments, magical glassmaking",
+	  "generation_chance": 0.02,
+	  "max_instances": 5
+	},
+	{
+	  "aspect_id": "faerie_ring",
+	  "f_name": "Faerie Ring",
+	  "type": "magical",
+	  "description": "A perfect circle of toadstools, humming with fae mischief.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "faerie_dust",
+		  "is_finite": true,
+		  "min_amount": 20,
+		  "max_amount": 60
+		}
+	  ],
+	  "primary_use_note": "Magical research, luxury goods",
+	  "generation_chance": 0.01,
+	  "max_instances": 3
+	},
+	{
+	  "aspect_id": "fire_beetle_nest",
+	  "f_name": "Fire Beetle Nest",
+	  "type": "magical",
+	  "description": "The earth is alive with glowing, heat-giving beetles.",
+	  "extraction_methods": [
+		{
+		  "building": "Apiary",
+		  "extracted_good": "fire_beetles",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Magical fuel, alchemical ingredient",
+	  "generation_chance": 0.02,
+	  "max_instances": 6
+	},
+	{
+	  "aspect_id": "quicksilver_vine_patch",
+	  "f_name": "Quicksilver Vine Patch",
+	  "type": "magical",
+	  "description": "Silvery vines slither and grow before your very eyes.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "quicksilver_vines",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Potions, magical inks",
+	  "generation_chance": 0.02,
+	  "max_instances": 6
+	},
+	{
+	  "aspect_id": "shadow_truffle_hollow",
+	  "f_name": "Shadow Truffle Hollow",
+	  "type": "magical",
+	  "description": "The air is thick and cool, perfect for rare shadow truffles.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "shadow_truffles",
+		  "is_finite": true,
+		  "min_amount": 10,
+		  "max_amount": 30
+		}
+	  ],
+	  "primary_use_note": "Delicacy, magical ingredient",
+	  "generation_chance": 0.01,
+	  "max_instances": 2
+	},
+	{
+	  "aspect_id": "sunstone_cluster",
+	  "f_name": "Sunstone Cluster",
+	  "type": "magical",
+	  "description": "Gemstones here soak up and store the sun's warmth.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "sunstones",
+		  "is_finite": true,
+		  "min_amount": 15,
+		  "max_amount": 40
+		}
+	  ],
+	  "primary_use_note": "Light source, magical batteries",
+	  "generation_chance": 0.01,
+	  "max_instances": 2
+	},
+	{
+	  "aspect_id": "dreamleaf_copse",
+	  "f_name": "Dreamleaf Copse",
+	  "type": "magical",
+	  "description": "Leaves shimmer with colours that dance just out of sight.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "dreamleaves",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Medicine, magical research",
+	  "generation_chance": 0.02,
+	  "max_instances": 5
+	},
+	{
+	  "aspect_id": "whisper_reed_marsh",
+	  "f_name": "Whisper Reed Marsh",
+	  "type": "magical",
+	  "description": "Tall reeds whisper secrets to those who listen.",
+	  "extraction_methods": [
+		{
+		  "building": "Grove",
+		  "extracted_good": "whisper_reeds",
+		  "is_finite": false,
+		  "min_amount": null,
+		  "max_amount": null
+		}
+	  ],
+	  "primary_use_note": "Wards, musical instruments",
+	  "generation_chance": 0.02,
+	  "max_instances": 5
+	},
+	{
+	  "aspect_id": "brimstone_vent",
+	  "f_name": "Brimstone Vent",
+	  "type": "magical",
+	  "description": "The ground steams and stinks of sulphur and hidden fire.",
+	  "extraction_methods": [
+		{
+		  "building": "Mine",
+		  "extracted_good": "brimstone",
+		  "is_finite": true,
+		  "min_amount": 30,
+		  "max_amount": 100
+		}
+	  ],
+	  "primary_use_note": "Alchemy, rituals",
+	  "generation_chance": 0.01,
+	  "max_instances": 2
+	}
+]
