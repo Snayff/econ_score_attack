@@ -105,6 +105,7 @@ func _initialise_land_grid() -> void:
 	grid_height = default_size.height
 
 	Logger.log_event("land_grid_initialised", {
+		"demesne": demesne_name,
 		"width": grid_width,
 		"height": grid_height,
 		"timestamp": Time.get_unix_time_from_system()
@@ -118,17 +119,32 @@ func _initialise_land_grid() -> void:
 			var terrain_type = "plains"  # Default terrain type
 			var parcel = DataLandParcel.new(x, y, terrain_type)
 			column.append(parcel)
+			# Mark all parcels as surveyed
+			surveyed_parcels[Vector2i(x, y)] = true
+			survey_parcel(x, y)
 		land_grid.append(column)
+
+	# Survey the centre-most parcel on initialisation (for logging)
+	var centre_x: int = int(grid_width / 2)
+	var centre_y: int = int(grid_height / 2)
+	if _is_valid_coordinates(centre_x, centre_y):
+		Logger.log_event("centre_parcel_surveyed", {
+			"demesne": demesne_name,
+			"x": centre_x,
+			"y": centre_y,
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
+		survey_parcel(centre_x, centre_y)
 
 ## Sets up the resource generator component
 func _setup_resource_generator() -> void:
 	_resource_generator = ResourceGenerator.new()
 	add_child(_resource_generator)
-	
+
 	# Connect signals
 	_resource_generator.resource_discovered.connect(_on_resource_discovered)
 	_resource_generator.resources_updated.connect(_on_resources_updated)
-	
+
 	# Initialize resources for all parcels
 	for x in range(grid_width):
 		for y in range(grid_height):
@@ -139,7 +155,7 @@ func _setup_pathfinding() -> void:
 	_pathfinding = PathfindingSystem.new()
 	add_child(_pathfinding)
 	_pathfinding.initialize(land_grid)
-	
+
 	# Connect signals
 	_pathfinding.path_found.connect(_on_path_found)
 	_pathfinding.path_failed.connect(_on_path_failed)
@@ -194,7 +210,7 @@ func set_parcel(x: int, y: int, parcel: DataLandParcel) -> bool:
 	if parcel.x != x or parcel.y != y:
 		Logger.error("Parcel coordinates (%d, %d) don't match target position (%d, %d)" % [parcel.x, parcel.y, x, y], "Demesne")
 		return false
-	
+
 	land_grid[x][y] = parcel
 	emit_signal("parcel_updated", x, y, parcel)
 	Logger.log_event("parcel_updated", {
@@ -460,10 +476,13 @@ func get_laws() -> Dictionary:
 ## @param y: Y coordinate of the parcel
 ## @return: Array of discovered resource IDs
 func survey_parcel(x: int, y: int) -> Array[String]:
-	var parcel = get_node("/root/World").get_parcel(x, y)
+	Logger.log_event("diagnostic_survey_parcel_called", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	var parcel = World.get_parcel(x, y)
 	if not parcel:
+		Logger.log_event("diagnostic_survey_parcel_null_parcel", {"x": x, "y": y, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 		return []
 	surveyed_parcels[Vector2i(x, y)] = true
+	Logger.log_event("diagnostic_survey_parcel_set", {"key": str(Vector2i(x, y)), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 	return _resource_generator.survey_parcel(parcel)
 
 ## Handles resource discovery events
@@ -474,6 +493,7 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 func _on_resource_discovered(x: int, y: int, resource_id: String, amount: float) -> void:
 	EventBusGame.emit_signal("resource_discovered", x, y, resource_id, amount)
 	Logger.log_event("resource_discovered", {
+		"demesne": demesne_name,
 		"x": x,
 		"y": y,
 		"resource_id": resource_id,
@@ -487,6 +507,13 @@ func _on_resource_discovered(x: int, y: int, resource_id: String, amount: float)
 ## @param resources: Updated resource dictionary
 func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
 	EventBusGame.emit_signal("resources_updated", x, y, resources)
+	Logger.log_event("parcel_resources_updated", {
+		"demesne": demesne_name,
+		"x": x,
+		"y": y,
+		"resources": resources,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
 	emit_signal("parcel_updated", x, y, land_grid[x][y])
 
 ## Checks if a parcel is surveyed for this demesne
@@ -494,4 +521,7 @@ func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
 ## @param y: int
 ## @return: bool
 func is_parcel_surveyed(x: int, y: int) -> bool:
-	return surveyed_parcels.has(Vector2i(x, y))
+	var key = Vector2i(x, y)
+	var result = surveyed_parcels.has(key)
+	Logger.log_event("diagnostic_is_parcel_surveyed", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "key": str(key), "result": result, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	return result

@@ -3,12 +3,15 @@
 ## Overview
 The Land System manages the demesne's land grid, including all parcels (tiles), their state, and their integration with the UI. It ensures that all land data is data-driven, modular, and updated in real time in response to game events.
 
+- On initialisation, the centre-most parcel of the grid is always surveyed by default. This ensures the player always starts with at least one surveyed parcel.
+
 ---
 
 ## Data Flow
 - The land grid is a 2D array of `DataLandParcel` objects, owned by the demesne (see `Sim` node).
 - The grid is initialised using configuration from `land_config.json` via the `Library` autoload.
 - The demesne exposes the grid and its dimensions via `land_grid` and `get_grid_dimensions()`.
+- The demesne surveys the centre-most parcel (using integer division of grid width/height) immediately after grid creation.
 
 ---
 
@@ -35,6 +38,7 @@ if sim_node and sim_node.demesne:
     var land_grid = demesne.land_grid
     var grid_dims = demesne.get_grid_dimensions()
     _view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
+# The centre-most parcel (grid_dims.x // 2, grid_dims.y // 2) will always be surveyed on initialisation.
 ```
 
 ---
@@ -44,6 +48,18 @@ if sim_node and sim_node.demesne:
 - Never hardcode land data in the UI; always inject from the demesne.
 - Ensure all UI components disconnect from signals on removal.
 - Use unique IDs or coordinates for referencing tiles, never names.
+- The initial surveyed state (centre parcel) is handled in the demesne logic, not the UI.
+
+---
+
+## Logging
+The land system includes detailed logging for key actions and state changes to aid debugging and monitoring:
+- Land grid initialisation (including demesne name and grid size)
+- Surveying of the centre-most parcel (coordinates and demesne)
+- Every parcel surveyed (coordinates and demesne)
+- Resource discovery and parcel resource updates (coordinates, demesne, and details)
+
+All logs are structured and timestamped using the `Logger.log_event()` function. This ensures that both initialisation and runtime changes can be traced and audited for correctness.
 
 ---
 
@@ -55,7 +71,7 @@ if sim_node and sim_node.demesne:
 ---
 
 ## Last Updated
-2024-06-09
+2024-06-10
 
 ## Core Concepts
 - **Grid-Based World:** The world is a 2D grid of parcels. Each parcel represents a discrete unit of land with its own state.
@@ -89,6 +105,9 @@ The `LandManager` class manages all land grids for all demesnes (player domains)
 - Provides access to parcels by coordinates
 - Responds to data requests (e.g., for UI updates)
 - Emits updates via the event bus
+
+**Initialisation:**
+- Upon initialisation, the demesne surveys the centre-most parcel (using integer division of grid width/height). This is performed in the demesne logic, ensuring the player always starts with a surveyed tile.
 
 **Example Usage:**
 ```gdscript
@@ -126,16 +145,4 @@ The land system is designed for extensibility:
   - `scripts/data/data_land_parcel.gd`
   - `scripts/core/land_manager.gd`
   - `scripts/ui/land_grid/land_grid_view.gd`
-  - `scripts/ui/land_grid/land_parcel_view.gd`
-  - `scripts/ui/land_grid/land_control_panel.gd`
-- **Scenes:**
-  - `scenes/ui/land_grid/land_grid_view.tscn`
-  - `scenes/ui/land_grid/land_parcel_view.tscn`
-  - `scenes/ui/land_grid/land_control_panel.tscn`
-- **Configuration:**
-  - `data/land_config.json` (terrain, improvements, resource modifiers)
-- **Design Archives:**
-  - `dev/docs/designs/_archive/land_system_design.md`
-  - `dev/docs/designs/_archive/land_system_implementation_phases.md`
-
-For further details, consult the referenced scripts and archived design documents. 
+  - `
