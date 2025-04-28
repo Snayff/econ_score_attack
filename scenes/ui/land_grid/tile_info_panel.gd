@@ -25,14 +25,15 @@ extends PanelContainer
 
 
 #region PUBLIC FUNCTIONS
-## Updates the info panel to show information for the selected tile.
+## Updates the info panel to show information for the selected tile and demesne.
 ## @param tile_data: DataLandParcel or null
+## @param demesne: Node or null
 ## @null If tile_data is null, shows 'No tile selected'.
-func update_tile_info(tile_data) -> void:
+func update_tile_info(tile_data, demesne = null) -> void:
 	var info: Array[String] = []
 	if tile_data == null:
 		info.append("No tile selected")
-	elif not tile_data.is_surveyed:
+	elif demesne == null or not demesne.is_parcel_surveyed(tile_data.x, tile_data.y):
 		info.append("Parcel not surveyed")
 	else:
 		info.append("Terrain: %s" % tile_data.terrain_type)

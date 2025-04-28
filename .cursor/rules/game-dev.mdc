@@ -69,7 +69,9 @@ alwaysApply: true
   - Avoid scene inheritance where possible, and never go more than 1 level deep. 
   - Remove any unused variables. 
   - Remove any unused function arguments, unless they provide a default value. 
-  - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node.  
+  - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node. 
+  - Access autoloads by their name, not via `get_node`. 
+  - When making a class an autload, ensure it does not use `class_name`, as this causes a conflict. 
   
   
   Naming Conventions

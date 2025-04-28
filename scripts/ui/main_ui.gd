@@ -46,32 +46,34 @@ func _ready() -> void:
 	assert(_btn_laws != null, "Laws button not found")
 	assert(_btn_land != null, "Land button not found")
 	assert(_btn_economy != null, "Economy button not found")
-	
+
 	assert(_view_people != null, "People view not found")
 	assert(_view_laws != null, "Laws view not found")
 	assert(_view_land != null, "Land view not found")
 	assert(_view_economy != null, "Economy view not found")
-	
+
 	assert(_panel_header != null, "Panel header not found")
-	
+
 	_btn_people.pressed.connect(func(): _switch_view(View.PEOPLE))
 	_btn_laws.pressed.connect(func(): _switch_view(View.LAWS))
 	_btn_land.pressed.connect(func(): _switch_view(View.LAND))
 	_btn_economy.pressed.connect(func(): _switch_view(View.ECONOMY))
-	
+
 	# Start with people view
 	_switch_view(View.PEOPLE)
 
 	# Show a test notification to demonstrate the notification system is working
 	EventBusUI.show_notification.emit("Welcome to your demesne!", "info")
 
-	# Inject real land grid data into LandViewPanel
+	# Connect to World grid initialisation
+	World.world_grid_updated.connect(_on_world_grid_ready)
+
+func _on_world_grid_ready() -> void:
 	var sim_node = get_node("/root/Main/Sim")
 	if sim_node and sim_node.demesne:
 		var demesne = sim_node.demesne
-		var land_grid = demesne.land_grid
-		var grid_dims = demesne.get_grid_dimensions()
-		_view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
+		var grid_dims = World.get_grid_dimensions()
+		_view_land.set_grid_and_demesne(grid_dims.x, grid_dims.y, demesne)
 		EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
 
 func _on_land_grid_updated() -> void:
@@ -80,9 +82,8 @@ func _on_land_grid_updated() -> void:
 		var sim_node = get_node("/root/Main/Sim")
 		if sim_node and sim_node.demesne:
 			var demesne = sim_node.demesne
-			var land_grid = demesne.land_grid
-			var grid_dims = demesne.get_grid_dimensions()
-			_view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
+			var grid_dims = World.get_grid_dimensions()
+			_view_land.set_grid_and_demesne(grid_dims.x, grid_dims.y, demesne)
 
 #endregion
 
@@ -101,7 +102,7 @@ func _switch_view(view: View) -> void:
 	_view_laws.visible = false
 	_view_land.visible = false
 	_view_economy.visible = false
-	
+
 	# Show selected view
 	match view:
 		View.PEOPLE:

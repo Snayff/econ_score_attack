@@ -46,22 +46,22 @@ signal tile_selected(tile_id: int, tile_data: DataLandParcel)
 
 #region VARS
 var viewport_origin: Vector2i = Vector2i(0, 0)
-var _land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var _grid_width: int = 0
 var _grid_height: int = 0
 var _selected_tile_coords: Vector2i = Vector2i(-1, -1)
+var _demesne: Node = null
 #endregion
 
 
 #region PUBLIC FUNCTIONS
-## Sets the land grid and its dimensions, then updates the grid display.
-## @param land_grid: Array[Array[DataLandParcel]]
+## Sets the grid dimensions and demesne reference, then updates the grid display.
 ## @param width: int
 ## @param height: int
-func set_land_grid(land_grid: Array, width: int, height: int) -> void:
-	_land_grid = land_grid
+## @param demesne: Node
+func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 	_grid_width = width
 	_grid_height = height
+	_demesne = demesne
 	# Centre viewport
 	viewport_origin = Vector2i((_grid_width - GRID_SIZE) / 2, (_grid_height - GRID_SIZE) / 2)
 	viewport_origin.x = clamp(viewport_origin.x, 0, _grid_width - GRID_SIZE)
@@ -110,7 +110,7 @@ func _on_scroll(direction: Vector2i) -> void:
 func _update_grid() -> void:
 	for child in _grid_container.get_children():
 		child.queue_free()
-	if _land_grid.size() == 0:
+	if _grid_width == 0 or _grid_height == 0 or _demesne == null:
 		return
 	for y in range(GRID_SIZE):
 		for x in range(GRID_SIZE):
@@ -122,12 +122,12 @@ func _update_grid() -> void:
 				btn.text = ""
 				btn.disabled = true
 			else:
-				var parcel: DataLandParcel = _land_grid[world_x][world_y]
+				var parcel = get_node("/root/World").get_parcel(world_x, world_y)
 				btn.text = "%d,%d" % [world_x, world_y]
 				btn.disabled = false
 				btn.pressed.connect(_on_tile_pressed.bind(world_x, world_y))
-				# Visual cues for surveyed/unsurveyed
-				if parcel.is_surveyed:
+				# Visual cues for surveyed/unsurveyed (demesne-specific)
+				if _demesne.is_parcel_surveyed(world_x, world_y):
 					btn.add_theme_color_override("bg_color", Color(0.4, 0.7, 0.4))
 				else:
 					btn.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2))
@@ -141,7 +141,7 @@ func _update_grid() -> void:
 
 func _on_tile_pressed(x: int, y: int) -> void:
 	_selected_tile_coords = Vector2i(x, y)
-	var tile_data = _land_grid[x][y]
+	var tile_data = get_node("/root/World").get_parcel(x, y)
 	emit_signal("tile_selected", y * _grid_width + x, tile_data)
 	_update_grid()
 #endregion

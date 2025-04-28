@@ -54,6 +54,9 @@ var _resource_generator: ResourceGenerator
 
 ## Pathfinding system component
 var _pathfinding: PathfindingSystem
+
+## Set of surveyed parcels (Dictionary used as a set: keys are Vector2i, values are true)
+var surveyed_parcels: Dictionary = {}
 #endregion
 
 
@@ -457,9 +460,10 @@ func get_laws() -> Dictionary:
 ## @param y: Y coordinate of the parcel
 ## @return: Array of discovered resource IDs
 func survey_parcel(x: int, y: int) -> Array[String]:
-	var parcel = get_parcel(x, y)
+	var parcel = get_node("/root/World").get_parcel(x, y)
 	if not parcel:
 		return []
+	surveyed_parcels[Vector2i(x, y)] = true
 	return _resource_generator.survey_parcel(parcel)
 
 ## Handles resource discovery events
@@ -484,4 +488,10 @@ func _on_resource_discovered(x: int, y: int, resource_id: String, amount: float)
 func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
 	EventBusGame.emit_signal("resources_updated", x, y, resources)
 	emit_signal("parcel_updated", x, y, land_grid[x][y])
-#endregion
+
+## Checks if a parcel is surveyed for this demesne
+## @param x: int
+## @param y: int
+## @return: bool
+func is_parcel_surveyed(x: int, y: int) -> bool:
+	return surveyed_parcels.has(Vector2i(x, y))

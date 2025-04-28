@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://du851jdgu87qs" path="res://scenes/ui/land_grid/world_view_panel.gd" id="1_y3pvl"]
 
 [node name="WorldViewPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(600, 0)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_y3pvl")
-custom_minimum_size = Vector2(600, 0)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -42,5 +42,6 @@ text = "↓"
 [node name="GridContainer" type="GridContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 5

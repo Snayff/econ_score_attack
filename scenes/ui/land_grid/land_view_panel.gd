@@ -36,14 +36,22 @@ func _ready() -> void:
 #endregion
 
 
+#region VARS
+var _world_view_panel
+var _tile_info_panel
+var _demesne: Node = null
+#endregion
+
+
 #region PUBLIC FUNCTIONS
-## Sets the land grid and its dimensions, then passes to WorldViewPanel.
-## @param land_grid: Array[Array[DataLandParcel]]
+## Sets the grid dimensions and demesne reference, then passes to WorldViewPanel.
 ## @param width: int
 ## @param height: int
-func set_land_grid(land_grid: Array, width: int, height: int) -> void:
+## @param demesne: Node
+func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
+	_demesne = demesne
 	if _world_view_panel:
-		_world_view_panel.set_land_grid(land_grid, width, height)
+		_world_view_panel.set_grid_and_demesne(width, height, demesne)
 #endregion
 
 
@@ -53,14 +61,11 @@ func set_land_grid(land_grid: Array, width: int, height: int) -> void:
 ## @param tile_data: DataLandParcel, the selected tile's data
 func _on_tile_selected(tile_id: int, tile_data) -> void:
 	if _tile_info_panel:
-		_tile_info_panel.update_tile_info(tile_data)
+		_tile_info_panel.update_tile_info(tile_data, _demesne)
 	else:
 		push_error("LandViewPanel: _tile_info_panel is null!")
 
 func _on_land_grid_updated() -> void:
 	if _world_view_panel:
 		_world_view_panel._update_grid()
-
-var _world_view_panel
-var _tile_info_panel
 #endregion

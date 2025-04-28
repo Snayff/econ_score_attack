@@ -22,6 +22,7 @@ EventBusGame="*res://scripts/globals/event_bus_game.gd"
 EventBusUI="*res://scripts/globals/event_bus_ui.gd"
 Library="*res://scripts/globals/library.gd"
 Logger="*res://dev_tools/logger/logger.gd"
+World="*res://scripts/globals/world.gd"
 
 [display]
 
