@@ -65,6 +65,7 @@ func _ready() -> void:
 	var demesne_data = DataDemesne.new()
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	Logger.log_event("Created demesne", {"name": demesne.demesne_name}, "Sim")
+	demesne.connect_to_turns()
 
 	# Add LandManager as a component
 	land_manager = LandManager.new()

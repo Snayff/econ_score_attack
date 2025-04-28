@@ -35,7 +35,9 @@ func update_tile_info(tile_data, demesne = null) -> void:
 		info.append("No tile selected")
 	else:
 		info.append("Parcel: (%d, %d)" % [tile_data.x, tile_data.y])
-		if demesne == null or not demesne.is_parcel_surveyed(tile_data.x, tile_data.y):
+		if demesne and demesne.surveys_in_progress.has(Vector2i(tile_data.x, tile_data.y)):
+			info.append("Survey in progress")
+		elif demesne == null or not demesne.is_parcel_surveyed(tile_data.x, tile_data.y):
 			info.append("Parcel not surveyed")
 		else:
 			info.append("Terrain: %s" % tile_data.terrain_type)

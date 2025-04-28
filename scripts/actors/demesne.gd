@@ -57,6 +57,9 @@ var _pathfinding: PathfindingSystem
 
 ## Set of surveyed parcels (Dictionary used as a set: keys are Vector2i, values are true)
 var surveyed_parcels: Dictionary = {}
+
+## Surveys in progress dictionary
+var surveys_in_progress: Dictionary = {} # keys: Vector2i(x, y), values: turns remaining
 #endregion
 
 
@@ -111,20 +114,18 @@ func _initialise_land_grid() -> void:
 		"timestamp": Time.get_unix_time_from_system()
 	}, "Demesne")
 
-	# Create empty grid
+	# Create empty grid, all parcels unsurveyed by default
 	land_grid.clear()
 	for x in range(grid_width):
 		var column: Array[DataLandParcel] = []
 		for y in range(grid_height):
 			var terrain_type = "plains"  # Default terrain type
 			var parcel = DataLandParcel.new(x, y, terrain_type)
+			parcel.is_surveyed = false
 			column.append(parcel)
-			# Mark all parcels as surveyed
-			surveyed_parcels[Vector2i(x, y)] = true
-			survey_parcel(x, y)
 		land_grid.append(column)
 
-	# Survey the centre-most parcel on initialisation (for logging)
+	# Survey the centre-most parcel on initialisation
 	var centre_x: int = int(grid_width / 2)
 	var centre_y: int = int(grid_height / 2)
 	if _is_valid_coordinates(centre_x, centre_y):
@@ -525,3 +526,31 @@ func is_parcel_surveyed(x: int, y: int) -> bool:
 	var result = surveyed_parcels.has(key)
 	Logger.log_event("diagnostic_is_parcel_surveyed", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "key": str(key), "result": result, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 	return result
+
+## Requests a survey for a parcel. Returns true if started, false if already surveyed or in progress.
+func request_survey(x: int, y: int) -> bool:
+	var key = Vector2i(x, y)
+	if is_parcel_surveyed(x, y) or surveys_in_progress.has(key):
+		return false
+	surveys_in_progress[key] = 1 # 1 turn to complete
+	Logger.log_event("survey_started", {"x": x, "y": y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	return true
+
+## Advances all surveys by 1 turn. Call this at the end of each turn.
+func advance_turn() -> void:
+	var completed: Array = []
+	for key in surveys_in_progress.keys():
+		surveys_in_progress[key] -= 1
+		if surveys_in_progress[key] <= 0:
+			completed.append(key)
+	for key in completed:
+		surveys_in_progress.erase(key)
+		survey_parcel(key.x, key.y)
+		Logger.log_event("survey_completed", {"x": key.x, "y": key.y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+
+func connect_to_turns() -> void:
+	EventBusGame.turn_complete.connect(_on_turn_complete)
+
+func _on_turn_complete() -> void:
+	advance_turn()
+	EventBusGame.land_grid_updated.emit()
