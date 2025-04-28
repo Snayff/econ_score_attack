@@ -545,8 +545,9 @@ func advance_turn() -> void:
 			completed.append(key)
 	for key in completed:
 		surveys_in_progress.erase(key)
-		survey_parcel(key.x, key.y)
+		var discovered_resources = survey_parcel(key.x, key.y)
 		Logger.log_event("survey_completed", {"x": key.x, "y": key.y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+		EventBusGame.parcel_surveyed.emit(key.x, key.y, discovered_resources)
 
 func connect_to_turns() -> void:
 	EventBusGame.turn_complete.connect(_on_turn_complete)
