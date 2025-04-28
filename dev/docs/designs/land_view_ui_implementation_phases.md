@@ -102,6 +102,7 @@ This document outlines a phased, test-driven approach for implementing the Land 
 ### Tasks
 - Make grid and panels responsive to window size.
 - Add accessibility features (e.g., keyboard navigation, tooltips).
+- Provide visual feedback on changes, such as completion of a survey. 
 - Document all classes, functions, and signals.
 
 ### Testing/Validation

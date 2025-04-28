@@ -21,6 +21,10 @@ signal survey_requested(x: int, y: int)
 func _ready() -> void:
 	if has_node("VBoxContainer/btn_survey"):
 		$VBoxContainer/btn_survey.pressed.connect(_on_survey_pressed)
+	if has_node("VBoxContainer/btn_build"):
+		$VBoxContainer/btn_build.tooltip_text = "Construct a building on this parcel."
+	if has_node("VBoxContainer/btn_survey"):
+		$VBoxContainer/btn_survey.tooltip_text = "Survey this parcel to reveal its details."
 #endregion
 
 
@@ -55,3 +59,8 @@ func _on_survey_pressed() -> void:
 	if self._tile_data:
 		emit_signal("survey_requested", self._tile_data.x, self._tile_data.y)
 #endregion
+
+func _exit_tree() -> void:
+	# Disconnect signals if needed
+	if has_node("VBoxContainer/btn_survey"):
+		$VBoxContainer/btn_survey.pressed.disconnect(_on_survey_pressed)

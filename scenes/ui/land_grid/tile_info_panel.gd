@@ -53,6 +53,7 @@ func update_tile_info(tile_data, demesne = null) -> void:
 				info.append("No discovered resources")
 	if has_node("VBoxContainer/lbl_info"):
 		$VBoxContainer/lbl_info.text = "\n".join(info)
+		$VBoxContainer/lbl_info.tooltip_text = "Information about the selected parcel."
 	else:
 		push_error("TileInfoPanelUI: lbl_info node not found!")
 #endregion

@@ -78,6 +78,18 @@ func get_viewport_origin() -> Vector2i:
 func set_selected_tile(coords: Vector2i) -> void:
 	_selected_tile_coords = coords
 	_update_grid()
+
+## Returns the screen position of a tile in the grid for feedback animation.
+## @param coords: Vector2i
+## @return: Vector2 (screen position)
+func get_tile_screen_position(coords: Vector2i) -> Vector2:
+	# Find the button for the given tile, return its global position (centre)
+	for child in _grid_container.get_children():
+		if child is Button and child.has_meta("tile_coords"):
+			if child.get_meta("tile_coords") == coords:
+				return child.get_global_rect().position + child.get_global_rect().size / 2
+	# Fallback: centre of panel
+	return get_global_rect().position + get_global_rect().size / 2
 #endregion
 
 
@@ -118,6 +130,8 @@ func _update_grid() -> void:
 			var world_y = viewport_origin.y + y
 			var btn = Button.new()
 			btn.custom_minimum_size = Vector2(48, 48)
+			btn.focus_mode = Control.FOCUS_ALL
+			btn.set_meta("tile_coords", Vector2i(world_x, world_y))
 			if world_x >= _grid_width or world_y >= _grid_height:
 				btn.text = ""
 				btn.disabled = true
@@ -129,8 +143,10 @@ func _update_grid() -> void:
 				# Visual cues for surveyed/unsurveyed (demesne-specific)
 				if _demesne.is_parcel_surveyed(world_x, world_y):
 					btn.add_theme_color_override("bg_color", Color(0.4, 0.7, 0.4))
+					btn.tooltip_text = "Surveyed parcel (%d, %d)" % [world_x, world_y]
 				else:
 					btn.add_theme_color_override("bg_color", Color(0.2, 0.2, 0.2))
+					btn.tooltip_text = "Unsurveyed parcel (%d, %d)" % [world_x, world_y]
 				if _selected_tile_coords == Vector2i(world_x, world_y):
 					btn.add_theme_color_override("font_color", Color(1, 1, 0))
 					btn.add_theme_color_override("outline_color", Color(1, 1, 0))
@@ -144,4 +160,31 @@ func _on_tile_pressed(x: int, y: int) -> void:
 	var tile_data = get_node("/root/World").get_parcel(x, y)
 	emit_signal("tile_selected", y * _grid_width + x, tile_data)
 	_update_grid()
+
+# Keyboard navigation for grid selection
+func _unhandled_input(event: InputEvent) -> void:
+	if not _grid_container or _grid_width == 0 or _grid_height == 0:
+		return
+	if event is InputEventKey and event.pressed:
+		var move = Vector2i.ZERO
+		match event.keycode:
+			KEY_UP:
+				move = Vector2i(0, -1)
+			KEY_DOWN:
+				move = Vector2i(0, 1)
+			KEY_LEFT:
+				move = Vector2i(-1, 0)
+			KEY_RIGHT:
+				move = Vector2i(1, 0)
+			KEY_ENTER, KEY_KP_ENTER:
+				# Select current tile
+				if _selected_tile_coords.x >= 0 and _selected_tile_coords.y >= 0:
+					_on_tile_pressed(_selected_tile_coords.x, _selected_tile_coords.y)
+				return
+		if move != Vector2i.ZERO:
+			var new_coords = _selected_tile_coords + move
+			new_coords.x = clamp(new_coords.x, viewport_origin.x, viewport_origin.x + GRID_SIZE - 1)
+			new_coords.y = clamp(new_coords.y, viewport_origin.y, viewport_origin.y + GRID_SIZE - 1)
+			set_selected_tile(new_coords)
+			accept_event()
 #endregion
