@@ -108,6 +108,12 @@ func _on_survey_completed(x: int, y: int) -> void:
 func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 	# Now the survey is truly complete; emit UI feedback
 	EventBusUI.survey_completed.emit(x, y)
+	# If the surveyed tile is currently selected, update the info panel
+	if _world_view_panel and _tile_info_panel:
+		var selected_coords = _world_view_panel._selected_tile_coords
+		if selected_coords == Vector2i(x, y):
+			var tile_data = _demesne.get_parcel(x, y) if _demesne else null
+			_tile_info_panel.update_tile_info(tile_data, _demesne)
 
 func _exit_tree() -> void:
 	# Disconnect signals
