@@ -69,7 +69,11 @@ func start_survey(parcel: DataLandParcel) -> void:
 		}, "AspectManager")
 		return
 
-	EventBusGame.emit_signal("survey_started", parcel.x, parcel.y)
+	Logger.log_event("survey_start", {
+		"x": parcel.x,
+		"y": parcel.y,
+		"has_aspects": not parcel.get_aspect_storage().get_all_aspects().is_empty(),
+	}, "AspectManager")
 
 
 ## Completes a survey on a land parcel, revealing all aspects
@@ -89,6 +93,7 @@ func complete_survey(parcel: DataLandParcel) -> void:
 		"has_aspects": not parcel.get_aspect_storage().get_all_aspects().is_empty(),
 	}, "AspectManager")
 
+	# First discover all aspects
 	var discovered_aspects = parcel.complete_survey()
 
 	Logger.log_event("survey_complete_discovery", {
@@ -98,9 +103,11 @@ func complete_survey(parcel: DataLandParcel) -> void:
 		"discovered_aspects": discovered_aspects,
 	}, "AspectManager")
 
+	# Then emit individual aspect discoveries
 	for aspect_id in discovered_aspects:
 		var aspect_data = {
-			"amount": parcel.get_aspect_amount(aspect_id)
+			"amount": parcel.get_aspect_amount(aspect_id),
+			"discovered": true
 		}
 
 		EventBusGame.emit_signal("aspect_discovered", parcel.x, parcel.y, aspect_id, aspect_data)
@@ -112,7 +119,7 @@ func complete_survey(parcel: DataLandParcel) -> void:
 			"amount": aspect_data.amount,
 		}, "AspectManager")
 
-	# Ensure the parcel is marked as surveyed
+	# Finally mark the parcel as surveyed and emit completion
 	parcel.is_surveyed = true
 
 	EventBusGame.emit_signal("survey_completed", parcel.x, parcel.y, discovered_aspects)
