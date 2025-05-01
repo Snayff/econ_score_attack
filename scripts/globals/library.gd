@@ -181,6 +181,9 @@ const _DEFAULT_CONFIGS: Dictionary = {
 		}
 	}
 }
+
+const _LAND_ASPECTS_FILE: String = "land_aspects.json"
+var _land_aspects: Array = []
 #endregion
 
 
@@ -276,4 +279,21 @@ func get_consumption_rule(good_id: String) -> Dictionary:
 ## @return: Array of all consumption rules
 func get_all_consumption_rules() -> Array:
 	return get_config("consumption_rules").get("consumption_rules", [])
+
+func get_land_aspects() -> Array:
+	if _land_aspects.is_empty():
+		var file = FileAccess.open(DATA_PATH + _LAND_ASPECTS_FILE, FileAccess.READ)
+		if file:
+			_land_aspects = JSON.parse_string(file.get_as_text())
+		else:
+			push_error("Failed to load land_aspects.json")
+			_land_aspects = []
+	return _land_aspects
+
+func get_land_aspect_by_good(good: String) -> Dictionary:
+	for aspect in get_land_aspects():
+		for method in aspect["extraction_methods"]:
+			if method["extracted_good"] == good:
+				return aspect
+	return {}
 #endregion

@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://by1wy0mrkj4xc"]
+
+[ext_resource type="Script" uid="uid://ceq2x3gletjci" path="res://scripts/ui/land_grid/resource_item.gd" id="1_xxxxx"]
+
+[node name="ResourceItem" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+script = ExtResource("1_xxxxx")
+
+[node name="lbl_Name" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Resource Name"
+
+[node name="lbl_Amount" type="Label" parent="."]
+layout_mode = 2
+text = "0.0"
+horizontal_alignment = 2
