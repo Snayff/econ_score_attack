@@ -17,8 +17,6 @@ extends RichTextLabel
 
 #region FUNCS
 func _ready() -> void:
-	Logger.debug("DemesneStockpile: _ready called", "DemesneStockpile")
-
 	# Connect to signals for updates
 	EventBusGame.turn_complete.connect(update_info)
 	if sim:
@@ -33,8 +31,6 @@ func _ready() -> void:
 
 ## Updates the displayed information
 func update_info() -> void:
-	Logger.debug("DemesneStockpile: update_info called", "DemesneStockpile")
-
 	if not sim:
 		Logger.error("DemesneStockpile: sim is null", "DemesneStockpile")
 		text = "No simulation data available (sim is null)"
@@ -57,12 +53,10 @@ func update_info() -> void:
 
 ## Handles stockpile changes from the demesne
 func _on_stockpile_changed(good_id: String, new_amount: int) -> void:
-	Logger.debug("DemesneStockpile: stockpile changed for " + good_id + " to " + str(new_amount), "DemesneStockpile")
 	update_info()
 
 ## Called when the simulation is initialized
 func _on_sim_initialized() -> void:
-	Logger.debug("DemesneStockpile: sim initialized", "DemesneStockpile")
 	# Connect to demesne's stockpile_changed signal
 	if sim and sim.demesne:
 		sim.demesne.stockpile_changed.connect(_on_stockpile_changed)

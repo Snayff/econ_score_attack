@@ -44,10 +44,6 @@ const MAX_TRANSACTION_HISTORY: int = 1000
 ## Sets the initial money in the system for validation
 func set_initial_money(amount: float) -> void:
 	_initial_money = amount
-	Logger.log_event("initial_money_set", {
-		"amount": amount,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "EconomicValidator")
 
 ## Records a new transaction for validation
 func record_transaction(
@@ -74,15 +70,9 @@ func record_transaction(
 	if _transaction_history.size() > MAX_TRANSACTION_HISTORY:
 		_transaction_history.pop_front()
 
-	Logger.log_event("transaction_recorded", transaction, "EconomicValidator")
-
 ## Updates the total resources tracking
 func update_resource_totals(resource_totals: Dictionary) -> void:
 	_total_resources = resource_totals.duplicate()
-	Logger.log_event("resource_totals_updated", {
-		"totals": _total_resources,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "EconomicValidator")
 
 ## Validates that the total money in the system remains constant
 ## (except for explicitly tracked sources/sinks)
@@ -101,10 +91,6 @@ func validate_money_conservation() -> bool:
 		Logger.log_event("money_conservation_violated", details, "EconomicValidator")
 		return false
 
-	Logger.log_event("money_conservation_validated", {
-		"total": current_total,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "EconomicValidator")
 	return true
 
 ## Validates that all goods in the economy came from valid production
@@ -126,11 +112,6 @@ func validate_closed_loop_economy() -> bool:
 			Logger.log_event("closed_loop_economy_violated", details, "EconomicValidator")
 			return false
 
-	Logger.log_event("closed_loop_economy_validated", {
-		"production_totals": production_totals,
-		"consumption_totals": consumption_totals,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "EconomicValidator")
 	return true
 
 ## Gets the current transaction history
@@ -140,9 +121,6 @@ func get_transaction_history() -> Array[Dictionary]:
 ## Clears the transaction history
 func clear_transaction_history() -> void:
 	_transaction_history.clear()
-	Logger.log_event("transaction_history_cleared", {
-		"timestamp": Time.get_unix_time_from_system()
-	}, "EconomicValidator")
 
 #endregion
 

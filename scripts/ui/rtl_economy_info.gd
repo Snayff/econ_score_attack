@@ -66,7 +66,6 @@ func _ready() -> void:
 
 	if sim:
 		sim.sim_initialized.connect(_on_sim_initialized)
-		Logger.debug("EconomyInfo: _ready called", "EconomyInfo")
 		EventBusGame.turn_complete.connect(update_info)
 
 	update_info()

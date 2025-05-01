@@ -35,7 +35,6 @@ func get_parcel(x: int, y: int) -> DataLandParcel:
 	if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
 		Logger.log_event("parcel_access_failed", {"x": x, "y": y, "reason": "out_of_bounds", "timestamp": Time.get_unix_time_from_system()}, "World")
 		return null
-	Logger.log_event("parcel_accessed", {"x": x, "y": y, "timestamp": Time.get_unix_time_from_system()}, "World")
 	return land_grid[x][y]
 
 ## Gets the grid dimensions

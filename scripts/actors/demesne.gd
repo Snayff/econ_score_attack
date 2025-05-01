@@ -65,10 +65,6 @@ var surveys_in_progress: Dictionary = {} # keys: Vector2i(x, y), values: turns r
 
 #region FUNCS
 func _init(demesne_name_: String) -> void:
-	Logger.log_event("demesne_created", {
-		"name": demesne_name_,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "Demesne")
 	demesne_name = demesne_name_
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
@@ -78,16 +74,6 @@ func _init(demesne_name_: String) -> void:
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
-	Logger.log_event("stockpile_initialised", {
-		"initial_values": {
-			"money": 0,
-			"grain": 0,
-			"water": 0,
-			"wood": 0,
-			"bureaucracy": 0
-		},
-		"timestamp": Time.get_unix_time_from_system()
-	}, "Demesne")
 	stockpile = {
 		"money": 0,
 		"grain": 0,
@@ -107,13 +93,6 @@ func _initialise_land_grid() -> void:
 	grid_width = default_size.width
 	grid_height = default_size.height
 
-	Logger.log_event("land_grid_initialised", {
-		"demesne": demesne_name,
-		"width": grid_width,
-		"height": grid_height,
-		"timestamp": Time.get_unix_time_from_system()
-	}, "Demesne")
-
 	# Create empty grid, all parcels unsurveyed by default
 	land_grid.clear()
 	for x in range(grid_width):
@@ -129,12 +108,6 @@ func _initialise_land_grid() -> void:
 	var centre_x: int = int(grid_width / 2)
 	var centre_y: int = int(grid_height / 2)
 	if _is_valid_coordinates(centre_x, centre_y):
-		Logger.log_event("centre_parcel_surveyed", {
-			"demesne": demesne_name,
-			"x": centre_x,
-			"y": centre_y,
-			"timestamp": Time.get_unix_time_from_system()
-		}, "Demesne")
 		survey_parcel(centre_x, centre_y)
 
 ## Sets up the resource generator component
