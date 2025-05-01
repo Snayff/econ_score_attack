@@ -38,7 +38,8 @@ const _CONFIG_FILES: Dictionary = {
 	"goods": "goods.json",
 	"consumption_rules": "rules/consumption_rules.json",
 	"laws": "rules/laws.json",
-	"land": "land_config.json"
+	"land": "land_config.json",
+	"land_aspects": "land_aspects.json"
 }
 
 ## Default values by config type
@@ -281,19 +282,22 @@ func get_all_consumption_rules() -> Array:
 	return get_config("consumption_rules").get("consumption_rules", [])
 
 func get_land_aspects() -> Array:
-	if _land_aspects.is_empty():
-		var file = FileAccess.open(DATA_PATH + _LAND_ASPECTS_FILE, FileAccess.READ)
-		if file:
-			_land_aspects = JSON.parse_string(file.get_as_text())
-		else:
-			push_error("Failed to load land_aspects.json")
-			_land_aspects = []
-	return _land_aspects
+	if _config_cache.has("land_aspects"):
+		return _config_cache.get("land_aspects", [])
+	
+	_load_config("land_aspects")
+	return _config_cache.get("land_aspects", [])
+
+func get_land_aspect_by_id(aspect_id: String) -> Dictionary:
+	for aspect in get_land_aspects():
+		if aspect.get("aspect_id") == aspect_id:
+			return aspect
+	return {}
 
 func get_land_aspect_by_good(good: String) -> Dictionary:
 	for aspect in get_land_aspects():
-		for method in aspect["extraction_methods"]:
-			if method["extracted_good"] == good:
+		for method in aspect.get("extraction_methods", []):
+			if method.get("extracted_good") == good:
 				return aspect
 	return {}
 #endregion

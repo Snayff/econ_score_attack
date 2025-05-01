@@ -105,6 +105,7 @@ alwaysApply: true
   - Monitor performance metrics.
   - Never fail silently. Any unexpected failure should fail clearly, announcing and recording the error. 
   - Use assertions in _ready() to confirm that any referenced Nodes exist. 
+  - Unless absolutely necessary, do not add a timestamp to logging statements. 
 
 
   Code Review Guidelines

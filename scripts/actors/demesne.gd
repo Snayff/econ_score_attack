@@ -116,8 +116,8 @@ func _setup_resource_generator() -> void:
 	add_child(_resource_generator)
 
 	# Connect signals
-	_resource_generator.resource_discovered.connect(_on_resource_discovered)
-	_resource_generator.resources_updated.connect(_on_resources_updated)
+	_resource_generator.aspect_discovered.connect(_on_aspect_discovered)
+	_resource_generator.aspects_updated.connect(_on_aspects_updated)
 
 	# Initialize resources for all parcels
 	for x in range(grid_width):
@@ -448,45 +448,82 @@ func get_laws() -> Dictionary:
 ## Surveys a land parcel for resources
 ## @param x: X coordinate of the parcel
 ## @param y: Y coordinate of the parcel
-## @return: Array of discovered resource IDs
+## @return: Array of discovered aspect IDs
 func survey_parcel(x: int, y: int) -> Array[String]:
 	Logger.log_event("diagnostic_survey_parcel_called", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 	var parcel = World.get_parcel(x, y)
 	if not parcel:
 		Logger.log_event("diagnostic_survey_parcel_null_parcel", {"x": x, "y": y, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 		return []
+
+	# Log parcel state before survey
+	var aspect_storage_before = parcel.get_aspect_storage()
+	var all_aspects_before = aspect_storage_before.get_all_aspects()
+	var discovered_before = aspect_storage_before.get_discovered_aspects()
+	Logger.log_event("diagnostic_survey_before", {
+		"x": x,
+		"y": y,
+		"is_surveyed": parcel.is_surveyed,
+		"all_aspects": all_aspects_before,
+		"discovered_aspects": discovered_before,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
 	surveyed_parcels[Vector2i(x, y)] = true
 	Logger.log_event("diagnostic_survey_parcel_set", {"key": str(Vector2i(x, y)), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
-	return _resource_generator.survey_parcel(parcel)
+
+	# Complete the survey on the parcel itself
+	var discovered_aspects: Array[String] = []
+	discovered_aspects.append_array(parcel.complete_survey())
+
+	# Ensure World is updated about the survey completion
+	World.complete_survey(x, y)
+
+	# Log the parcel state after survey
+	var aspect_storage_after = parcel.get_aspect_storage()
+	var all_aspects_after = aspect_storage_after.get_all_aspects()
+	var discovered_after = aspect_storage_after.get_discovered_aspects()
+	Logger.log_event("diagnostic_survey_after", {
+		"x": x,
+		"y": y,
+		"is_surveyed": parcel.is_surveyed,
+		"all_aspects": all_aspects_after,
+		"discovered_aspects": discovered_after,
+		"newly_discovered": discovered_aspects,
+		"timestamp": Time.get_unix_time_from_system()
+	}, "Demesne")
+
+	# Also run the resource generator's survey for any additional logic
+	_resource_generator.survey_parcel(parcel)
+
+	return discovered_aspects
 
 ## Handles resource discovery events
 ## @param x: X coordinate of the parcel
 ## @param y: Y coordinate of the parcel
-## @param resource_id: ID of the discovered resource
-## @param amount: Amount of resource discovered
-func _on_resource_discovered(x: int, y: int, resource_id: String, amount: float) -> void:
-	EventBusGame.emit_signal("resource_discovered", x, y, resource_id, amount)
-	Logger.log_event("resource_discovered", {
+## @param aspect_id: ID of the discovered aspect
+## @param aspect_data: Data about the discovered aspect
+func _on_aspect_discovered(x: int, y: int, aspect_id: String, aspect_data: Dictionary) -> void:
+	EventBusGame.emit_signal("aspect_discovered", x, y, aspect_id, aspect_data)
+	Logger.log_event("aspect_discovered", {
 		"demesne": demesne_name,
 		"x": x,
 		"y": y,
-		"resource_id": resource_id,
-		"amount": amount,
-		"timestamp": Time.get_unix_time_from_system()
+		"aspect_id": aspect_id,
+		"aspect_data": aspect_data,
 	}, "Demesne")
 
-## Handles resource update events
+## Handles aspect update events
 ## @param x: X coordinate of the parcel
 ## @param y: Y coordinate of the parcel
-## @param resources: Updated resource dictionary
-func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
-	EventBusGame.emit_signal("resources_updated", x, y, resources)
-	Logger.log_event("parcel_resources_updated", {
+## @param aspects: Updated aspects dictionary
+func _on_aspects_updated(x: int, y: int, aspects: Dictionary) -> void:
+	EventBusGame.emit_signal("aspects_updated", x, y, aspects)
+	Logger.log_event("parcel_aspects_updated", {
 		"demesne": demesne_name,
 		"x": x,
 		"y": y,
-		"resources": resources,
-		"timestamp": Time.get_unix_time_from_system()
+		"aspects": aspects,
 	}, "Demesne")
 	emit_signal("parcel_updated", x, y, land_grid[x][y])
 
@@ -497,7 +534,6 @@ func _on_resources_updated(x: int, y: int, resources: Dictionary) -> void:
 func is_parcel_surveyed(x: int, y: int) -> bool:
 	var key = Vector2i(x, y)
 	var result = surveyed_parcels.has(key)
-	Logger.log_event("diagnostic_is_parcel_surveyed", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "key": str(key), "result": result, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 	return result
 
 ## Requests a survey for a parcel. Returns true if started, false if already surveyed or in progress.
@@ -518,9 +554,23 @@ func advance_turn() -> void:
 			completed.append(key)
 	for key in completed:
 		surveys_in_progress.erase(key)
-		var discovered_resources = survey_parcel(key.x, key.y)
-		Logger.log_event("survey_completed", {"x": key.x, "y": key.y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
-		EventBusGame.parcel_surveyed.emit(key.x, key.y, discovered_resources)
+
+		# Complete the survey and get discovered resources
+		var discovered_aspects = survey_parcel(key.x, key.y)
+
+		# Log the completion
+		Logger.log_event("survey_completed", {
+			"x": key.x,
+			"y": key.y,
+			"demesne": demesne_name,
+			"discovered_aspects": discovered_aspects,
+			"timestamp": Time.get_unix_time_from_system()
+		}, "Demesne")
+
+		# Emit signal with the properly typed array
+		var typed_aspects: Array[String] = []
+		typed_aspects.append_array(discovered_aspects)
+		EventBusGame.parcel_surveyed.emit(key.x, key.y, typed_aspects)
 
 func connect_to_turns() -> void:
 	EventBusGame.turn_complete.connect(_on_turn_complete)

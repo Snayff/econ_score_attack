@@ -24,6 +24,7 @@ signal world_grid_updated()
 var land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var grid_width: int = 0
 var grid_height: int = 0
+var _aspect_manager: AspectManager = AspectManager.new()
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -33,7 +34,7 @@ var grid_height: int = 0
 ## @return: DataLandParcel
 func get_parcel(x: int, y: int) -> DataLandParcel:
 	if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
-		Logger.log_event("parcel_access_failed", {"x": x, "y": y, "reason": "out_of_bounds", "timestamp": Time.get_unix_time_from_system()}, "World")
+		Logger.log_event("parcel_access_failed", {"x": x, "y": y, "reason": "out_of_bounds"}, "World")
 		return null
 	return land_grid[x][y]
 
@@ -48,16 +49,71 @@ func initialise_from_config(config: Dictionary) -> void:
 	grid_width = size.width
 	grid_height = size.height
 	land_grid.clear()
-	Logger.log_event("world_grid_initialised", {"width": grid_width, "height": grid_height, "timestamp": Time.get_unix_time_from_system()}, "World")
+	Logger.log_event("world_grid_initialised", {"width": grid_width, "height": grid_height}, "World")
 	for x in range(grid_width):
 		var column: Array = []
 		for y in range(grid_height):
 			var terrain_type = "plains" # TODO: randomise or load from config
 			var parcel = DataLandParcel.new(x, y, terrain_type)
-			Logger.log_event("parcel_created", {"x": x, "y": y, "terrain_type": terrain_type, "timestamp": Time.get_unix_time_from_system()}, "World")
+			_aspect_manager.generate_aspects_for_parcel(parcel)
+
+			# Get all aspects (including undiscovered) for logging
+			var aspect_storage = parcel.get_aspect_storage()
+			var all_aspects = aspect_storage.get_all_aspects()
+			var aspect_info = {}
+			for aspect_id in all_aspects:
+				aspect_info[aspect_id] = {
+					"amount": aspect_storage.get_aspect_amount(aspect_id),
+					"discovered": aspect_storage.is_aspect_discovered(aspect_id)
+				}
+
+			Logger.log_event("parcel_created", {
+				"x": x,
+				"y": y,
+				"terrain_type": terrain_type,
+				"aspects": aspect_info,
+			}, "World")
 			column.append(parcel)
 		land_grid.append(column)
 	emit_signal("world_grid_updated")
+
+## Gets the AspectManager instance for the world
+## @return: AspectManager instance
+func get_aspect_manager() -> AspectManager:
+	return _aspect_manager
+
+## Starts a survey on a parcel at (x, y)
+## @param x: int
+## @param y: int
+## @return: bool - Whether the survey was started successfully
+func start_survey(x: int, y: int) -> bool:
+	var parcel = get_parcel(x, y)
+	if parcel == null:
+		return false
+
+	if parcel.is_surveyed:
+		return false
+
+	_aspect_manager.start_survey(parcel)
+	return true
+
+## Completes a survey on a parcel at (x, y)
+## @param x: int
+## @param y: int
+## @return: bool - Whether the survey was completed successfully
+func complete_survey(x: int, y: int) -> bool:
+	var parcel = get_parcel(x, y)
+	if parcel == null:
+		return false
+
+	# If already surveyed, just ensure state is consistent
+	if parcel.is_surveyed:
+		EventBusGame.emit_signal("land_grid_updated")
+		return true
+
+	_aspect_manager.complete_survey(parcel)
+	EventBusGame.emit_signal("land_grid_updated")
+	return true
 #endregion
 
 #region PRIVATE FUNCTIONS

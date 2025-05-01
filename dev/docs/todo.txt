@@ -12,13 +12,13 @@ ASK FOR FEATURE PROPOSAL
 	Remember, we're not worried about the specific code just yet, unless it helps explain you're thinking. 
 
 ENHANCE FEATURE PROPOSAL
-	Please reflect on your proposal. Are there any problems with the implementation? Is there anything you could improve? Could your proposal better align to project rules? How can you make the design more testable?
+	Please reflect on your proposal. Are there any problems with the implementation? Is there anything you could improve? Could your proposal better align to project rules? How can you make the design more testable? 
 
 IMPLEMENT FEATURE PROPOSAL
 	Please implement the feature exactly as you have described. 
 	
 RECORD FEATURE PROPOSAL AS DESIGN
-	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Remember, we're not worried about the specific code just yet, unless it helps explain you're thinking.
+	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking.
 
 IMPLEMENT DESIGN
 	Please review the @_design.md  and then implement phase x, as listed in @_implementation_phases.md.
@@ -28,6 +28,8 @@ IMPLEMENT DESIGN
 #########
 
 ## NEXT
+- max aspects per tile centrally set
+- amount of aspect generated should be int
 - implement folder restructure as per res://dev/docs/docs/project_structure.md, and update rules in res://.cursor/rules/project-structure.mdc.
 
 ## NEW FEATURES / System
@@ -54,6 +56,7 @@ IMPLEMENT DESIGN
 -  5 day week. 10 week year.  (Bear in mind turns available to player to achieve shit)
 - add category to goods. Most things just need something from the category, and will use the cheapest by default. Some things need specific goods. 
 - notification system use toasts. 
+- split land_config.json into component parts (world def, improvmeents, terrain)
  
 
 ## DEV
@@ -65,6 +68,6 @@ IMPLEMENT DESIGN
 
 
 ## BUGS
-
+- on land view, when progressing time, grid keeps resetting to centre most. 
 
 ################
