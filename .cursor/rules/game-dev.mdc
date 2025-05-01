@@ -72,6 +72,7 @@ alwaysApply: true
   - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node. 
   - Access autoloads by their name, not via `get_node`. 
   - When making a class an autload, ensure it does not use `class_name`, as this causes a conflict. 
+  - Limit the amount of deep nesting, wherever possible, by using things such as early returns. 
   
   
   Naming Conventions

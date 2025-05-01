@@ -53,6 +53,7 @@ IMPLEMENT DESIGN
 - law take time to start implementing. then take time to scale to full effectiveness. time to implement and scaling time defined per law. Show in law panel. 
 -  5 day week. 10 week year.  (Bear in mind turns available to player to achieve shit)
 - add category to goods. Most things just need something from the category, and will use the cheapest by default. Some things need specific goods. 
+- notification system use toasts. 
  
 
 ## DEV
@@ -61,6 +62,9 @@ IMPLEMENT DESIGN
 - add performance measuring and track trending over time, to identify regressions. as per res://dev/docs/designs/performance_monitoring_system.md.
 	- profile the sim to ensure can be handled within a frame. 
 - logger enhancements as per. res://dev/docs/designs/logger_enhancements.md
+
+
+## BUGS
 
 
 ################
