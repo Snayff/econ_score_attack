@@ -2,6 +2,8 @@
 ## Centralised logging system for the application
 ## Provides consistent formatting and control over log output
 ##
+## Log file retention: On every game start, old log files are deleted, retaining only the most recent as per the max_log_files config, regardless of whether file logging is enabled.
+##
 ## Log Levels:
 ## - DEBUG: Detailed information useful during debugging. Use for function entry/exit,
 ##          variable values, and detailed flow control.
@@ -429,6 +431,7 @@ func _close_log_file() -> void:
 ## Called when the node enters the scene tree
 func _ready() -> void:
 	load_config()
+	_cleanup_old_logs()
 
 ## Called when the node is about to be removed from the scene tree
 func _exit_tree() -> void:

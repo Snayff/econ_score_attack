@@ -129,6 +129,8 @@ func _on_survey_progress_updated(x: int, y: int, progress: float) -> void:
 
 func _on_survey_completed(x: int, y: int, _discovered_aspects: Array) -> void:
 	if x == _current_x and y == _current_y:
+		if _progress_bar:
+			_progress_bar.hide()
 		_update_ui_state()
 
 
