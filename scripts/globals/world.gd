@@ -24,7 +24,6 @@ signal world_grid_updated()
 var land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var grid_width: int = 0
 var grid_height: int = 0
-var _aspect_manager: AspectManager = AspectManager.new()
 var _surveys_in_progress: Dictionary = {} # Dictionary[Vector2i, bool]
 #endregion
 
@@ -57,7 +56,7 @@ func initialise_from_config(config: Dictionary) -> void:
 		for y in range(grid_height):
 			var terrain_type = "plains" # TODO: randomise or load from config
 			var parcel = DataLandParcel.new(x, y, terrain_type)
-			_aspect_manager.generate_aspects_for_parcel(parcel)
+			AspectManager.generate_aspects_for_parcel(parcel)
 
 			# Get all aspects (including undiscovered) for logging
 			var aspect_storage = parcel.get_aspect_storage()
@@ -79,11 +78,6 @@ func initialise_from_config(config: Dictionary) -> void:
 		land_grid.append(column)
 	emit_signal("world_grid_updated")
 
-## Gets the AspectManager instance for the world
-## @return: AspectManager instance
-func get_aspect_manager() -> AspectManager:
-	return _aspect_manager
-
 ## Starts a survey on a parcel at (x, y)
 ## @param x: int
 ## @param y: int
@@ -101,9 +95,7 @@ func start_survey(x: int, y: int) -> bool:
 		return false
 
 	_surveys_in_progress[coords] = true
-	_aspect_manager.start_survey(parcel)
-	EventBusGame.emit_signal("survey_started", x, y)
-	return true
+	return SurveyManager.start_survey(x, y)
 
 ## Completes a survey on a parcel at (x, y)
 ## @param x: int
@@ -127,7 +119,8 @@ func complete_survey(x: int, y: int) -> bool:
 		if not start_survey(x, y):
 			return false
 
-	_aspect_manager.complete_survey(parcel)
+	# Mark parcel as surveyed and update its aspects
+	parcel.is_surveyed = true
 	_surveys_in_progress.erase(coords)
 
 	# Emit signals in correct order
@@ -144,4 +137,6 @@ func is_survey_in_progress(x: int, y: int) -> bool:
 #endregion
 
 #region PRIVATE FUNCTIONS
+func _ready() -> void:
+	pass
 #endregion

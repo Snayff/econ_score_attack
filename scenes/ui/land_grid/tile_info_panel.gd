@@ -17,6 +17,9 @@ extends PanelContainer
 
 
 #region ON READY
+
+@onready var _survey_panel = %SurveyPanel
+
 func _ready() -> void:
 	# Connect to grid update signals
 	EventBusGame.land_grid_updated.connect(_on_grid_updated)
@@ -43,9 +46,11 @@ func update_tile_info(tile_data, demesne = null) -> void:
 	if tile_data:
 		_current_coords = Vector2i(tile_data.x, tile_data.y)
 		_current_demesne = demesne
+		_survey_panel.update_parcel(tile_data.x, tile_data.y)
 	else:
 		_current_coords = Vector2i(-1, -1)
 		_current_demesne = null
+		_survey_panel.update_parcel(-1, -1)
 
 	var info: Array[String] = []
 	if tile_data == null:

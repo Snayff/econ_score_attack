@@ -42,6 +42,10 @@ signal survey_completed(x: int, y: int, discovered_aspects: Array)
 @warning_ignore("unused_signal")
 signal survey_started(x: int, y: int)
 
+## Emitted when survey progress is updated
+@warning_ignore("unused_signal")
+signal survey_progress_updated(x: int, y: int, progress: float)
+
 ## Emitted when a season changes
 @warning_ignore("unused_signal")
 signal season_changed(new_season: EnvironmentalSystem.Season)

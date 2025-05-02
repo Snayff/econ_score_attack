@@ -1,17 +1,14 @@
-"""
-WorldViewPanelUI
-
-Panel for displaying the world tile grid with scrollable viewport.
-Usage: Attach to WorldViewPanel.tscn root node.
-
-- Shows a 5x5 grid of tile buttons, each displaying its tile index.
-- Arrow buttons scroll the visible viewport.
-- Uses DataLandParcel for mock data.
-
-Example:
-var panel = WorldViewPanelUI.new()
-add_child(panel)
-"""
+## WorldViewPanelUI
+## Panel for displaying the world tile grid with scrollable viewport.
+## Usage: Attach to WorldViewPanel.tscn root node.
+##
+## - Shows a 5x5 grid of tile buttons, each displaying its tile index.
+## - Arrow buttons scroll the visible viewport.
+## - Uses DataLandParcel for mock data.
+##
+## Example:
+## var panel = WorldViewPanelUI.new()
+## add_child(panel)
 
 class_name WorldViewPanelUI
 extends PanelContainer

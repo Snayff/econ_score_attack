@@ -54,6 +54,7 @@ alwaysApply: true
 
   GDScript 2.0/Godot
   - Never use "name" as a variable, use "f_name" instead.
+  - Godot's minimum version is 4.4. 
   - Utilize Godot's UI system (Control Nodes) for creating user interfaces.
   - UI commuinication with other nodes should prioritise using signals and only if absolutely necessary should there be a hardcoded reference to another node in a UI node.
   - Use static typing at all times, unless not possible. 
@@ -61,7 +62,6 @@ alwaysApply: true
   - When communicating up the hierarchy, i.e. from a child to a parent, use signals. Never call a function or variable from a parent directly. 
   - Ensure signals are disconnected when removed. 
   - Connect signals as early as possible, preferably in _ready().
-  - Godot's minimum version is 4.4. 
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
   - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment, but before the signal.
   - Avoid narrowing precision by converting floats to ints. 
@@ -105,13 +105,14 @@ alwaysApply: true
   - Monitor performance metrics.
   - Never fail silently. Any unexpected failure should fail clearly, announcing and recording the error. 
   - Use assertions in _ready() to confirm that any referenced Nodes exist. 
-  - Unless absolutely necessary, do not add a timestamp to logging statements. 
+  - Unless absolutely necessary, do not add a timestamp to logging 
 
 
   Code Review Guidelines
   - Check for proper error handling.
   - Verify performance considerations.
   - Confirm documentation completeness.
+  - Check for duplicate signals. 
 
 
   Structure

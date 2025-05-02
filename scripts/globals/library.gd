@@ -17,6 +17,7 @@ func _ready() -> void:
 	_load_config("consumption_rules")
 	_load_config("laws")
 	_load_config("land")
+	_load_config("land_aspects")
 #endregion
 
 
@@ -300,4 +301,15 @@ func get_land_aspect_by_good(good: String) -> Dictionary:
 			if method.get("extracted_good") == good:
 				return aspect
 	return {}
+
+## Gets all aspect data
+## @return Array containing all aspect data
+func get_aspect_data() -> Array:
+	return get_land_aspects()
+
+## Gets data for a specific aspect by ID
+## @param aspect_id: The ID of the aspect to get
+## @return Dictionary containing the aspect data, or empty if not found
+func get_aspect_by_id(aspect_id: String) -> Dictionary:
+	return get_land_aspect_by_id(aspect_id)
 #endregion
