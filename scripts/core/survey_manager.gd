@@ -118,12 +118,14 @@ static func _complete_survey(coord_key: String) -> void:
 	if parcel == null:
 		_active_surveys.erase(coord_key)
 		return
-		
-	# Emit completion event with discovered aspects
+
+	# Mark as surveyed and discover aspects before emitting the signal
+	var discovered_aspects = parcel.complete_survey()
+
 	EventBusGame.survey_completed.emit(
 		survey.x,
 		survey.y,
-		parcel.get_aspect_storage().get_discovered_aspect_ids()
+		discovered_aspects
 	)
 	
 	_active_surveys.erase(coord_key)
