@@ -119,9 +119,6 @@ static func _complete_survey(coord_key: String) -> void:
 		_active_surveys.erase(coord_key)
 		return
 		
-	# Mark parcel as surveyed
-	parcel.is_surveyed = true
-	
 	# Emit completion event with discovered aspects
 	EventBusGame.survey_completed.emit(
 		survey.x,

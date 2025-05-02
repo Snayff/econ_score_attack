@@ -81,11 +81,11 @@ func update_tile_info(tile_data, demesne = null) -> void:
 			info.append("Building: %s" % (tile_data.building_id if tile_data.building_id != "" else "No building"))
 
 			var discovered_aspects = tile_data.get_discovered_aspects()
-			Logger.log_event("diagnostic_tile_info_aspects", {
+			Logger.log_event("debug_tile_info_discovered_aspects", {
 				"x": tile_data.x,
 				"y": tile_data.y,
-				"discovered_count": discovered_aspects.size(),
-				"discovered_ids": discovered_aspects.keys(),
+				"discovered_aspects": discovered_aspects,
+				"is_surveyed": tile_data.is_surveyed,
 				"all_aspects": tile_data.get_aspect_storage().get_all_aspects(),
 				"timestamp": Time.get_unix_time_from_system()
 			}, "TileInfoPanel")

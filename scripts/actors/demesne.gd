@@ -11,6 +11,7 @@ const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
 const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
 const ResourceGenerator = preload("res://scripts/actors/actor_components/resource_generator.gd")
 const PathfindingSystem = preload("res://scripts/core/pathfinding_system.gd")
+const SurveyManager = preload("res://scripts/core/survey_manager.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)
@@ -541,7 +542,7 @@ func request_survey(x: int, y: int) -> bool:
 	var key = Vector2i(x, y)
 	if is_parcel_surveyed(x, y) or surveys_in_progress.has(key):
 		return false
-	surveys_in_progress[key] = 1 # 1 turn to complete
+	surveys_in_progress[key] = SurveyManager.SURVEY_TURNS
 	Logger.log_event("survey_started", {"x": x, "y": y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
 	return true
 

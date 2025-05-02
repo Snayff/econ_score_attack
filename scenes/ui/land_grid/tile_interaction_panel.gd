@@ -89,8 +89,7 @@ func _update_ui_state() -> void:
 		if _survey_button:
 			_survey_button.hide()
 		if _progress_bar:
-			_progress_bar.value = 1.0
-			_progress_bar.show()
+			_progress_bar.hide()
 		return
 
 	# If survey in progress

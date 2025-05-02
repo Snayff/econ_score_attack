@@ -120,7 +120,6 @@ func complete_survey(x: int, y: int) -> bool:
 			return false
 
 	# Mark parcel as surveyed and update its aspects
-	parcel.is_surveyed = true
 	_surveys_in_progress.erase(coords)
 
 	# Emit signals in correct order
