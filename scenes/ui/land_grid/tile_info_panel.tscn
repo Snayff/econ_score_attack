@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bvysdiib6f0vw"]
+[gd_scene load_steps=2 format=3 uid="uid://bvysdiib6f0vw"]
 
-[ext_resource type="Script" uid="uid://4idxjlue5as0" path="res://scenes/ui/land_grid/tile_info_panel.gd" id="1_y2fh3"]
-[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/survey_panel.tscn" id="2_xxxxx"]
+[ext_resource type="Script" path="res://scenes/ui/land_grid/tile_info_panel.gd" id="1_y2fh3"]
 
 [node name="TileInfoPanel" type="PanelContainer"]
 script = ExtResource("1_y2fh3")
@@ -14,10 +13,4 @@ theme_override_constants/separation = 10
 [node name="lbl_info" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Tile Info Placeholder"
-
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="SurveyPanel" parent="VBoxContainer" instance=ExtResource("2_xxxxx")]
-unique_name_in_owner = true
-layout_mode = 2
+tooltip_text = "Information about the selected parcel."

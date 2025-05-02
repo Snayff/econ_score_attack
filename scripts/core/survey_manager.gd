@@ -63,15 +63,6 @@ static func start_survey(x: int, y: int) -> bool:
 	return true
 
 
-## Cancels an active survey
-static func cancel_survey(x: int, y: int) -> void:
-	if not is_instance_valid(SurveyManager):
-		return
-		
-	var coord_key := _get_coord_key(x, y)
-	_active_surveys.erase(coord_key)
-
-
 ## Gets the survey progress for a parcel
 ## Returns -1 if no survey is active
 static func get_survey_progress(x: int, y: int) -> float:

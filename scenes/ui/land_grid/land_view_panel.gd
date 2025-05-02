@@ -25,19 +25,18 @@ func _ready() -> void:
 	assert(world_view_panel != null)
 	assert(tile_info_panel != null)
 	assert(tile_interaction_panel != null)
-	# Connect signal (expects two arguments: tile_id, tile_data)
+
+	# Connect signals
 	world_view_panel.tile_selected.connect(_on_tile_selected)
-	if tile_interaction_panel is TileInteractionPanelUI:
-		tile_interaction_panel.survey_requested.connect(_on_survey_requested)
-	else:
-		push_error("TileInteractionPanel does not have the correct script attached!")
+	EventBusGame.request_survey.connect(_on_survey_requested)
+	EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
+	EventBusUI.survey_completed.connect(_on_survey_completed)
+	EventBusGame.parcel_surveyed.connect(_on_parcel_surveyed)
+
 	# Store for later use if needed
 	self._world_view_panel = world_view_panel
 	self._tile_info_panel = tile_info_panel
 	self._tile_interaction_panel = tile_interaction_panel
-	EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
-	EventBusUI.survey_completed.connect(_on_survey_completed)
-	EventBusGame.parcel_surveyed.connect(_on_parcel_surveyed)
 #endregion
 
 
@@ -77,6 +76,7 @@ func _on_tile_selected(tile_id: int, tile_data) -> void:
 	else:
 		push_error("LandViewPanel: _tile_info_panel is null!")
 
+
 func _on_survey_requested(x: int, y: int) -> void:
 	if _demesne:
 		if _demesne.request_survey(x, y):
@@ -87,11 +87,12 @@ func _on_survey_requested(x: int, y: int) -> void:
 				_tile_info_panel.update_tile_info(tile_data, _demesne)
 			if _tile_interaction_panel:
 				_tile_interaction_panel.update_for_tile(tile_data, _demesne)
-			# Do NOT emit survey_completed here; wait for actual completion
+
 
 func _on_land_grid_updated() -> void:
 	if _world_view_panel:
 		_world_view_panel._update_grid()
+
 
 func _on_survey_completed(x: int, y: int) -> void:
 	# Show notification and visual feedback
@@ -105,6 +106,7 @@ func _on_survey_completed(x: int, y: int) -> void:
 		var panel_rect = _world_view_panel.get_global_rect() if _world_view_panel else Rect2(Vector2.ZERO, Vector2(100, 100))
 		EventBusUI.show_visual_feedback.emit("Surveyed!", panel_rect.position + panel_rect.size / 2)
 
+
 func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 	# Now the survey is truly complete; emit UI feedback
 	EventBusUI.survey_completed.emit(x, y)
@@ -115,10 +117,15 @@ func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 			var tile_data = _demesne.get_parcel(x, y) if _demesne else null
 			_tile_info_panel.update_tile_info(tile_data, _demesne)
 
+
 func _exit_tree() -> void:
 	# Disconnect signals
 	if EventBusUI.survey_completed.is_connected(_on_survey_completed):
 		EventBusUI.survey_completed.disconnect(_on_survey_completed)
 	if EventBusGame.parcel_surveyed.is_connected(_on_parcel_surveyed):
 		EventBusGame.parcel_surveyed.disconnect(_on_parcel_surveyed)
+	if EventBusGame.request_survey.is_connected(_on_survey_requested):
+		EventBusGame.request_survey.disconnect(_on_survey_requested)
+	if EventBusGame.land_grid_updated.is_connected(_on_land_grid_updated):
+		EventBusGame.land_grid_updated.disconnect(_on_land_grid_updated)
 #endregion
