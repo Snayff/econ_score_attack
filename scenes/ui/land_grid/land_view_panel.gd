@@ -18,20 +18,10 @@ extends HSplitContainer
 
 #region ON READY
 func _ready() -> void:
-	# Get references to WorldViewPanel, TileInfoPanel, and TileInteractionPanel
+	# Get references to WorldViewPanel, TileInfoPanelNew, and TileInteractionPanel
 	var world_view_panel = $MiddleRightSplit/WorldViewPanel
 	var tile_info_panel = $MiddleRightSplit/TileInfoPanel
 	var tile_interaction_panel: TileInteractionPanelUI = $TileInteractionPanel
-
-	# Debug: List all children of MiddleRightSplit
-	var middle_right_split = $MiddleRightSplit
-	print("[DEBUG] Children of MiddleRightSplit:")
-	for child in middle_right_split.get_children():
-		print("[DEBUG]  - ", child.name, " (", child.get_class(), ")")
-
-	print("[DEBUG] tile_info_panel: ", tile_info_panel)
-	print("[DEBUG] world_view_panel: ", world_view_panel)
-	print("[DEBUG] tile_interaction_panel: ", tile_interaction_panel)
 
 	assert(world_view_panel != null)
 	assert(tile_info_panel != null)
@@ -81,7 +71,12 @@ func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 ## @param tile_data: DataLandParcel, the selected tile's data
 func _on_tile_selected(tile_id: int, tile_data) -> void:
 	if _tile_info_panel:
-		_tile_info_panel.update_tile_info(tile_data, _demesne)
+		# Construct DataTileInfo for the new panel
+		var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
+		var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
+		var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
+		var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+		_tile_info_panel.update_info(data_tile_info)
 	if _tile_interaction_panel:
 		_tile_interaction_panel.update_for_tile(tile_data, _demesne)
 	else:
@@ -95,7 +90,11 @@ func _on_survey_requested(x: int, y: int) -> void:
 			# Optionally, update panels immediately
 			var tile_data = _demesne.get_parcel(x, y)
 			if _tile_info_panel:
-				_tile_info_panel.update_tile_info(tile_data, _demesne)
+				var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
+				var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
+				var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
+				var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				_tile_info_panel.update_info(data_tile_info)
 			if _tile_interaction_panel:
 				_tile_interaction_panel.update_for_tile(tile_data, _demesne)
 
@@ -126,7 +125,11 @@ func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 		var selected_coords = _world_view_panel._selected_tile_coords
 		if selected_coords == Vector2i(x, y):
 			var tile_data = _demesne.get_parcel(x, y) if _demesne else null
-			_tile_info_panel.update_tile_info(tile_data, _demesne)
+			var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
+			var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
+			var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
+			var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+			_tile_info_panel.update_info(data_tile_info)
 
 
 func _exit_tree() -> void:
@@ -140,3 +143,6 @@ func _exit_tree() -> void:
 	if EventBusGame.land_grid_updated.is_connected(_on_land_grid_updated):
 		EventBusGame.land_grid_updated.disconnect(_on_land_grid_updated)
 #endregion
+
+# Import DataTileInfo for static typing
+const DataTileInfo = preload("res://scripts/data/DataTileInfo.gd")
