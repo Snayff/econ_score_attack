@@ -22,6 +22,17 @@ func _ready() -> void:
 	var world_view_panel = $MiddleRightSplit/WorldViewPanel
 	var tile_info_panel = $MiddleRightSplit/TileInfoPanel
 	var tile_interaction_panel: TileInteractionPanelUI = $TileInteractionPanel
+
+	# Debug: List all children of MiddleRightSplit
+	var middle_right_split = $MiddleRightSplit
+	print("[DEBUG] Children of MiddleRightSplit:")
+	for child in middle_right_split.get_children():
+		print("[DEBUG]  - ", child.name, " (", child.get_class(), ")")
+
+	print("[DEBUG] tile_info_panel: ", tile_info_panel)
+	print("[DEBUG] world_view_panel: ", world_view_panel)
+	print("[DEBUG] tile_interaction_panel: ", tile_interaction_panel)
+
 	assert(world_view_panel != null)
 	assert(tile_info_panel != null)
 	assert(tile_interaction_panel != null)

@@ -50,6 +50,8 @@ alwaysApply: true
   - UI to be as decoupled as possible from game logic. use signals for communication, not direct links to nodes, wherever possible. 
   - Only use global autoloads for truly global, stateless, or cross-cutting concerns (e.g., event buses, config loaders, constants), or data or services that must be accessible everywhere, regardless of scene or context.
   - For all classes where there are multiple instances existing at once provide a unique ID, so that it can be more easily referenced. Avoid using names as a unique id.
+  - Consider how will save 
+  - Externalise text to later support different languages.
 
 
   GDScript 2.0/Godot
