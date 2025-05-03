@@ -42,15 +42,15 @@ static var _active_surveys: Dictionary = {}
 static func start_survey(x: int, y: int) -> bool:
 	if not is_instance_valid(SurveyManager):
 		return false
-		
+
 	var parcel = World.get_parcel(x, y)
 	if parcel == null or parcel.is_surveyed:
 		return false
-		
+
 	var coord_key := _get_coord_key(x, y)
 	if _active_surveys.has(coord_key):
 		return false
-		
+
 	# Initialize survey data
 	_active_surveys[coord_key] = {
 		"progress": 0.0,
@@ -58,7 +58,7 @@ static func start_survey(x: int, y: int) -> bool:
 		"y": y,
 		"turns_remaining": SURVEY_TURNS
 	}
-	
+
 	EventBusGame.survey_started.emit(x, y)
 	return true
 
@@ -68,7 +68,7 @@ static func start_survey(x: int, y: int) -> bool:
 static func get_survey_progress(x: int, y: int) -> float:
 	if not is_instance_valid(SurveyManager):
 		return -1.0
-		
+
 	var coord_key := _get_coord_key(x, y)
 	if not _active_surveys.has(coord_key):
 		return -1.0
@@ -79,23 +79,23 @@ static func get_survey_progress(x: int, y: int) -> float:
 static func process_turn() -> void:
 	if not is_instance_valid(SurveyManager):
 		return
-		
+
 	var completed_surveys: Array = []
-	
+
 	for coord_key in _active_surveys:
 		var survey: Dictionary = _active_surveys[coord_key]
 		survey.turns_remaining -= 1
 		survey.progress = minf(1.0, survey.progress + PROGRESS_PER_TURN)
-		
+
 		EventBusGame.survey_progress_updated.emit(
 			survey.x,
 			survey.y,
 			survey.progress
 		)
-		
+
 		if survey.turns_remaining <= 0:
 			completed_surveys.append(coord_key)
-			
+
 	for coord_key in completed_surveys:
 		_complete_survey(coord_key)
 #endregion
@@ -114,7 +114,7 @@ static func _connect_signals() -> void:
 static func _complete_survey(coord_key: String) -> void:
 	var survey: Dictionary = _active_surveys[coord_key]
 	var parcel := World.get_parcel(survey.x, survey.y)
-	
+
 	if parcel == null:
 		_active_surveys.erase(coord_key)
 		return
@@ -127,7 +127,7 @@ static func _complete_survey(coord_key: String) -> void:
 		survey.y,
 		discovered_aspects
 	)
-	
+
 	_active_surveys.erase(coord_key)
 
 
@@ -141,4 +141,4 @@ static func _on_turn_complete() -> void:
 
 static func _get_coord_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]
-#endregion 
+#endregion

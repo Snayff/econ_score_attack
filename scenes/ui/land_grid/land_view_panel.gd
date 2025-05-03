@@ -124,12 +124,14 @@ func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 	if _world_view_panel and _tile_info_panel:
 		var selected_coords = _world_view_panel._selected_tile_coords
 		if selected_coords == Vector2i(x, y):
-			var tile_data = _demesne.get_parcel(x, y) if _demesne else null
-			var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
-			var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
-			var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
-			var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
-			_tile_info_panel.update_info(data_tile_info)
+			# Fetch the latest tile data after survey from World singleton
+			var tile_data = World.get_parcel(x, y)
+			if tile_data:
+				var location: Vector2i = tile_data.get_coordinates()
+				var is_surveyed: bool = tile_data.is_surveyed
+				var aspects: Dictionary = tile_data.get_discovered_aspects()
+				var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				_tile_info_panel.update_info(data_tile_info)
 
 
 func _exit_tree() -> void:

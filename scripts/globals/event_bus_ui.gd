@@ -45,4 +45,4 @@ signal survey_completed(x: int, y: int)
 
 #region FUNCS
 
-#endregion 
+#endregion

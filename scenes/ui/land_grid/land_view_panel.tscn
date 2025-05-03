@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bn2f4bby2e6wb" path="res://scenes/ui/land_grid/tile_interaction_panel.tscn" id="1"]
 [ext_resource type="Script" uid="uid://drw3cfya4tybr" path="res://scenes/ui/land_grid/land_view_panel.gd" id="1_1vomj"]
 [ext_resource type="PackedScene" uid="uid://be338px6n6hy4" path="res://scenes/ui/land_grid/world_view_panel.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://cqkshiytv5kx3" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="4"]
 [ext_resource type="Script" uid="uid://13lc4m1o0ppa" path="res://scenes/ui/land_grid/tile_info_panel.gd" id="5_1jnom"]
 
 [node name="LandViewPanel" type="HSplitContainer"]

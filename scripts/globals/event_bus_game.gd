@@ -98,4 +98,4 @@ signal request_build(x: int, y: int, building_id: String)
 @warning_ignore("unused_signal")
 signal land_grid_updated()
 
-#endregion 
+#endregion
