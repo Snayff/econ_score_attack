@@ -1,72 +1,220 @@
 # Land System
 
 ## Overview
-The Land System manages the demesne's land grid, including all parcels (tiles), their state, and their integration with the UI. It ensures that all land data is data-driven, modular, and updated in real time in response to game events.
+The Land System manages the demesne's 2D land grid, ensuring all parcels (tiles) are data-driven, modular, and updated in real time. It is foundational to the closed-loop economy, as all production and consumption are tied to parcels.
 
-- On initialisation, the centre-most parcel of the grid is always surveyed by default. This ensures the player always starts with at least one surveyed parcel.
+- The grid is initialised from external JSON config (`land_config.json`) via the `Library` autoload.
+- The centre-most parcel is always surveyed on initialisation.
+- All land data is encapsulated in `DataLandParcel` data classes.
+
+---
+
+## Core Concepts
+
+- **Closed-Loop Economy:** All goods must be produced and consumed within the grid; nothing is created ex nihilo.
+- **Dynamic Market:** Resource availability and land improvements affect economic activity and prices.
+- **Physical Grid:** The world is a 2D array of parcels, each with unique coordinates and state.
+- **Buildings and Jobs:** Buildings are placed on parcels, creating jobs and enabling production.
+- **Laws and Environment:** Laws and environmental factors (fertility, pollution) influence parcel productivity.
 
 ---
 
 ## Data Flow
-- The land grid is a 2D array of `DataLandParcel` objects, owned by the demesne (see `Sim` node).
-- The grid is initialised using configuration from `land_config.json` via the `Library` autoload.
-- The demesne exposes the grid and its dimensions via `land_grid` and `get_grid_dimensions()`.
-- The demesne surveys the centre-most parcel (using integer division of grid width/height) immediately after grid creation.
+
+- The demesne owns the land grid (`Array<Array<DataLandParcel>>`).
+- Grid dimensions and data are exposed via `get_grid_dimensions()` and `land_grid`.
+- The `LandManager` registers and manages all demesne grids, providing access and updates.
+- All changes are signalled via the event bus for UI and system updates.
+
+### Data Flow Diagram
+
+```text
++-------------------+         +-------------------+         +-------------------+
+|   land_config.json|         |   Library (autoload)        |   DataLandParcel   |
++-------------------+         +-------------------+         +-------------------+
+         |                              |                              |
+         |  (loads config)              |  (creates grid)              |
+         +----------------------------->|----------------------------->|
+         |                              |                              |
+         |                              v                              |
+         |                    +-------------------+                   |
+         |                    |   Demesne         |                   |
+         |                    +-------------------+                   |
+         |                              |                              |
+         |  (owns grid, exposes         |                              |
+         |   land_grid, dimensions)     |                              |
+         |                              v                              |
+         |                    +-------------------+                   |
+         |                    |   LandManager     |                   |
+         |                    +-------------------+                   |
+         |                              |                              |
+         |  (registers grid, provides   |                              |
+         |   access, emits updates)     |                              |
+         |                              v                              |
+         |                    +-------------------+                   |
+         |                    |   EventBusGame    |                   |
+         |                    +-------------------+                   |
+         |                              |                              |
+         |  (signals updates)           |                              |
+         |                              v                              |
+         |                    +-------------------+                   |
+         |                    |   UI Components   |                   |
+         |                    +-------------------+                   |
+```
+
+**Explanation:**
+- The land grid is initialised from `land_config.json` via the `Library` autoload.
+- The demesne owns the grid and exposes it.
+- The `LandManager` registers and manages the grid, emitting updates via the event bus.
+- UI components listen for signals and update accordingly.
 
 ---
 
 ## Signals
-- `EventBusGame.land_grid_updated()`: Emitted whenever the land grid changes (e.g., after surveying, building, or resource updates). All UI components listen for this signal to refresh their data.
-- `WorldViewPanel.tile_selected(tile_id: int, tile_data: DataLandParcel)`: Emitted when a tile is selected in the UI grid.
+
+- `EventBusGame.land_grid_updated(parcel_data: DataLandParcel)`: Emitted on any parcel update.
+- `WorldViewPanel.tile_selected(tile_id: int, tile_data: DataLandParcel)`: Emitted on tile selection in the UI.
+- `parcel_selected(x: int, y: int)`: Emitted when a parcel is selected.
+- `request_parcel_data(x: int, y: int)`: Requests data for a specific parcel.
+
+All signals are connected/disconnected as per Godot best practice, and are never duplicated.
+
+---
+
+## Data Structures
+
+### DataLandParcel
+
+```gdscript
+## Data class for a single land parcel.
+## Example:
+##   var parcel = DataLandParcel.new(x, y, "plains", {}, null, {}, 1.0, 0.0, false, 0.0)
+class_name DataLandParcel
+extends RefCounted
+
+var x: int
+var y: int
+var terrain_type: String
+var resources: Dictionary
+var building_id: int
+var improvements: Dictionary
+var fertility: float
+var pollution_level: float
+var is_surveyed: bool
+var resource_generation_rate: float
+
+func add_resource(resource_id: String, amount: float, discovered: bool) -> void:
+    # Adds a resource to the parcel.
+    pass
+
+func get_resource_amount(resource_id: String) -> float:
+    # Returns the amount of a resource.
+    pass
+
+func discover_resource(resource_id: String) -> void:
+    # Marks a resource as discovered.
+    pass
+
+func update_resources(delta: float) -> void:
+    # Updates resource amounts over time.
+    pass
+```
+
+---
+
+## Land Management
+
+### LandManager
+
+- Registers each demesne's land grid.
+- Provides access to parcels by coordinates.
+- Emits updates via the event bus.
+- Handles all requests for parcel data and updates.
+
+### Architecture Diagram
+
+```text
++-------------------+         +-------------------+
+|   Demesne         |<------->|   LandManager     |
++-------------------+         +-------------------+
+         |                              |
+         |  (owns grid)                 |  (registers, manages grid)
+         v                              v
++-------------------+         +-------------------+
+|   DataLandParcel  |         |   EventBusGame    |
++-------------------+         +-------------------+
+         |                              |
+         |  (parcel data)               |  (signals)
+         v                              v
++-------------------+         +-------------------+
+|   UI Components   |<--------|   WorldViewPanel  |
++-------------------+         +-------------------+
+```
+
+**Explanation:**
+- The demesne owns the land grid and interacts with the `LandManager`.
+- The `LandManager` manages all grids and emits updates via the event bus.
+- `DataLandParcel` holds all parcel data.
+- UI components receive updates and display parcel information.
 
 ---
 
 ## UI Integration
-- The main UI (`MainUI`) injects the real land grid into the `LandViewPanel` (node: `ViewLand`) on ready and whenever the grid is updated.
-- `LandViewPanel` passes the grid to `WorldViewPanel`, which displays the 5x5 viewport and handles scrolling and selection.
-- `TileInfoPanel` displays information for the selected tile, updating in response to selection and grid changes.
+
+- The main UI injects the land grid into the `LandViewPanel` and updates it on signal.
 - All UI updates are data-driven and respond to signals, not direct node calls.
+- The UI supports keyboard and controller navigation, with all information selectable and no horizontal scrolling.
 
 ---
 
-## Example Usage
+## Logging and Error Handling
+
+- All key actions (initialisation, surveying, resource updates) are logged using `Logger.log_event()`.
+- Errors are never silent; all failures are logged and surfaced for debugging.
+
+---
+
+## Best Practices
+
+- Use signals for all cross-system communication.
+- Never hardcode land data in the UI.
+- Use unique IDs or coordinates for referencing tiles.
+- Disconnect all signals on node removal.
+- Keep all static data in external JSON files, loaded via the `Library` autoload.
+
+---
+
+## Usage Example
+
 ```gdscript
 # In MainUI.gd
-var sim_node = get_node("/root/Main/Sim")
+var sim_node: Node = get_node("/root/Main/Sim")
 if sim_node and sim_node.demesne:
     var demesne = sim_node.demesne
     var land_grid = demesne.land_grid
     var grid_dims = demesne.get_grid_dimensions()
     _view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
-# The centre-most parcel (grid_dims.x // 2, grid_dims.y // 2) will always be surveyed on initialisation.
+# The centre-most parcel (grid_dims.x // 2, grid_dims.y // 2) is always surveyed on initialisation.
 ```
 
 ---
 
-## Best Practices
-- Always use signals for communication between unrelated systems.
-- Never hardcode land data in the UI; always inject from the demesne.
-- Ensure all UI components disconnect from signals on removal.
-- Use unique IDs or coordinates for referencing tiles, never names.
-- The initial surveyed state (centre parcel) is handled in the demesne logic, not the UI.
+## Extensibility and Future Work
+
+- Add new terrain types, resources, and improvements via config files.
+- Support for dynamic grid resizing, mini-map, advanced overlays, and tooltips.
+- Integration with weather, disasters, and trade systems.
 
 ---
 
-## Logging
-The land system includes detailed logging for key actions and state changes to aid debugging and monitoring:
-- Land grid initialisation (including demesne name and grid size)
-- Surveying of the centre-most parcel (coordinates and demesne)
-- Every parcel surveyed (coordinates and demesne)
-- Resource discovery and parcel resource updates (coordinates, demesne, and details)
+## References
 
-All logs are structured and timestamped using the `Logger.log_event()` function. This ensures that both initialisation and runtime changes can be traced and audited for correctness.
-
----
-
-## Future Enhancements
-- Support for dynamic grid resizing.
-- Mini-map and advanced scrolling/zooming.
-- More detailed tile overlays and tooltips.
+- `scripts/data/data_land_parcel.gd`
+- `scripts/core/land_manager.gd`
+- `scripts/ui/land_grid/land_grid_view.gd`
+- `data/land_config.json`
+- `globals/library.gd`
+- `globals/event_bus_game.gd`
 
 ---
 

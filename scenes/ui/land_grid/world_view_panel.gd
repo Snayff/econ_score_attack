@@ -87,6 +87,14 @@ func get_tile_screen_position(coords: Vector2i) -> Vector2:
 				return child.get_global_rect().position + child.get_global_rect().size / 2
 	# Fallback: centre of panel
 	return get_global_rect().position + get_global_rect().size / 2
+
+## Returns the currently visible tile region as a dictionary with top_left and bottom_right Vector2i.
+## @return: Dictionary {top_left: Vector2i, bottom_right: Vector2i}
+func get_visible_tile_region() -> Dictionary:
+	return {
+		"top_left": viewport_origin,
+		"bottom_right": viewport_origin + Vector2i(GRID_SIZE - 1, GRID_SIZE - 1)
+	}
 #endregion
 
 

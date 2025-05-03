@@ -1,10 +1,26 @@
 ## AspectManager
 ## Global autoload for managing land aspects.
-## Handles aspect definitions, generation, and validation.
-## Example:
+##
+## Purpose and Intent:
+## - Centralised Aspect Management: Acts as the single source of truth for all land aspect definitions in the game. Land aspects are properties or features (such as resources, terrain features, or special characteristics) that can be assigned to parcels of land within the simulation.
+## - Data Loading and Validation: Loads aspect definitions from the external data source (via the Library autoload, which handles JSON/static data), ensuring all aspect data is consistent and up-to-date.
+## - Aspect Generation: Provides logic to procedurally generate aspects for a given land parcel, based on definitions and randomised rules (such as generation chance, number of instances, and resource amounts). This supports dynamic and data-driven world-building.
+## - Aspect Querying: Offers static methods to retrieve all aspect definitions or a specific aspect definition by its unique ID, making it easy for other systems to access this data without duplicating logic.
+## - Error Handling and Logging: Includes error handling (e.g., warnings if no aspects are found) and logs events for debugging and monitoring.
+##
+## Example Usage:
 ## ```gdscript
+## # Generate aspects for a parcel
 ## AspectManager.generate_aspects_for_parcel(parcel)
+##
+## # Retrieve all aspect definitions
+## var all_aspects = AspectManager.get_all_aspect_definitions()
+##
+## # Get a specific aspect definition by ID
+## var aspect_def = AspectManager.get_aspect_definition("fertile_soil")
 ## ```
+##
+## AspectManager is a global, data-driven manager for all land aspect logic, ensuring that the simulation's parcels are populated with appropriate, consistent, and dynamically generated features, in line with the game's closed-loop, data-driven design principles. It decouples the data (aspect definitions) from the logic (how aspects are assigned and queried), following best practices for modular, scalable Godot development.
 
 extends Node
 

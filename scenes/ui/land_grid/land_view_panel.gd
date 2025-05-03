@@ -62,6 +62,16 @@ func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 	_demesne = demesne
 	if _world_view_panel:
 		_world_view_panel.set_grid_and_demesne(width, height, demesne)
+
+## Call this when the panel is activated to select the centre tile in view.
+func on_panel_activated() -> void:
+	if _world_view_panel and _world_view_panel.has_method("get_visible_tile_region") and _world_view_panel.has_method("set_selected_tile"):
+		var region = _world_view_panel.get_visible_tile_region()
+		var top_left: Vector2i = region["top_left"]
+		var bottom_right: Vector2i = region["bottom_right"]
+		var centre_x = int((top_left.x + bottom_right.x) / 2)
+		var centre_y = int((top_left.y + bottom_right.y) / 2)
+		_world_view_panel.set_selected_tile(Vector2i(centre_x, centre_y))
 #endregion
 
 
