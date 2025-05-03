@@ -285,7 +285,7 @@ func get_all_consumption_rules() -> Array:
 func get_land_aspects() -> Array:
 	if _config_cache.has("land_aspects"):
 		return _config_cache.get("land_aspects", [])
-	
+
 	_load_config("land_aspects")
 	return _config_cache.get("land_aspects", [])
 

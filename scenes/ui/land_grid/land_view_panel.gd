@@ -71,11 +71,24 @@ func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 ## @param tile_data: DataLandParcel, the selected tile's data
 func _on_tile_selected(tile_id: int, tile_data) -> void:
 	if _tile_info_panel:
-		# Construct DataTileInfo for the new panel
-		var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
-		var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
-		var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
-		var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+		# Use to_tile_info() if available, otherwise build DataTileInfo with correct structure
+		var data_tile_info = tile_data.to_tile_info() if tile_data and tile_data.has_method("to_tile_info") else null
+		if not data_tile_info and tile_data:
+			var location: Vector2i = tile_data.get_coordinates()
+			var is_surveyed: bool = tile_data.is_surveyed
+			var aspects: Array = []
+			var discovered = tile_data.get_discovered_aspects()
+			for aspect_id in discovered.keys():
+				var amount = discovered[aspect_id]
+				var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
+				aspects.append({
+					"f_name": aspect_meta.get("f_name", aspect_id) if aspect_meta else aspect_id,
+					"description": aspect_meta.get("description", "") if aspect_meta else "",
+					"amount": amount
+				})
+			data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+		elif not data_tile_info:
+			data_tile_info = DataTileInfo.new(Vector2i.ZERO, false, [])
 		_tile_info_panel.update_info(data_tile_info)
 	if _tile_interaction_panel:
 		_tile_interaction_panel.update_for_tile(tile_data, _demesne)
@@ -90,10 +103,23 @@ func _on_survey_requested(x: int, y: int) -> void:
 			# Optionally, update panels immediately
 			var tile_data = _demesne.get_parcel(x, y)
 			if _tile_info_panel:
-				var location: Vector2i = tile_data.get_coordinates() if tile_data != null else Vector2i.ZERO
-				var is_surveyed: bool = tile_data.is_surveyed if tile_data != null else false
-				var aspects: Dictionary = tile_data.get_discovered_aspects() if tile_data != null else {}
-				var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				var data_tile_info = tile_data.to_tile_info() if tile_data and tile_data.has_method("to_tile_info") else null
+				if not data_tile_info and tile_data:
+					var location: Vector2i = tile_data.get_coordinates()
+					var is_surveyed: bool = tile_data.is_surveyed
+					var aspects: Array = []
+					var discovered = tile_data.get_discovered_aspects()
+					for aspect_id in discovered.keys():
+						var amount = discovered[aspect_id]
+						var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
+						aspects.append({
+							"f_name": aspect_meta.get("f_name", aspect_id) if aspect_meta else aspect_id,
+							"description": aspect_meta.get("description", "") if aspect_meta else "",
+							"amount": amount
+						})
+					data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				elif not data_tile_info:
+					data_tile_info = DataTileInfo.new(Vector2i.ZERO, false, [])
 				_tile_info_panel.update_info(data_tile_info)
 			if _tile_interaction_panel:
 				_tile_interaction_panel.update_for_tile(tile_data, _demesne)
@@ -127,10 +153,23 @@ func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
 			# Fetch the latest tile data after survey from World singleton
 			var tile_data = World.get_parcel(x, y)
 			if tile_data:
-				var location: Vector2i = tile_data.get_coordinates()
-				var is_surveyed: bool = tile_data.is_surveyed
-				var aspects: Dictionary = tile_data.get_discovered_aspects()
-				var data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				var data_tile_info = tile_data.to_tile_info() if tile_data and tile_data.has_method("to_tile_info") else null
+				if not data_tile_info and tile_data:
+					var location: Vector2i = tile_data.get_coordinates()
+					var is_surveyed: bool = tile_data.is_surveyed
+					var aspects: Array = []
+					var discovered = tile_data.get_discovered_aspects()
+					for aspect_id in discovered.keys():
+						var amount = discovered[aspect_id]
+						var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
+						aspects.append({
+							"f_name": aspect_meta.get("f_name", aspect_id) if aspect_meta else aspect_id,
+							"description": aspect_meta.get("description", "") if aspect_meta else "",
+							"amount": amount
+						})
+					data_tile_info = DataTileInfo.new(location, is_surveyed, aspects)
+				elif not data_tile_info:
+					data_tile_info = DataTileInfo.new(Vector2i.ZERO, false, [])
 				_tile_info_panel.update_info(data_tile_info)
 
 
@@ -147,4 +186,4 @@ func _exit_tree() -> void:
 #endregion
 
 # Import DataTileInfo for static typing
-const DataTileInfo = preload("res://scripts/data/DataTileInfo.gd")
+const DataTileInfo = preload("res://scripts/data/data_tile_info.gd")

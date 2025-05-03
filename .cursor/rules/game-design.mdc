@@ -13,5 +13,8 @@ You are building a game focused on an arcade-feeling simulation strategy game, w
   - Buildings. Buildings make jobs available. 
   - Jobs. Jobs are assigned people and produce goods. 
   - Laws. Law's are demesne specific. The player can pass or repeal laws in the demesne to influence how the simulation works. 
-
   - A physical space. The world is made up of a grid of tiles. A tile has properties, such as natural resources. Buildings are located on tiles. 
+
+  Design
+  - We want to ensure the game can be played with keyboard-only, controller-only, and keyboard and mouse. We want to avoid horizontal scroll and any sets of information should be selectable. 
+

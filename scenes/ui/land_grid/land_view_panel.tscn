@@ -26,6 +26,7 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="TileInfoPanel" parent="MiddleRightSplit" instance=ExtResource("4")]
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 script = ExtResource("5_1jnom")

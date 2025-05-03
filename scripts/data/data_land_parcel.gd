@@ -135,6 +135,30 @@ func complete_survey() -> Array:
 ## @return: DataParcelAspectStorage instance
 func get_aspect_storage() -> DataParcelAspectStorage:
 	return aspect_storage
+
+
+## Converts this DataLandParcel to a DataTileInfo instance for UI display.
+## @return: DataTileInfo - Contains location (Vector2i), is_surveyed, and discovered aspects (Array of dictionaries).
+func to_tile_info() -> Variant:
+	# Gather discovered aspects with metadata for UI
+	var aspects: Array = []
+	var discovered: Dictionary = get_discovered_aspects()
+	for aspect_id in discovered.keys():
+		var amount = discovered[aspect_id]
+		var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
+		if aspect_meta:
+			aspects.append({
+				"f_name": aspect_meta.get("f_name", aspect_id),
+				"description": aspect_meta.get("description", ""),
+				"amount": amount
+			})
+		else:
+			aspects.append({
+				"f_name": aspect_id,
+				"description": "",
+				"amount": amount
+			})
+	return DataTileInfo.new(get_coordinates(), is_surveyed, aspects)
 #endregion
 
 
