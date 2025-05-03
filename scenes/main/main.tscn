@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://b43wppeg5xjsl"]
+[gd_scene load_steps=5 format=3 uid="uid://b43wppeg5xjsl"]
 
 [ext_resource type="Script" uid="uid://bhjkkssint781" path="res://scripts/core/chrono.gd" id="3_7mycd"]
 [ext_resource type="Script" uid="uid://ro8fq6c3k2s3" path="res://scripts/core/sim.gd" id="4_272bh"]
 [ext_resource type="PackedScene" uid="uid://cmkfp7f7dii75" path="res://scenes/ui/main_ui.tscn" id="7_hujxm"]
+[ext_resource type="Script" uid="uid://ck1u8ku01n2u4" path="res://scenes/main/main.gd" id="main_script"]
 
 [node name="Main" type="Node"]
+script = ExtResource("main_script")
 
 [node name="Chrono" type="Node" parent="."]
 unique_name_in_owner = true
@@ -27,10 +29,13 @@ sim = NodePath("../../../../../../Sim")
 [node name="ViewLaws" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="1" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../../../../Sim")
 
-[node name="ViewLand" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="3" node_paths=PackedStringArray("sim")]
+[node name="ViewEconomy" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="2" node_paths=PackedStringArray("sim")]
 sim = NodePath("../../../../../../Sim")
 
 [node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
 text = "Progress"
+
+[node name="NotificationSystem" parent="UI" index="5"]
+visible = true
 
 [editable path="UI"]

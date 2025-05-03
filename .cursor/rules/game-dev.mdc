@@ -50,10 +50,13 @@ alwaysApply: true
   - UI to be as decoupled as possible from game logic. use signals for communication, not direct links to nodes, wherever possible. 
   - Only use global autoloads for truly global, stateless, or cross-cutting concerns (e.g., event buses, config loaders, constants), or data or services that must be accessible everywhere, regardless of scene or context.
   - For all classes where there are multiple instances existing at once provide a unique ID, so that it can be more easily referenced. Avoid using names as a unique id.
+  - Consider how will save 
+  - Externalise text to later support different languages.
 
 
   GDScript 2.0/Godot
   - Never use "name" as a variable, use "f_name" instead.
+  - Godot's minimum version is 4.4. 
   - Utilize Godot's UI system (Control Nodes) for creating user interfaces.
   - UI commuinication with other nodes should prioritise using signals and only if absolutely necessary should there be a hardcoded reference to another node in a UI node.
   - Use static typing at all times, unless not possible. 
@@ -61,7 +64,6 @@ alwaysApply: true
   - When communicating up the hierarchy, i.e. from a child to a parent, use signals. Never call a function or variable from a parent directly. 
   - Ensure signals are disconnected when removed. 
   - Connect signals as early as possible, preferably in _ready().
-  - Godot's minimum version is 4.4. 
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
   - Signals in event_bus.gd should have @warning_ignore("unused_signal") after their comment, but before the signal.
   - Avoid narrowing precision by converting floats to ints. 
@@ -69,7 +71,10 @@ alwaysApply: true
   - Avoid scene inheritance where possible, and never go more than 1 level deep. 
   - Remove any unused variables. 
   - Remove any unused function arguments, unless they provide a default value. 
-  - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node.  
+  - When trying to find a node in the tree, and that node has a unique name, use `%node_name`, prefixing the node's name with `%`, to access that node. 
+  - Access autoloads by their name, not via `get_node`. 
+  - When making a class an autload, ensure it does not use `class_name`, as this causes a conflict. 
+  - Limit the amount of deep nesting, wherever possible, by using things such as early returns. 
   
   
   Naming Conventions
@@ -83,6 +88,7 @@ alwaysApply: true
 
   Documentation
   - Docstring style is as per GDScript best practice, unles sotherwise stated. 
+  - Class Docstrings are noted with "##", meaning each line of the class docstring has the double hash. 
   - All classes should begin with a docstring explaining the purpose and intent of that class. An example of usage should also be included. 
   - A class should begin with the Docstring, then be followed by the classname (if the class needs to be referred to elsewhere), then finally the extends keyword, defining any base class. 
   - Documenation should always be kept up to date. 
@@ -101,12 +107,14 @@ alwaysApply: true
   - Monitor performance metrics.
   - Never fail silently. Any unexpected failure should fail clearly, announcing and recording the error. 
   - Use assertions in _ready() to confirm that any referenced Nodes exist. 
+  - Unless absolutely necessary, do not add a timestamp to logging 
 
 
   Code Review Guidelines
   - Check for proper error handling.
   - Verify performance considerations.
   - Confirm documentation completeness.
+  - Check for duplicate signals. 
 
 
   Structure

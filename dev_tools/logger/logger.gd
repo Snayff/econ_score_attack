@@ -2,6 +2,8 @@
 ## Centralised logging system for the application
 ## Provides consistent formatting and control over log output
 ##
+## Log file retention: On every game start, old log files are deleted, retaining only the most recent as per the max_log_files config, regardless of whether file logging is enabled.
+##
 ## Log Levels:
 ## - DEBUG: Detailed information useful during debugging. Use for function entry/exit,
 ##          variable values, and detailed flow control.
@@ -177,20 +179,20 @@ func load_config() -> void:
 	if not FileAccess.file_exists(CONFIG_PATH):
 		error("Logger configuration file not found: " + CONFIG_PATH)
 		return
-		
+
 	var file: FileAccess = FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	var json_string: String = file.get_as_text()
 	file.close()
-	
+
 	var json: JSON = JSON.new()
 	var parse_result: int = json.parse(json_string)
-	
+
 	if parse_result != OK:
 		error("Failed to parse logger configuration: " + json.get_error_message())
 		return
-		
+
 	var config: Dictionary = json.get_data()
-	
+
 	# Set log level
 	if config.has("log_level"):
 		var level_name: String = config["log_level"]
@@ -198,7 +200,7 @@ func load_config() -> void:
 			if LEVEL_NAMES[level] == level_name:
 				current_level = level
 				break
-	
+
 	# Set output options
 	if config.has("output"):
 		var output: Dictionary = config["output"]
@@ -210,7 +212,7 @@ func load_config() -> void:
 			log_directory = output["file_path"]
 		if output.has("max_log_files"):
 			max_log_files = output["max_log_files"]
-	
+
 	# Set formatting options
 	if config.has("formatting"):
 		var formatting: Dictionary = config["formatting"]
@@ -220,13 +222,13 @@ func load_config() -> void:
 			show_levels = formatting["show_levels"]
 		if formatting.has("show_source"):
 			show_source = formatting["show_source"]
-	
+
 	# Set signal options
 	if config.has("signals"):
 		var signals_config: Dictionary = config["signals"]
 		if signals_config.has("emit_signals"):
 			emit_signals = signals_config["emit_signals"]
-	
+
 	# Setup log file if needed
 	if write_to_file:
 		_setup_log_file()
@@ -304,17 +306,17 @@ func log_threshold_violation(metric_name: String, threshold: float, current_valu
 func _log(level: int, message: String, source: String = "") -> void:
 	if level < current_level:
 		return
-		
+
 	var formatted_message: String = _format_message(level, message, source)
-	
+
 	if print_to_console:
 		print(formatted_message)
-		
+
 	if write_to_file:
 		_ensure_log_file()
 		if log_file != null:
 			log_file.store_line(formatted_message)
-		
+
 	if emit_signals:
 		emit_signal("log_message", LEVEL_NAMES[level], formatted_message)
 
@@ -325,18 +327,18 @@ func _log(level: int, message: String, source: String = "") -> void:
 ## @return: The formatted message
 func _format_message(level: int, message: String, source: String = "") -> String:
 	var parts: Array = []
-	
+
 	if show_timestamps:
 		parts.append(Time.get_datetime_string_from_system())
-		
+
 	if show_levels:
 		parts.append(LEVEL_NAMES[level])
-		
+
 	if show_source and source != "":
 		parts.append(source)
-		
+
 	parts.append(message)
-	
+
 	return " | ".join(parts)
 
 ## Generate the current log file name using ISO format
@@ -358,14 +360,14 @@ func _setup_log_file() -> void:
 	var dir: DirAccess = DirAccess.open("res://")
 	if not dir.dir_exists(log_directory):
 		dir.make_dir_recursive(log_directory)
-	
+
 	_cleanup_old_logs()
 	_ensure_log_file()
 
 ## Ensure we have the correct log file open
 func _ensure_log_file() -> void:
 	var new_log_file: String = log_directory.path_join(_generate_log_file_name())
-	
+
 	if new_log_file != current_log_file:
 		_close_log_file()
 		current_log_file = new_log_file
@@ -379,20 +381,20 @@ func _cleanup_old_logs() -> void:
 	if dir == null:
 		error("Failed to open log directory: " + log_directory)
 		return
-	
+
 	var files: Array = []
-	
+
 	# Use proper error handling for directory listing
 	var list_result = dir.list_dir_begin()
 	if list_result != OK:
 		error("Failed to begin listing directory: " + log_directory)
 		return
-		
+
 	while true:
 		var file_name: String = dir.get_next()
 		if file_name == "":
 			break
-			
+
 		if not dir.current_is_dir() and file_name.ends_with(".log"):
 			var full_path = log_directory.path_join(file_name)
 			# Convert to absolute path for removal
@@ -402,13 +404,13 @@ func _cleanup_old_logs() -> void:
 				"name": file_name,
 				"modified": FileAccess.get_modified_time(full_path)
 			})
-	
+
 	dir.list_dir_end()
-	
+
 	if files.size() > max_log_files:
 		# Sort by modification time instead of name
 		files.sort_custom(func(a, b): return a["modified"] < b["modified"])
-		
+
 		# Delete oldest files until we're at max_log_files
 		var files_to_delete: int = files.size() - max_log_files
 		for i in range(files_to_delete):
@@ -429,8 +431,9 @@ func _close_log_file() -> void:
 ## Called when the node enters the scene tree
 func _ready() -> void:
 	load_config()
+	_cleanup_old_logs()
 
 ## Called when the node is about to be removed from the scene tree
 func _exit_tree() -> void:
 	_close_log_file()
-#endregion 
+#endregion

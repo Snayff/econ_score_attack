@@ -30,6 +30,22 @@ signal resources_updated(x: int, y: int, resources: Dictionary)
 @warning_ignore("unused_signal")
 signal parcel_surveyed(x: int, y: int, discovered_resources: Array[String])
 
+## Emitted when a land aspect is discovered
+@warning_ignore("unused_signal")
+signal aspect_discovered(x: int, y: int, aspect_id: String, aspect_data: Dictionary)
+
+## Emitted when a survey is completed, revealing all aspects
+@warning_ignore("unused_signal")
+signal survey_completed(x: int, y: int, discovered_aspects: Array)
+
+## Emitted when a survey is started
+@warning_ignore("unused_signal")
+signal survey_started(x: int, y: int)
+
+## Emitted when survey progress is updated
+@warning_ignore("unused_signal")
+signal survey_progress_updated(x: int, y: int, progress: float)
+
 ## Emitted when a season changes
 @warning_ignore("unused_signal")
 signal season_changed(new_season: EnvironmentalSystem.Season)
@@ -78,4 +94,8 @@ signal request_survey(x: int, y: int)
 @warning_ignore("unused_signal")
 signal request_build(x: int, y: int, building_id: String)
 
-#endregion 
+## Emitted when the land grid is updated (e.g., after surveying, building, etc.)
+@warning_ignore("unused_signal")
+signal land_grid_updated()
+
+#endregion

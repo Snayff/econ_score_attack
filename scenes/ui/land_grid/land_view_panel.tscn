@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://du0hvsy4yir3x"]
+[gd_scene load_steps=6 format=3 uid="uid://cehbj0wwgyqcm"]
 
-[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/tile_interaction_panel.tscn" id="1"]
-[ext_resource type="PackedScene" uid="uid://d4emrc3ik05b0" path="res://scenes/ui/land_grid/world_view_panel.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bn2f4bby2e6wb" path="res://scenes/ui/land_grid/tile_interaction_panel.tscn" id="1"]
+[ext_resource type="Script" uid="uid://drw3cfya4tybr" path="res://scenes/ui/land_grid/land_view_panel.gd" id="1_1vomj"]
+[ext_resource type="PackedScene" uid="uid://be338px6n6hy4" path="res://scenes/ui/land_grid/world_view_panel.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://cqkshiytv5kx3" path="res://scenes/ui/land_grid/tile_info_panel.tscn" id="4"]
+[ext_resource type="Script" uid="uid://13lc4m1o0ppa" path="res://scenes/ui/land_grid/tile_info_panel.gd" id="5_1jnom"]
 
 [node name="LandViewPanel" type="HSplitContainer"]
 anchors_preset = 15
@@ -10,9 +12,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_1vomj")
 
 [node name="TileInteractionPanel" parent="." instance=ExtResource("1")]
-custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
 [node name="MiddleRightSplit" type="HSplitContainer" parent="."]
@@ -23,7 +25,8 @@ size_flags_vertical = 3
 [node name="WorldViewPanel" parent="MiddleRightSplit" instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="TileInfoPanel" parent="MiddleRightSplit" instance=ExtResource("3")]
-custom_minimum_size = Vector2(160, 0)
+[node name="TileInfoPanel" parent="MiddleRightSplit" instance=ExtResource("4")]
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+script = ExtResource("5_1jnom")

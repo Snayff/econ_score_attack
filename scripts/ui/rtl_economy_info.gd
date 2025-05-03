@@ -1,11 +1,8 @@
-extends Control
-
 ## Displays economic information and metrics about the demesne.
 ## Shows various economic indicators like price levels, trade volume, unemployment, etc.
 ## in a clear, organized panel with historical trends.
 ##
-## Example usage:
-## var economy_info = rtl_economy_info.new()
+extends Control
 
 
 #region EXPORTS
@@ -66,7 +63,6 @@ func _ready() -> void:
 
 	if sim:
 		sim.sim_initialized.connect(_on_sim_initialized)
-		Logger.debug("EconomyInfo: _ready called", "EconomyInfo")
 		EventBusGame.turn_complete.connect(update_info)
 
 	update_info()

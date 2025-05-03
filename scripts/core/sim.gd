@@ -49,7 +49,6 @@ var _turn_transactions: Array[Dictionary] = []
 #region FUNCS
 ## Initialises the simulation and connects to the turn_complete signal
 func _ready() -> void:
-	Logger.log_event("Initializing simulation", {}, "Sim")
 	EventBusGame.turn_complete.connect(resolve_turn)
 
 	# Initialize economic monitoring
@@ -64,43 +63,35 @@ func _ready() -> void:
 	# Create the demesne
 	var demesne_data = DataDemesne.new()
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
-	Logger.log_event("Created demesne", {"name": demesne.demesne_name}, "Sim")
+	demesne.connect_to_turns()
 
 	# Add LandManager as a component
 	land_manager = LandManager.new()
 	add_child(land_manager)
 	land_manager.register_demesne(demesne.demesne_name, demesne.land_grid)
 
-	# Enact the sales tax law
+	# Enact initial laws
 	var sales_tax = demesne.enact_law("sales_tax")
-	if sales_tax:
-		Logger.log_event("Enacted sales tax law", {"rate": sales_tax.get_parameter("tax_rate")}, "Sim")
-	else:
-		Logger.log_validation("Sales tax law enactment", false, "Failed to create law", "Sim")
+	if not sales_tax:
+		Logger.error("Failed to create sales tax law", "Sim")
 
-	# Enact the demesne inheritance law
 	var inheritance = demesne.enact_law("demesne_inheritance")
-	if inheritance:
-		Logger.log_event("Enacted inheritance law", {}, "Sim")
-	else:
-		Logger.log_validation("Inheritance law enactment", false, "Failed to create law", "Sim")
+	if not inheritance:
+		Logger.error("Failed to create inheritance law", "Sim")
 
 	# Initialize demesne stockpile with starting resources
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
 		demesne.add_resource(resource, starting_resources[resource])
-	Logger.log_event("Initialized stockpile", starting_resources, "Sim")
 
 	# Initialize good prices from Library
 	var goods_data = Library.get_config("goods").get("goods", {})
 	for good in goods_data:
 		good_prices[good] = goods_data[good].get("base_price", 0)
-	Logger.log_event("Initialized good prices", good_prices, "Sim")
 
 	# Set initial money for validation
 	var total_money = _calculate_total_money()
 	_economic_validator.set_initial_money(total_money)
-	Logger.log_money_change(total_money, total_money, "Sim")
 
 	_create_people()
 	emit_signal("sim_initialized")
@@ -112,8 +103,6 @@ func _create_people() -> void:
 	var demesne_data: DataDemesne = DataDemesne.new()
 
 	var num_people: int = people_data.get_num_people()
-	Logger.log_event("Creating people", {"count": num_people}, "Sim")
-
 	var names: Array = people_data.get_names()
 	var job_allocation: Dictionary = demesne_data.get_job_allocation()
 	var starting_goods: Dictionary = people_data.get_starting_goods()
@@ -129,11 +118,6 @@ func _create_people() -> void:
 	for i in range(num_people):
 		var person = Person.new(names[i], jobs[i], starting_goods.duplicate())
 		demesne.add_person(person)
-		Logger.log_event("Created person", {
-			"name": person.f_name,
-			"job": person.job,
-			"starting_goods": starting_goods
-		}, "Sim")
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
@@ -141,12 +125,6 @@ func resolve_turn() -> void:
 	_turn_transactions.clear()
 	var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	var desired_goods: Dictionary = {}  # { good: { person: { amount: 123 } } }
-
-	# logging stuff
-	var supply: Dictionary = {}  # {name: { good: amount } }
-	var demand: Dictionary = {}  # {name: { good: amount } }
-
-	Logger.log_event("Starting turn", {}, "Sim")
 
 	# Process production and consumption through the demesne
 	demesne.process_production()
@@ -173,11 +151,6 @@ func resolve_turn() -> void:
 				"money_made": 0
 			}
 
-			# update supply for logging
-			if person.f_name not in supply:
-				supply[person.f_name] = {}
-			supply[person.f_name][good] = goods_to_sell[good]
-
 		# get goods people want to buy
 		var goods_to_buy: Dictionary = person.get_goods_to_buy()
 		for good in goods_to_buy:
@@ -186,23 +159,11 @@ func resolve_turn() -> void:
 
 			desired_goods[good][person] = goods_to_buy[good]
 
-			# update demand for logging
-			if person.f_name not in demand:
-				demand[person.f_name] = {}
-			demand[person.f_name][good] = goods_to_buy[good]
-
-	Logger.log_event("Market setup", {
-		"supply": supply,
-		"demand": demand
-	}, "Sim")
-
-	# conduct sale
 	Logger.info(">>> Market Opens", "Sim")
 	var purchasers: Array = []
 	var amount_to_buy: int = 0
 	var sellers: Array = []
 	var saleable_remaining: int = 0
-	var log_message: String = ""
 
 	for good in saleable_goods:
 		# no buyers, move on
@@ -223,8 +184,6 @@ func resolve_turn() -> void:
 			purchasers.shuffle()
 
 			for buyer in purchasers:
-				log_message = ""
-
 				# make purchase
 				amount_to_buy = min(floor(buyer.stockpile["money"] / good_prices[good]), desired_goods[good][buyer])
 
@@ -236,7 +195,6 @@ func resolve_turn() -> void:
 					tax_amount = sales_tax_law.calculate_tax(final_cost)
 					final_cost += tax_amount
 					demesne.add_resource("money", tax_amount)
-					Logger.debug("Sales tax collected: %s gold" % tax_amount, "Sim")
 
 				# Check if buyer can afford the purchase with tax
 				if buyer.stockpile["money"] < final_cost:
@@ -248,7 +206,6 @@ func resolve_turn() -> void:
 						tax_amount = sales_tax_law.calculate_tax(final_cost)
 						final_cost += tax_amount
 						demesne.add_resource("money", tax_amount)
-						Logger.debug("Sales tax collected (recalculated): %s gold" % tax_amount, "Sim")
 
 				buyer.stockpile["money"] -= final_cost
 				seller.stockpile["money"] += good_prices[good] * amount_to_buy  # Seller gets only the base cost
@@ -276,41 +233,7 @@ func resolve_turn() -> void:
 				saleable_goods[good][seller]["amount"] = goods_left
 				saleable_goods[good][seller]["money_made"] += good_prices[good] * amount_to_buy
 
-				log_message = str(
-					seller.f_name,
-					" sold ",
-					amount_to_buy,
-					" ",
-					good,
-					" to ",
-					buyer.f_name,
-					" for 🪙",
-					good_prices[good] * amount_to_buy,
-					" (",
-					good_prices[good],
-					"🪙 each).",
-				)
-				Logger.debug(log_message, "Sim")
-
-				# seller has stock remaining, find new buyer
-				if goods_left > 0:
-					continue
-
-				# sellers stock is empty, find new seller
-				elif goods_left == 0:
-					break
-
 	Logger.info(">>> Market Closes", "Sim")
-	var results: Dictionary = {}
-	for good in saleable_goods.keys():
-		for seller in saleable_goods[good]:
-			if seller.f_name not in results:
-				results[seller.f_name] = 0
-			results[seller.f_name] += saleable_goods[good][seller]["money_made"]
-	Logger.info(str(
-		"Sales: ",
-		results
-	), "Sim")
 
 	# Validate economic state
 	_validate_economic_state()

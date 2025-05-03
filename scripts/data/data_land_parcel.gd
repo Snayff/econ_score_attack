@@ -37,168 +37,210 @@ const DEFAULT_RESOURCE_AMOUNT: float = 100.0
 ## @param y_: The y-coordinate of the parcel in the grid
 ## @param terrain_type_: The type of terrain for this parcel
 func _init(x_: int, y_: int, terrain_type_: String) -> void:
-    x = x_
-    y = y_
-    terrain_type = terrain_type_
-    _initialise_properties()
+	x = x_
+	y = y_
+	terrain_type = terrain_type_
+	_initialise_properties()
 
 
 ## Gets the coordinates of this parcel as a Vector2i
 ## @return: Vector2i containing the parcel's coordinates
 func get_coordinates() -> Vector2i:
-    return Vector2i(x, y)
+	return Vector2i(x, y)
 
 
 ## Gets a dictionary containing all parcel properties
 ## @return: Dictionary with the parcel's current state
 func get_properties() -> Dictionary:
-    return {
-        "x": x,
-        "y": y,
-        "terrain_type": terrain_type,
-        "building_id": building_id,
-        "improvements": improvements.duplicate(),
-        "fertility": fertility,
-        "pollution_level": pollution_level,
-        "is_surveyed": is_surveyed,
-        "resources": resources.duplicate(),
-        "resource_generation_rate": resource_generation_rate
-    }
+	return {
+		"x": x,
+		"y": y,
+		"terrain_type": terrain_type,
+		"building_id": building_id,
+		"improvements": improvements.duplicate(),
+		"fertility": fertility,
+		"pollution_level": pollution_level,
+		"is_surveyed": is_surveyed,
+		"aspects": aspect_storage.to_dict()
+	}
 
 
-## Adds a resource to the parcel
-## @param resource_id: The identifier of the resource
-## @param amount: The amount of resource to add
-## @param discovered: Whether the resource is discovered
-func add_resource(resource_id: String, amount: float = DEFAULT_RESOURCE_AMOUNT, discovered: bool = false) -> void:
-    resources[resource_id] = {
-        "amount": amount,
-        "discovered": discovered
-    }
+## Adds an aspect to the parcel
+## @param aspect_id: The identifier of the aspect
+## @param amount: The amount of the aspect (for finite aspects)
+## @param discovered: Whether the aspect is already discovered
+func add_aspect(aspect_id: String, amount: int = 0, discovered: bool = false) -> void:
+	aspect_storage.add_aspect(aspect_id, amount, discovered)
 
 
-## Gets the amount of a specific resource
-## @param resource_id: The identifier of the resource
-## @return: The amount of the resource, or 0 if not present
-func get_resource_amount(resource_id: String) -> float:
-    if not resources.has(resource_id):
-        return 0.0
-    return resources[resource_id].amount
+## Gets the amount of a specific aspect
+## @param aspect_id: The identifier of the aspect
+## @return: The amount of the aspect, or 0 if not present
+func get_aspect_amount(aspect_id: String) -> int:
+	return aspect_storage.get_aspect_amount(aspect_id)
 
 
-## Checks if a specific resource is discovered
-## @param resource_id: The identifier of the resource
-## @return: Whether the resource is discovered
-func is_resource_discovered(resource_id: String) -> bool:
-    if not resources.has(resource_id):
-        return false
-    return resources[resource_id].discovered
+## Checks if a specific aspect is discovered
+## @param aspect_id: The identifier of the aspect
+## @return: Whether the aspect is discovered
+func is_aspect_discovered(aspect_id: String) -> bool:
+	return aspect_storage.is_aspect_discovered(aspect_id)
 
 
-## Discovers a resource on the parcel
-## @param resource_id: The identifier of the resource to discover
-## @return: Whether the resource was discovered (false if already discovered or not present)
-func discover_resource(resource_id: String) -> bool:
-    if not resources.has(resource_id) or resources[resource_id].discovered:
-        return false
-    resources[resource_id].discovered = true
-    return true
+## Discovers an aspect on the parcel
+## @param aspect_id: The identifier of the aspect to discover
+## @return: Whether the aspect was discovered (false if already discovered or not present)
+func discover_aspect(aspect_id: String) -> bool:
+	return aspect_storage.discover_aspect(aspect_id)
 
 
-## Updates resource amounts based on generation rate
-## @param delta: Time elapsed since last update
-func update_resources(delta: float) -> void:
-    for resource_id in resources:
-        if not resources[resource_id].discovered:
-            continue
-        var base_rate = resource_generation_rate * DEFAULT_GENERATION_RATE
-        var terrain_modifiers = Library.get_config("land").terrain_types[terrain_type].resource_modifiers
-        var modifier = terrain_modifiers.get(resource_id, 1.0)
-        resources[resource_id].amount += base_rate * modifier * delta
+## Gets all discovered aspects
+## @return: Dictionary with aspect_id as key and aspect data as value
+func get_discovered_aspects() -> Dictionary:
+	return aspect_storage.get_discovered_aspects()
+
+
+## Completes a survey of the parcel, revealing all aspects
+## @return: Array of aspect IDs that were newly discovered
+func complete_survey() -> Array:
+	Logger.log_event("diagnostic_parcel_complete_survey_start", {
+		"x": x,
+		"y": y,
+		"is_surveyed": is_surveyed,
+		"has_aspects": not aspect_storage.get_all_aspects().is_empty(),
+	}, "DataLandParcel")
+
+	if is_surveyed:
+		Logger.log_event("diagnostic_parcel_already_surveyed", {
+			"x": x,
+			"y": y,
+		}, "DataLandParcel")
+		return []
+
+	is_surveyed = true
+	var discovered = aspect_storage.discover_all_aspects()
+
+	Logger.log_event("diagnostic_parcel_survey_completed", {
+		"x": x,
+		"y": y,
+		"discovered": discovered,
+		"all_aspects": aspect_storage.get_all_aspects(),
+		"discovered_aspects": aspect_storage.get_discovered_aspects(),
+	}, "DataLandParcel")
+
+	return discovered
+
+
+## Gets the parcel's aspect storage
+## @return: DataParcelAspectStorage instance
+func get_aspect_storage() -> DataParcelAspectStorage:
+	return aspect_storage
+
+
+## Converts this DataLandParcel to a DataTileInfo instance for UI display.
+## @return: DataTileInfo - Contains location (Vector2i), is_surveyed, and discovered aspects (Array of dictionaries).
+func to_tile_info() -> Variant:
+	# Gather discovered aspects with metadata for UI
+	var aspects: Array = []
+	var discovered: Dictionary = get_discovered_aspects()
+	for aspect_id in discovered.keys():
+		var amount = discovered[aspect_id]
+		var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
+		if aspect_meta:
+			aspects.append({
+				"f_name": aspect_meta.get("f_name", aspect_id),
+				"description": aspect_meta.get("description", ""),
+				"amount": amount,
+				"is_finite": aspect_meta.get("is_finite", false)
+			})
+		else:
+			aspects.append({
+				"f_name": aspect_id,
+				"description": "",
+				"amount": amount,
+				"is_finite": false
+			})
+	return DataTileInfo.new(get_coordinates(), is_surveyed, aspects)
 #endregion
 
 
 #region PRIVATE FUNCTIONS
 ## Initialises the default values for parcel properties
 func _initialise_properties() -> void:
-    building_id = ""
-    improvements = {}
-    fertility = 1.0
-    pollution_level = 0.0
-    is_surveyed = false
-    resources = {}
-    resource_generation_rate = DEFAULT_GENERATION_RATE
+	building_id = ""
+	improvements = {}
+	fertility = 1.0
+	pollution_level = 0.0
+	is_surveyed = false
+	aspect_storage = DataParcelAspectStorage.new()
+	resource_generation_rate = DEFAULT_GENERATION_RATE
 #endregion
 
 
 #region VARS
 ## X-coordinate in the grid
 var x: int:
-    get:
-        return x
-    set(value):
-        x = value
+	get:
+		return x
+	set(value):
+		x = value
 
 ## Y-coordinate in the grid
 var y: int:
-    get:
-        return y
-    set(value):
-        y = value
+	get:
+		return y
+	set(value):
+		y = value
 
 ## Type of terrain in this parcel
 var terrain_type: String:
-    get:
-        return terrain_type
-    set(value):
-        terrain_type = value
+	get:
+		return terrain_type
+	set(value):
+		terrain_type = value
 
 ## ID of the building placed on this parcel (empty string if none)
 var building_id: String:
-    get:
-        return building_id
-    set(value):
-        building_id = value
+	get:
+		return building_id
+	set(value):
+		building_id = value
 
 ## Dictionary of improvements and their levels
 var improvements: Dictionary:
-    get:
-        return improvements
-    set(value):
-        improvements = value
+	get:
+		return improvements
+	set(value):
+		improvements = value
 
 ## Base fertility of the parcel (1.0 is normal)
 var fertility: float:
-    get:
-        return fertility
-    set(value):
-        fertility = value
+	get:
+		return fertility
+	set(value):
+		fertility = value
 
 ## Current pollution level (0.0 is unpolluted)
 var pollution_level: float:
-    get:
-        return pollution_level
-    set(value):
-        pollution_level = value
+	get:
+		return pollution_level
+	set(value):
+		pollution_level = value
 
 ## Whether this parcel has been surveyed
 var is_surveyed: bool:
-    get:
-        return is_surveyed
-    set(value):
-        is_surveyed = value
+	get:
+		return is_surveyed
+	set(value):
+		is_surveyed = value
 
-## Dictionary of resources and their properties
-var resources: Dictionary:
-    get:
-        return resources
-    set(value):
-        resources = value
+## Storage for aspects and their properties
+var aspect_storage: DataParcelAspectStorage
 
 ## Base rate at which resources generate
 var resource_generation_rate: float:
-    get:
-        return resource_generation_rate
-    set(value):
-        resource_generation_rate = value
-#endregion 
+	get:
+		return resource_generation_rate
+	set(value):
+		resource_generation_rate = value
+#endregion

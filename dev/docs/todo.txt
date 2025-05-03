@@ -1,0 +1,73 @@
+###########
+# PROMPTS #
+###########
+
+ASK FOR FEATURE PROPOSAL
+	We're looking to implement a new feature. The problem we seek to solve  [problem], so we want [succinct feature description]. 
+
+	We want to implement [feature definition]
+
+	How would you propose we approach the design of this feature? Is there any other core functionality you think should be included in this feature? What are the likely challenges we'll face and how can we resolve them? 
+	
+	Remember, we're not worried about the specific code just yet, unless it helps explain you're thinking. 
+
+ENHANCE FEATURE PROPOSAL
+	Please reflect on your proposal. Are there any problems with the implementation? Is there anything you could improve? Could your proposal better align to project rules? How can you make the design more testable? 
+
+IMPLEMENT FEATURE PROPOSAL
+	Please implement the feature exactly as you have described. 
+	
+RECORD FEATURE PROPOSAL AS DESIGN
+	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking.
+
+IMPLEMENT DESIGN
+	Please review the @_design.md  and then implement phase x, as listed in @_implementation_phases.md.
+
+#########
+# TO DO #
+#########
+
+## NEXT
+- max aspects per tile centrally set
+- amount of aspect generated should be int
+- implement folder restructure as per res://dev/docs/docs/project_structure.md, and update rules in res://.cursor/rules/project-structure.mdc.
+
+## NEW FEATURES / System
+- Continue - https://thomassimon.dev/ps/4 - Simulation 13.
+- move good pricing to market class, to manage current price and price fluctuations, as per res://dev/docs/designs/market_system_design.md. 
+- ancestry system. as per res://dev/docs/designs/ancestry_system_design.md.
+- decision making / utility system. as per res://dev/docs/designs/economic_actor_decision_system_phased_implementation.md.
+- world generation. it was done on auto by ai, need to define actual rules as intended. 
+- faith system person can believe in 1 or more gods. This influences their preferences, and therefore the utility of goods and actions. At demesne level, the amount of faith in a god results in that god blessing the demesne with positive modifiers. e.g. increased producitivty in some job or other. 
+	! Need a way to determine the level of faith - why does a person believe in any given god?
+- Business setup. Needs concept of ownerhsip of buildings. 
+- crime and criminality. cause unrest, but also some happiness. black market. 
+- drugs. High happiness, so easy way to reduce unrest. Reduce productivity. Withdrawal when wears off; still reduced productivity, negative happiness. 
+- guilds. Can create guilds. Demesne sponsored or independent. Bonus to effectiveness of related jobs for members, e.g. foresters guild increase strength for all members. Count as building, so must be manned and operated to get bonuses. 
+	- can lead to unlocks, such as ability to do  dungeon missions, attempt to steal from enemy demesne, etc.should be specific to guild and also unique enough to feel meaningful, not just a simple variation of stuff generally available to the player
+- law builder. as per res://dev/docs/designs/law_builder_system_design.md.
+
+## ENHANCEMENTS
+- production via component. 
+- person needs to be assigned the relevant consumption rules. build person with their culture and ancestry. 
+- people skills. Value 0-1.0. literacy, stength.  as per res://dev/docs/designs/skill_system.md.
+- Jobs have skill requirements. 
+- law take time to start implementing. then take time to scale to full effectiveness. time to implement and scaling time defined per law. Show in law panel. 
+-  5 day week. 10 week year.  (Bear in mind turns available to player to achieve shit)
+- add category to goods. Most things just need something from the category, and will use the cheapest by default. Some things need specific goods. 
+- notification system use toasts. 
+- split land_config.json into component parts (world def, improvmeents, terrain)
+ 
+
+## DEV
+- verification system for data files. e.g. if  a good is an output of a land aspect, is the good specified in the goods.json? are all entries valid.
+- extract test runner into dev_tools
+- add performance measuring and track trending over time, to identify regressions. as per res://dev/docs/designs/performance_monitoring_system.md.
+	- profile the sim to ensure can be handled within a frame. 
+- logger enhancements as per. res://dev/docs/designs/logger_enhancements.md
+
+
+## BUGS
+- on land view, when progressing time, grid keeps resetting to centre most. 
+
+################

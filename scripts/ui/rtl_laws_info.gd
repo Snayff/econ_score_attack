@@ -49,7 +49,6 @@ func _ready() -> void:
 
 	if sim:
 		sim.sim_initialized.connect(_on_sim_initialized)
-		Logger.debug("LawsInfo: _ready called", "LawsInfo")
 		EventBusGame.turn_complete.connect(update_info)
 
 	update_info()

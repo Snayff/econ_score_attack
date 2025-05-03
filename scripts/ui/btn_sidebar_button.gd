@@ -53,4 +53,4 @@ func _ready() -> void:
 func _on_pressed() -> void:
 	sidebar_button_pressed.emit(button_text)
 
-#endregion 
+#endregion

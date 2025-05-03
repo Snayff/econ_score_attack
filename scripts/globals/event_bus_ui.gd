@@ -21,6 +21,10 @@ signal show_visual_feedback(message: String, position: Vector2)
 @warning_ignore("unused_signal")
 signal show_notification(message: String, type: String)
 
+## Emitted when a tile survey is completed (for feedback/notification)
+@warning_ignore("unused_signal")
+signal survey_completed(x: int, y: int)
+
 #endregion
 
 
@@ -41,4 +45,4 @@ signal show_notification(message: String, type: String)
 
 #region FUNCS
 
-#endregion 
+#endregion

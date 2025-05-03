@@ -3,7 +3,7 @@
 ## class desc
 #@icon("")
 #class_name XXX
-extends _BASE_
+#extends _BASE_
 
 
 #region SIGNALS

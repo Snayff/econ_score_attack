@@ -32,13 +32,11 @@ extends Control
 @onready var header_container: VBoxContainer = $MarginContainer/VBoxContainer/HeaderContainer
 
 func _ready() -> void:
-	Logger.log_event("Initializing people info panel", {}, "PeopleInfo")
 	EventBusGame.turn_complete.connect(update_info)
 
 	# Find the Sim node if not provided
 	if not sim:
 		sim = get_node("/root/Main/Sim")
-		Logger.log_event("Found Sim node", {"node": str(sim)}, "PeopleInfo")
 
 	if sim:
 		sim.sim_initialized.connect(update_info)
@@ -53,8 +51,6 @@ func _ready() -> void:
 
 ## Updates the displayed information
 func update_info() -> void:
-	Logger.log_event("Updating people info", {}, "PeopleInfo")
-
 	# Clear existing content
 	for child in people_container.get_children():
 		child.queue_free()
