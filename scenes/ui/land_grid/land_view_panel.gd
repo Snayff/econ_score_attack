@@ -38,6 +38,9 @@ func _ready() -> void:
 	self._world_view_panel = world_view_panel
 	self._tile_info_panel = tile_info_panel
 	self._tile_interaction_panel = tile_interaction_panel
+
+	# Automatically select the centre tile in the world view panel
+	# _select_centre_tile()
 #endregion
 
 
@@ -62,16 +65,7 @@ func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 	_demesne = demesne
 	if _world_view_panel:
 		_world_view_panel.set_grid_and_demesne(width, height, demesne)
-
-## Call this when the panel is activated to select the centre tile in view.
-func on_panel_activated() -> void:
-	if _world_view_panel and _world_view_panel.has_method("get_visible_tile_region") and _world_view_panel.has_method("set_selected_tile"):
-		var region = _world_view_panel.get_visible_tile_region()
-		var top_left: Vector2i = region["top_left"]
-		var bottom_right: Vector2i = region["bottom_right"]
-		var centre_x = int((top_left.x + bottom_right.x) / 2)
-		var centre_y = int((top_left.y + bottom_right.y) / 2)
-		_world_view_panel.set_selected_tile(Vector2i(centre_x, centre_y))
+		_select_centre_tile()
 #endregion
 
 
@@ -193,6 +187,25 @@ func _exit_tree() -> void:
 		EventBusGame.request_survey.disconnect(_on_survey_requested)
 	if EventBusGame.land_grid_updated.is_connected(_on_land_grid_updated):
 		EventBusGame.land_grid_updated.disconnect(_on_land_grid_updated)
+
+## Selects the centre tile in the WorldViewPanel grid and updates info/interaction panels.
+func _select_centre_tile() -> void:
+	if not _world_view_panel:
+		return
+	if _world_view_panel._grid_width == 0 or _world_view_panel._grid_height == 0:
+		return
+	# Get the viewport origin and calculate the centre tile's world coordinates
+	var viewport_origin: Vector2i = _world_view_panel.get_viewport_origin()
+	var grid_size: int = 5 # Should match GRID_SIZE in WorldViewPanel
+	var centre_offset: Vector2i = Vector2i(grid_size / 2, grid_size / 2)
+	var centre_coords: Vector2i = viewport_origin + centre_offset
+	# Clamp to grid bounds
+	centre_coords.x = clamp(centre_coords.x, 0, _world_view_panel._grid_width - 1)
+	centre_coords.y = clamp(centre_coords.y, 0, _world_view_panel._grid_height - 1)
+	_world_view_panel.set_selected_tile(centre_coords)
+	# Manually update info/interaction panels as if the user selected the tile
+	var tile_data = World.get_parcel(centre_coords.x, centre_coords.y)
+	_on_tile_selected(centre_coords.y * _world_view_panel._grid_width + centre_coords.x, tile_data)
 #endregion
 
 # Import DataTileInfo for static typing
