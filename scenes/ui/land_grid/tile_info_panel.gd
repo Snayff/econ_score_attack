@@ -35,7 +35,12 @@ func update_info(tile_info: DataTileInfo) -> void:
 			text += "[i]Nothing of interest found.[/i]"
 		else:
 			for aspect in tile_info.aspects:
-				text += "[b]%s[/b] (x%s)\n" % [aspect["f_name"], str(aspect["amount"])]
+				var amount: String = ""
+				if aspect.is_finite:
+					amount = "x" + str(aspect["amount"]["amount"])
+				else:
+					amount = "♾️"
+				text += "[b]%s[/b] (%s)\n" % [aspect["f_name"], amount]
 				if aspect["description"]:
 					text += "[i]%s[/i]\n" % aspect["description"]
 				text += "\n"

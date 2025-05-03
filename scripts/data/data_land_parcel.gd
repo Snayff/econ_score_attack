@@ -150,13 +150,15 @@ func to_tile_info() -> Variant:
 			aspects.append({
 				"f_name": aspect_meta.get("f_name", aspect_id),
 				"description": aspect_meta.get("description", ""),
-				"amount": amount
+				"amount": amount,
+				"is_finite": aspect_meta.get("is_finite", false)
 			})
 		else:
 			aspects.append({
 				"f_name": aspect_id,
 				"description": "",
-				"amount": amount
+				"amount": amount,
+				"is_finite": false
 			})
 	return DataTileInfo.new(get_coordinates(), is_surveyed, aspects)
 #endregion
