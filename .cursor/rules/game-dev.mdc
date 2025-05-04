@@ -75,6 +75,7 @@ alwaysApply: true
   - Access autoloads by their name, not via `get_node`. 
   - When making a class an autload, ensure it does not use `class_name`, as this causes a conflict. 
   - Limit the amount of deep nesting, wherever possible, by using things such as early returns. 
+  - If trying to refer to a class that has has class_name declaration, we do not need to preload it prior to referencing. 
   
   
   Naming Conventions
@@ -97,6 +98,7 @@ alwaysApply: true
   - Documentation within a class, whether for a function or variable, should explain why an action is being taken. 
   - When adding a new system, make sure to ask if we should create a new documentation file in "dev/docs/docs/systems". This documentation should explain how the system works, the system's intent, how a developer can make use of it, and a definition of any associated data schemas. 
   - When updating a system, if there is system documentation in "dev/docs/docs/systems" ensure it is updated. 
+  - All documentation should have a header called Last Updated. It should be set to today's date whenever the file is updated. The Last Updated header should be the first, after the title. 
 
 
   Error Handling and Debugging

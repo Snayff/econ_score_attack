@@ -1,0 +1,17 @@
+{
+  "output_directory": "dev/test_results/",
+  "categories": {
+    "unit": {
+      "enabled": true,
+      "test_paths": ["shared/tests/unit/"]
+    },
+    "integration": {
+      "enabled": true,
+      "test_paths": ["shared/tests/integration/"]
+    }
+  },
+  "output_format": {
+    "include_stack_traces": true,
+    "verbose": true
+  }
+} 

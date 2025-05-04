@@ -28,8 +28,12 @@ IMPLEMENT DESIGN
 #########
 
 ## NEXT
+- BUG we now have 2 survey buttons. 
+	The survey button on the right should move to the interaction panel. 
+	When clicking button on the right, after it completes, tile info isnt updated
+- "grid" is a term for the UI. ensure that the code distringuishes between land parcel and grid
 - max aspects per tile centrally set
-- amount of aspect generated should be int
+- aspects "amount" generated should be int
 - implement folder restructure as per res://dev/docs/docs/project_structure.md, and update rules in res://.cursor/rules/project-structure.mdc.
 
 ## NEW FEATURES / System

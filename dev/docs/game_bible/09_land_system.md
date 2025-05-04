@@ -122,3 +122,7 @@ The land system forms the physical and economic foundation of the game world. It
 ---
 
 This section should be updated as the land system is implemented and refined. For questions or contributions, contact the design lead or refer to the technical documentation in `dev/docs/docs/systems/` if available. 
+
+
+## Last Updated
+2025-05-04 

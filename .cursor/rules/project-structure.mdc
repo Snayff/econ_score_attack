@@ -12,13 +12,24 @@ You always ensure new files and functionality is added in keeping with a logical
   - "globals/constants.gd" is used to hold any constant or enum value that is used in more than 1 file. 
   - "globals/event_bus_game.gd" holds all signals used for game logic accessed by unrelated classes.
   - "globals/event_bus_ui.gd" holds all signals used for ui events.
-  - External data files are held in "data/" folder.
+  - External data files are held in "data/" folder within a feature folder.
   - Autloads/globals are held in "globals/" folder. 
-  - The game begins with "scenes/main/main.tscn". There should only ever be 1 main.tscn and it should always be in that folder location. 
-  - "scenes/" holds all scenes and that scenes script file, if they share the same name (excluding the file extension).
-  - "scripts/" holds standalone, or reused, scripts, that do not fit another description.
+  - The game begins with "main/main.tscn". There should only ever be 1 main.tscn and it should always be in that folder location. 
+  - "feature/" holds all code for a single feature. 
+  - Within "feature/" we should have "/data", "/test", "/ui", and any other approproate folders. 
+  - Shared code or scenes is held in "shared/".
 
+
+  Communication
+  - Communication across features is handled by signals. 
 
 
   Storing New Functionality
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
+
+  Documentation
+  - Interlinked or combined systems are detailed and explained as a core system in dev/docs/docs/systems/.
+  - How to use a class is explained in dev/docs/docs/api. 
+  - The intended future state, i.e. what we're working towards, for aspects of gameplay is defined in dev/docs/game_bible.
+  - Research and reference information is held in dev/docs/research. It is not authoritative. 
+  - Specific designs for new features, along with the implementation plans, are held in dev/docs/designs.
