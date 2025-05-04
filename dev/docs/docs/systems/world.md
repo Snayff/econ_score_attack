@@ -93,4 +93,4 @@ var parcel = World.get_parcel(2, 3)
 - `globals/world.gd` (autoload singleton)
 
 ## Last Updated
-2024-06-10 
+2025-05-04 

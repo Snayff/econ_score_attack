@@ -98,4 +98,4 @@ Library.connect("config_loaded", Callable(self, "_on_config_loaded"))
 - `globals/library.gd` (autoload singleton)
 
 ## Last Updated
-2024-06-10 
+2025-05-04 

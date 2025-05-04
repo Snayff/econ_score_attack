@@ -61,3 +61,6 @@ The Logger System provides a centralised, configurable logging facility for the 
 Logger.info("Game started", "Main")
 Logger.log_event("player_action", {"action": "build", "building": "farm"}, "GameLoop")
 ``` 
+
+## Last Updated
+2025-05-04 
