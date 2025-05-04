@@ -4,7 +4,7 @@
 class_name DemesneInheritance
 extends Law
 
-const Law = preload("res://scripts/laws/law.gd")
+const Law = preload("res://feature/law/law.gd")
 
 
 #region CONSTANTS

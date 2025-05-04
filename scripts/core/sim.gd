@@ -5,7 +5,7 @@
 class_name Sim
 extends Node
 
-const SalesTax = preload("res://scripts/laws/sales_tax.gd")
+const SalesTax = preload("res://feature/law/sales_tax.gd")
 const EconomicValidator = preload("res://feature/economy/market/economic_validator.gd")
 const EconomicMetrics = preload("res://feature/economy/market/economic_metrics.gd")
 

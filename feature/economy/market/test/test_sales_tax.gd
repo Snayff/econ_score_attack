@@ -2,12 +2,19 @@
 class_name TestSalesTax
 extends ABCTest
 
-const SalesTax = preload("res://scripts/laws/sales_tax.gd")
+const SalesTax = preload("res://feature/law/sales_tax.gd")
 
 var _sales_tax: SalesTax
 
 func before_each() -> void:
-    _sales_tax = SalesTax.new("Test Tax", "A test tax", {"tax_rate": 10.0})
+    _sales_tax = SalesTax.new(
+        "Test Tax", # name_
+        "Taxation", # category_
+        "General", # subcategory_
+        ["test"], # tags_
+        "A test tax", # description_
+        {"tax_rate": 10.0} # parameters_
+    )
     _sales_tax.activate()
 
 func after_each() -> void:

@@ -75,12 +75,12 @@ func _ready() -> void:
 ##	@param type: The notification type (info, success, warning, error).
 ##	@return void
 func show_notification(message: String, type: String = "info") -> void:
-	var notification := _create_notification(message, type)
-	_notification_container.add_child(notification)
+	var notification_ := _create_notification(message, type)
+	_notification_container.add_child(notification_)
 
 	# Remove after duration
 	await get_tree().create_timer(NOTIFICATION_DURATION).timeout
-	notification.queue_free()
+	notification_.queue_free()
 
 ##	Displays a floating feedback message at a given position, animating it upwards and fading out.
 ##	@param message: The feedback message to display.

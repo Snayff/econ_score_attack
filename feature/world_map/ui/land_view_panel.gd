@@ -1,11 +1,7 @@
-"""
-LandViewPanel
+## LandViewPanel
+## Main container for the Land View UI, holding the interaction, world view, and info panels.
+## Usage: Attach to LandViewPanel.tscn root node.
 
-Main container for the Land View UI, holding the interaction, world view, and info panels.
-Usage: Attach to LandViewPanel.tscn root node.
-"""
-
-# class_name LandViewPanel  # Removed to avoid global class conflict
 extends HSplitContainer
 
 #region CONSTANTS
@@ -207,6 +203,3 @@ func _select_centre_tile() -> void:
 	var tile_data = World.get_parcel(centre_coords.x, centre_coords.y)
 	_on_tile_selected(centre_coords.y * _world_view_panel._grid_width + centre_coords.x, tile_data)
 #endregion
-
-# Import DataTileInfo for static typing
-const DataTileInfo = preload("res://scripts/data/data_tile_info.gd")

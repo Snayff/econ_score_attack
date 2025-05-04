@@ -133,7 +133,6 @@ func _update_grid() -> void:
 				btn.text = ""
 				btn.disabled = true
 			else:
-				var parcel = get_node("/root/World").get_parcel(world_x, world_y)
 				btn.text = "%d,%d" % [world_x, world_y]
 				btn.disabled = false
 				btn.pressed.connect(_on_tile_pressed.bind(world_x, world_y))
