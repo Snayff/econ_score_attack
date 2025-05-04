@@ -5,13 +5,6 @@
 class_name Demesne
 extends Node
 
-const Law = preload("res://feature/law/law.gd")
-const LawRegistry = preload("res://feature/law/law_registry.gd")
-const DemesneInheritance = preload("res://feature/law/demesne_inheritance.gd")
-const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
-const ResourceGenerator = preload("res://feature/economic_actor/components/resource_generator.gd")
-const PathfindingSystem = preload("res://scripts/core/pathfinding_system.gd")
-const SurveyManager = preload("res://scripts/core/survey_manager.gd")
 
 #region SIGNALS
 signal stockpile_changed(good_id: String, new_amount: int)

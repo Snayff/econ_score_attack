@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://cehbj0wwgyqcm"]
 
-[ext_resource type="PackedScene" uid="uid://bn2f4bby2e6wb" path="res://features/world_map/ui/tile_interaction_panel.tscn" id="1"]
-[ext_resource type="Script" uid="uid://ca21wysaabwno" path="res://features/world_map/ui/land_view_panel.gd" id="1_1vomj"]
-[ext_resource type="PackedScene" uid="uid://be338px6n6hy4" path="res://features/world_map/ui/world_view_panel.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://cqkshiytv5kx3" path="res://features/world_map/ui/tile_info_panel.tscn" id="4"]
-[ext_resource type="Script" uid="uid://dup4m4kqmgxgn" path="res://features/world_map/ui/tile_info_panel.gd" id="5_1jnom"]
+[ext_resource type="PackedScene" uid="uid://bn2f4bby2e6wb" path="res://feature/world/ui/tile_interaction_panel.tscn" id="1"]
+[ext_resource type="Script" uid="uid://dhuk1i36r7lgo" path="res://feature/world/ui/land_view_panel.gd" id="1_1vomj"]
+[ext_resource type="PackedScene" uid="uid://be338px6n6hy4" path="res://feature/world/ui/world_view_panel.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://cqkshiytv5kx3" path="res://feature/world/ui/tile_info_panel.tscn" id="4"]
+[ext_resource type="Script" uid="uid://dwcjl34p2pjr2" path="res://feature/world/ui/tile_info_panel.gd" id="5_1jnom"]
 
 [node name="LandViewPanel" type="HSplitContainer"]
 anchors_preset = 15

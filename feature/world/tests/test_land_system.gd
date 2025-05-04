@@ -3,9 +3,6 @@
 class_name TestLandSystem
 extends ABCTest
 
-const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
-const Demesne = preload("res://feature/demesne/demesne.gd")
-const ResourceGenerator = preload("res://feature/economic_actor/components/resource_generator.gd")
 
 var _demesne: Demesne
 var _resource_generator: ResourceGenerator
@@ -20,7 +17,7 @@ func after_each() -> void:
 
 func test_land_parcel_creation() -> void:
 	var parcel = DataLandParcel.new(5, 3, "plains")
-	
+
 	assert_eq(
 		parcel.x,
 		5,
@@ -71,7 +68,7 @@ func test_demesne_grid_initialization() -> void:
 	var dimensions = _demesne.get_grid_dimensions()
 	var land_config = Library.get_config("land")
 	var default_size = land_config.get("grid", {}).get("default_size", {"width": 10, "height": 10})
-	
+
 	assert_eq(
 		dimensions.x,
 		default_size.width,
@@ -85,7 +82,7 @@ func test_demesne_grid_initialization() -> void:
 
 func test_parcel_access() -> void:
 	var dimensions = _demesne.get_grid_dimensions()
-	
+
 	# Test valid coordinates
 	var parcel = _demesne.get_parcel(0, 0)
 	assert_eq(
@@ -93,7 +90,7 @@ func test_parcel_access() -> void:
 		true,
 		"Should get parcel at valid coordinates"
 	)
-	
+
 	# Test invalid coordinates
 	parcel = _demesne.get_parcel(-1, 0)
 	assert_eq(
@@ -101,7 +98,7 @@ func test_parcel_access() -> void:
 		null,
 		"Should return null for invalid x coordinate"
 	)
-	
+
 	parcel = _demesne.get_parcel(0, dimensions.y + 1)
 	assert_eq(
 		parcel,
@@ -112,20 +109,20 @@ func test_parcel_access() -> void:
 func test_parcel_modification() -> void:
 	var original_parcel = _demesne.get_parcel(1, 1)
 	var new_parcel = DataLandParcel.new(1, 1, "forest")
-	
+
 	assert_eq(
 		_demesne.set_parcel(1, 1, new_parcel),
 		true,
 		"Should successfully set parcel at valid coordinates"
 	)
-	
+
 	var retrieved_parcel = _demesne.get_parcel(1, 1)
 	assert_eq(
 		retrieved_parcel.terrain_type,
 		"forest",
 		"Retrieved parcel should have updated terrain type"
 	)
-	
+
 	# Test setting parcel with mismatched coordinates
 	var mismatched_parcel = DataLandParcel.new(2, 2, "mountains")
 	assert_eq(
@@ -137,7 +134,7 @@ func test_parcel_modification() -> void:
 func test_parcel_properties() -> void:
 	var parcel = _demesne.get_parcel(0, 0)
 	var properties = parcel.get_properties()
-	
+
 	assert_eq(
 		properties.has("x"),
 		true,
@@ -182,10 +179,10 @@ func test_parcel_properties() -> void:
 func test_resource_initialization() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	_resource_generator.initialise_resources(parcel)
-	
+
 	var land_config = Library.get_config("land")
 	var terrain_type = land_config.terrain_types[parcel.terrain_type]
-	
+
 	for resource_id in terrain_type.resource_modifiers:
 		if terrain_type.resource_modifiers[resource_id] > 0:
 			assert_eq(
@@ -202,7 +199,7 @@ func test_resource_initialization() -> void:
 func test_resource_discovery() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	_resource_generator.initialise_resources(parcel)
-	
+
 	# Force discovery of a specific resource
 	parcel.add_resource("grain", 100.0, false)
 	assert_eq(
@@ -210,7 +207,7 @@ func test_resource_discovery() -> void:
 		false,
 		"Resource should start undiscovered"
 	)
-	
+
 	var discovered = parcel.discover_resource("grain")
 	assert_eq(
 		discovered,
@@ -226,11 +223,11 @@ func test_resource_discovery() -> void:
 func test_resource_generation() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	parcel.add_resource("grain", 100.0, true)
-	
+
 	var initial_amount = parcel.get_resource_amount("grain")
 	parcel.update_resources(1.0)  # Update for 1 second
 	var new_amount = parcel.get_resource_amount("grain")
-	
+
 	assert_true(
 		new_amount > initial_amount,
 		"Resource amount should increase over time"
@@ -239,21 +236,21 @@ func test_resource_generation() -> void:
 func test_resource_surveying() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	_resource_generator.initialise_resources(parcel)
-	
+
 	assert_eq(
 		parcel.is_surveyed,
 		false,
 		"Parcel should start unsurveyed"
 	)
-	
+
 	var discovered_resources = _resource_generator.survey_parcel(parcel)
-	
+
 	assert_eq(
 		parcel.is_surveyed,
 		true,
 		"Parcel should be surveyed after survey_parcel"
 	)
-	
+
 	# Verify that any discovered resources are properly marked
 	for resource_id in discovered_resources:
 		assert_eq(
@@ -266,15 +263,15 @@ func test_resource_generation_rates() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	parcel.add_resource("grain", 100.0, true)
 	parcel.add_resource("wood", 100.0, true)
-	
+
 	var initial_grain = parcel.get_resource_amount("grain")
 	var initial_wood = parcel.get_resource_amount("wood")
-	
+
 	parcel.update_resources(1.0)
-	
+
 	var grain_increase = parcel.get_resource_amount("grain") - initial_grain
 	var wood_increase = parcel.get_resource_amount("wood") - initial_wood
-	
+
 	# Plains should generate grain faster than wood
 	assert_true(
 		grain_increase > wood_increase,
@@ -285,7 +282,7 @@ func test_pathfinding_integration() -> void:
 	var start := Vector2i(0, 0)
 	var end := Vector2i(1, 1)
 	var path := _demesne.find_path(start, end)
-	
+
 	assert_true(
 		path.size() > 0,
 		"Should find a path between valid coordinates"
@@ -305,10 +302,10 @@ func test_movement_cost_calculation() -> void:
 	var start := Vector2i(0, 0)
 	var end := Vector2i(1, 0)
 	var cost := _demesne.get_movement_cost(start, end)
-	
+
 	var land_config := Library.get_config("land")
 	var expected_cost: float = land_config.terrain_types["plains"].movement_cost
-	
+
 	assert_eq(
 		cost,
 		expected_cost,
@@ -318,19 +315,19 @@ func test_movement_cost_calculation() -> void:
 func test_pathfinding_with_road() -> void:
 	var start := Vector2i(0, 0)
 	var end := Vector2i(1, 0)
-	
+
 	# Add road improvement
 	var parcel1: DataLandParcel = _demesne.get_parcel(0, 0)
 	var parcel2: DataLandParcel = _demesne.get_parcel(1, 0)
 	parcel1.improvements["road"] = 1
 	parcel2.improvements["road"] = 1
-	
+
 	var cost := _demesne.get_movement_cost(start, end)
 	var land_config := Library.get_config("land")
 	var expected_cost: float = land_config.terrain_types["plains"].movement_cost * \
 							  land_config.improvements.road.movement_cost_multiplier * \
 							  land_config.improvements.road.movement_cost_multiplier
-	
+
 	assert_eq(
 		cost,
 		expected_cost,
@@ -340,7 +337,7 @@ func test_pathfinding_with_road() -> void:
 func test_pathfinding_signals() -> void:
 	var path_found_emitted := false
 	var path_failed_emitted := false
-	
+
 	# Connect to signals
 	_demesne.path_found.connect(
 		func(start: Vector2i, end: Vector2i, path: Array[Vector2i]) -> void:
@@ -350,22 +347,22 @@ func test_pathfinding_signals() -> void:
 		func(start: Vector2i, end: Vector2i, reason: String) -> void:
 			path_failed_emitted = true
 	)
-	
+
 	# Test valid path
 	var start := Vector2i(0, 0)
 	var end := Vector2i(1, 1)
 	_demesne.find_path(start, end)
-	
+
 	assert_true(
 		path_found_emitted,
 		"Should emit path_found signal for valid path"
 	)
-	
+
 	# Test invalid path
 	start = Vector2i(-1, -1)
 	_demesne.find_path(start, end)
-	
+
 	assert_true(
 		path_failed_emitted,
 		"Should emit path_failed signal for invalid path"
-	) 
+	)

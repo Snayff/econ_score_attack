@@ -52,7 +52,7 @@ This document outlines the phased approach for implementing the new project stru
 
 ### Tasks
 1. Choose a relatively independent feature
-   - Suggest starting with `world_map`
+   - Suggest starting with `world`
    - Include all related scripts, scenes, and data
    - Set up feature-specific tests
 

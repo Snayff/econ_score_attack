@@ -28,7 +28,7 @@ This document describes the folder structure and organisational principles for t
   - `features/economic_actor/people/`
   - `features/economy/market/`
   - `features/laws/`
-  - `features/world_map/`
+  - `features/world/`
 
 ### shared/
 - Contains all shared components, data classes, utilities, UI elements, and assets (art, audio, icons, etc.) used by multiple features.
@@ -123,7 +123,7 @@ features/
     law_data.json
     law_ui.tscn
     tests/
-  world_map/
+  world/
     tile.gd
     tile_data.json
     tile_ui.tscn

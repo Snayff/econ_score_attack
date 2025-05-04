@@ -49,7 +49,7 @@ data/         # Global data files (if not feature-specific)
 Each feature is self-contained and may include subfolders for UI, data, and tests:
 ```
 features/
-  world_map/
+  world/
     ui/                # UI scenes and scripts for the feature
     data/              # Feature-specific data files (optional)
     tests/             # Unit and integration tests for the feature
@@ -60,7 +60,7 @@ features/
 #### Example: World Map Feature
 ```
 features/
-  world_map/
+  world/
     ui/
       land_view_panel.tscn
       land_view_panel.gd

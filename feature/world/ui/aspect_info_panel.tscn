@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://db2o3bnwn2mss"]
 
-[ext_resource type="Script" path="res://features/world_map/ui/land_grid/aspect_info_panel.gd" id="1_k8qv1"]
+[ext_resource type="Script" path="res://features/world/ui/land_grid/aspect_info_panel.gd" id="1_k8qv1"]
 
 [node name="AspectInfoPanel" type="Panel"]
 custom_minimum_size = Vector2(300, 0)

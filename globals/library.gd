@@ -34,10 +34,10 @@ const _CONFIG_FILES: Dictionary = {
 	"people": "res://feature/economic_actor/data/people.json",
 	"demesne": "res://feature/demesne/data/demesne.json",
 	"goods": "res://feature/economy/data/goods.json",
-	"consumption_rules": "res://data/rules/consumption_rules.json",
+	"consumption_rules": "res://feature/economic_actor/data/consumption_rules.json",
 	"laws": "res://feature/law/data/laws.json",
-	"land": "res://feature/world_map/data/land_config.json",
-	"land_aspects": "res://feature/world_map/data/land_aspects.json"
+	"land": "res://feature/world/data/land_config.json",
+	"land_aspects": "res://feature/world/data/land_aspects.json"
 }
 
 ## Default values by config type

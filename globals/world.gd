@@ -10,7 +10,6 @@ extends Node
 
 #region SIGNALS
 ## Emitted when the world grid is updated (e.g., after terrain/resource changes)
-@warning_ignore("unused_signal")
 signal world_grid_updated()
 #endregion
 
