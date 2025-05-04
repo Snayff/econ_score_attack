@@ -78,7 +78,7 @@ signal movement_costs_updated(demesne_id: String, affected_coordinates: Array[Ve
 
 ## Emitted when parcel data is requested
 @warning_ignore("unused_signal")
-signal request_parcel_data(x: int, y: int)
+signal request_parcel_data(demesne_id: String, x: int, y: int)
 
 ## Emitted when a parcel improvement is requested
 @warning_ignore("unused_signal")

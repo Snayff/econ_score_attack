@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxqxe2yvmqxxx"]
 
-[ext_resource type="Script" path="res://scripts/ui/panel_header.gd" id="1_xxxxx"]
+[ext_resource type="Script" uid="uid://cd8aiosoe0v0y" path="res://main/ui/panel_header.gd" id="1_xxxxx"]
+
 
 [node name="PanelHeader" type="VBoxContainer"]
 anchors_preset = 15

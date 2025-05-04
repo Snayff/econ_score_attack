@@ -4,9 +4,6 @@
 class_name LawRegistry
 extends RefCounted
 
-const Law = preload("res://feature/law/law.gd")
-const SalesTax = preload("res://feature/law/sales_tax.gd")
-const DemesneInheritance = preload("res://feature/law/demesne_inheritance.gd")
 
 #region VARS
 ## Mapping of law IDs to their data classes

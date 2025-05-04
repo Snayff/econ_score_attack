@@ -18,13 +18,15 @@ config/icon="uid://6enbllaeljxy"
 [autoload]
 
 Constants="*res://globals/constants.gd"
-Library="*res://globals/library.gd"
-World="*res://globals/world.gd"
 Logger="*res://dev_tools/logger/logger.gd"
+IDGenerator="*res://globals/id_generator.gd"
+Library="*res://globals/library.gd"
 EventBusGame="*res://globals/event_bus_game.gd"
 EventBusUI="*res://globals/event_bus_ui.gd"
-SurveyManager="*res://feature/world/survey_manager.gd"
-AspectManager="*res://feature/world/aspect_manager.gd"
+World="*res://globals/world.gd"
+SurveyManager="*res://globals/survey_manager.gd"
+AspectManager="*res://globals/aspect_manager.gd"
+LandManager="*res://globals/land_manager.gd"
 
 [display]
 

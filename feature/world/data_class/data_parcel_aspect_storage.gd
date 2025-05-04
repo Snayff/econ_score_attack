@@ -50,7 +50,7 @@ func add_aspect(aspect_id: String, amount: int = 0, discovered: bool = false) ->
 func discover_aspect(aspect_id: String) -> bool:
 	if not has_aspect(aspect_id) or is_aspect_discovered(aspect_id):
 		return false
-		
+
 	aspects[aspect_id].discovered = true
 	return true
 
@@ -59,23 +59,23 @@ func discover_aspect(aspect_id: String) -> bool:
 ## @return: Array of aspect IDs that were newly discovered
 func discover_all_aspects() -> Array:
 	var newly_discovered = []
-	
+
 	Logger.log_event("diagnostic_discover_all_aspects_start", {
 		"aspect_count": aspects.size(),
 		"aspects": aspects.keys(),
 		"timestamp": Time.get_unix_time_from_system()
 	}, "AspectStorage")
-	
+
 	for aspect_id in aspects.keys():
 		if not aspects[aspect_id].discovered:
 			aspects[aspect_id].discovered = true
 			newly_discovered.append(aspect_id)
-			
+
 	Logger.log_event("diagnostic_discover_all_aspects_end", {
 		"newly_discovered": newly_discovered,
 		"timestamp": Time.get_unix_time_from_system()
 	}, "AspectStorage")
-			
+
 	return newly_discovered
 
 
@@ -92,7 +92,7 @@ func has_aspect(aspect_id: String) -> bool:
 func is_aspect_discovered(aspect_id: String) -> bool:
 	if not has_aspect(aspect_id):
 		return false
-		
+
 	return aspects[aspect_id].discovered
 
 
@@ -102,7 +102,7 @@ func is_aspect_discovered(aspect_id: String) -> bool:
 func get_aspect_amount(aspect_id: String) -> int:
 	if not has_aspect(aspect_id):
 		return 0
-		
+
 	return aspects[aspect_id].amount
 
 
@@ -113,7 +113,7 @@ func get_aspect_amount(aspect_id: String) -> int:
 func set_aspect_amount(aspect_id: String, amount: int) -> bool:
 	if not has_aspect(aspect_id):
 		return false
-		
+
 	aspects[aspect_id].amount = amount
 	return true
 
@@ -122,17 +122,17 @@ func set_aspect_amount(aspect_id: String, amount: int) -> bool:
 ## @return: Dictionary with aspect_id as key and aspect data as value
 func get_discovered_aspects() -> Dictionary:
 	var discovered = {}
-	
+
 	for aspect_id in aspects.keys():
 		if aspects[aspect_id].discovered:
 			discovered[aspect_id] = aspects[aspect_id].duplicate()
-			
+
 	Logger.log_event("diagnostic_get_discovered_aspects", {
 		"discovered_count": discovered.size(),
 		"discovered_ids": discovered.keys(),
 		"timestamp": Time.get_unix_time_from_system()
 	}, "AspectStorage")
-			
+
 	return discovered
 
 
@@ -146,11 +146,11 @@ func get_all_aspects() -> Dictionary:
 ## @return: Array of discovered aspect IDs
 func get_discovered_aspect_ids() -> Array:
 	var discovered = []
-	
+
 	for aspect_id in aspects.keys():
 		if aspects[aspect_id].discovered:
 			discovered.append(aspect_id)
-			
+
 	return discovered
 
 
@@ -167,7 +167,7 @@ func to_dict() -> Dictionary:
 ## @return: New DataParcelAspectStorage instance
 static func from_dict(data: Dictionary) -> DataParcelAspectStorage:
 	var storage = DataParcelAspectStorage.new()
-	
+
 	for aspect_id in data.get("aspects", {}).keys():
 		var aspect_data = data.aspects[aspect_id]
 		storage.add_aspect(
@@ -175,7 +175,7 @@ static func from_dict(data: Dictionary) -> DataParcelAspectStorage:
 			aspect_data.get("amount", 0),
 			aspect_data.get("discovered", false)
 		)
-		
+
 	return storage
 #endregion
 
@@ -191,4 +191,4 @@ var aspects: Dictionary:
 		return aspects
 	set(value):
 		aspects = value
-#endregion 
+#endregion

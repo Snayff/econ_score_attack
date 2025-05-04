@@ -33,17 +33,34 @@ const PROGRESS_PER_TURN := 1.0 / float(SURVEY_TURNS)
 #region VARS
 ## Dictionary of active surveys by coordinate key
 static var _active_surveys: Dictionary = {}
+
+## Callable for parcel access, to be injected at runtime
+static var _parcel_accessor: Callable = Callable()
 #endregion
 
 
 #region PUBLIC FUNCTIONS
+##	Sets the callable used to access parcels by coordinates. This decouples SurveyManager from the World global.
+##	@param accessor: Callable
+static func set_parcel_accessor(accessor: Callable) -> void:
+	_parcel_accessor = accessor
+
+## Internal helper to get a parcel using the injected accessor
+## @param x: int
+## @param y: int
+## @return: DataLandParcel or null
+static func _get_parcel(x: int, y: int) -> DataLandParcel:
+	if not _parcel_accessor.is_null():
+		return _parcel_accessor.call(x, y)
+	return null
+
 ## Starts a survey on a parcel
 ## Returns false if survey already in progress or parcel already surveyed
 static func start_survey(x: int, y: int) -> bool:
 	if not is_instance_valid(SurveyManager):
 		return false
 
-	var parcel = World.get_parcel(x, y)
+	var parcel = _get_parcel(x, y)
 	if parcel == null or parcel.is_surveyed:
 		return false
 
@@ -113,7 +130,7 @@ static func _connect_signals() -> void:
 
 static func _complete_survey(coord_key: String) -> void:
 	var survey: Dictionary = _active_surveys[coord_key]
-	var parcel := World.get_parcel(survey.x, survey.y)
+	var parcel := _get_parcel(survey.x, survey.y)
 
 	if parcel == null:
 		_active_surveys.erase(coord_key)

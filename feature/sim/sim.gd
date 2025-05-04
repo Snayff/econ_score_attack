@@ -5,9 +5,6 @@
 class_name Sim
 extends Node
 
-const SalesTax = preload("res://feature/law/sales_tax.gd")
-const EconomicValidator = preload("res://feature/economy/market/economic_validator.gd")
-const EconomicMetrics = preload("res://feature/economy/market/economic_metrics.gd")
 
 #region SIGNALS
 signal sim_initialized
@@ -30,7 +27,6 @@ signal sim_initialized
 #region VARS
 ## The demesne in the simulation
 var demesne: Demesne
-var land_manager: LandManager
 
 ## Dictionary of good prices in the market
 var good_prices: Dictionary = {}
@@ -51,7 +47,7 @@ var _turn_transactions: Array[Dictionary] = []
 func _ready() -> void:
 	EventBusGame.turn_complete.connect(resolve_turn)
 
-	# Initialize economic monitoring
+	# Initialise economic monitoring
 	_economic_validator = EconomicValidator.new()
 	add_child(_economic_validator)
 	_economic_validator.invariant_violated.connect(_on_invariant_violated)
@@ -64,11 +60,7 @@ func _ready() -> void:
 	var demesne_data = DataDemesne.new()
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	demesne.connect_to_turns()
-
-	# Add LandManager as a component
-	land_manager = LandManager.new()
-	add_child(land_manager)
-	land_manager.register_demesne(demesne.demesne_name, demesne.land_grid)
+	LandManager.register_demesne(demesne.demesne_name, demesne.land_grid)
 
 	# Enact initial laws
 	var sales_tax = demesne.enact_law("sales_tax")

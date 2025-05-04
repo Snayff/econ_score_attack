@@ -48,7 +48,7 @@ func initialise_resources(parcel: DataLandParcel) -> void:
 	var resource_modifiers = terrain_type.resource_modifiers
 
 	# Load land aspects from Library
-	var land_aspects = Library.get_land_aspects()
+	var land_aspects = AspectManager.get_all_aspect_definitions()
 
 	for aspect_def in land_aspects:
 		var aspect = DataLandAspect.new(aspect_def)
