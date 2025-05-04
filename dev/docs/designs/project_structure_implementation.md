@@ -214,4 +214,50 @@ This document outlines the phased approach for implementing the new project stru
 - Each phase has a rollback point
 - Feature toggles for new structure
 - Parallel systems during migration
-- Data backup strategy 
+- Data backup strategy
+
+## Migration Checklist and Audit
+
+### Migration Checklist
+- [ ] All scripts are in `feature/`, `shared/`, or `globals/`
+- [ ] All scenes are co-located with their scripts (feature, shared, or main)
+- [ ] All assets are in `feature/` or `shared/`
+- [ ] All data files are in `feature/`, `shared/`, or `data/`
+- [ ] All tests are in `feature/` or `shared/`
+- [ ] All documentation is up to date and references new paths
+- [ ] All templates are in `feature/` or `shared/`
+- [ ] All configs are in `config/`, `dev_tools/`, or feature folders
+- [ ] Only necessary autoloads exist in `globals/`
+- [ ] All cross-feature communication uses event buses
+
+### Audit of Remaining Items to Migrate
+
+#### 1. `scripts/` Directory
+- Contains subfolders: `ui/`, `resources/`, `laws/`, `data/`, `core/`, `actors/`, `economic_analysis/`, `globals/`
+- **Action:** Review each subfolder and migrate scripts to the appropriate `feature/`, `shared/`, or `globals/` location. Remove or archive the `scripts/` directory once empty.
+
+#### 4. `tests/` Directory
+- Contains: `core/`, `unit/`, `integration/`.
+- **Action:** Move feature-specific tests to `feature/<feature_name>/tests/`. Move cross-feature/integration tests to `shared/tests/`. Remove or archive the `tests/` directory once empty.
+
+#### 5. `scenes/` Directory
+- Contains: `main/`, `ui/`.
+- **Action:** Move feature-specific scenes to `feature/<feature_name>/ui/`. Move shared scenes to `shared/ui/scenes/`. Main entry scene should be in `main/`.
+
+#### 6. `dev_tools/` Directory
+- Contains: `logger/` (with `ui/components/`, `ui/scenes/`, `config/`).
+- **Action:** Ensure only dev-related tools/scripts are present. If any UI components or scenes are reusable, consider moving to `shared/ui/components/` or `shared/ui/scenes/`.
+
+#### 7. `config/` Directory
+- Contains: `test_runner.json`.
+- **Action:** Ensure only configuration files are present. Move feature-specific configs to the relevant feature folder if needed.
+
+#### 11. Documentation
+- **Action:** Update all documentation to reference new paths and structure. Place feature-specific docs in `feature/<feature_name>/docs/` if needed. System-level docs should be in `dev/docs/docs/systems/`.
+
+#### 12. Event Buses
+- **Action:** Ensure all cross-feature signals are in `globals/event_bus_game.gd` or `globals/event_bus_ui.gd`. Remove any direct node-to-node communication that crosses feature boundaries.
+
+---
+
+This checklist and audit should be reviewed and updated regularly throughout the migration process to ensure a complete and maintainable transition to the new project structure. 
