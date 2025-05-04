@@ -17,8 +17,10 @@ You always ensure new files and functionality is added in keeping with a logical
   - The game begins with "main/main.tscn". There should only ever be 1 main.tscn and it should always be in that folder location. 
   - "feature/" holds all code for a single feature. 
   - Within "feature/" we should have "/data", "/test", "/ui", and any other approproate folders. 
-  - Shared code or scenes is held in "shared/"
+  - Shared code or scenes is held in "shared/".
 
+  Communication
+  - Communication across features should be handled by signals. 
 
 
   Storing New Functionality
