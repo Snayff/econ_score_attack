@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://be338px6n6hy4"]
 
-[ext_resource type="Script" uid="uid://du851jdgu87qs" path="res://scenes/ui/land_grid/world_view_panel.gd" id="1_y3pvl"]
+[ext_resource type="Script" uid="uid://bjpm0k1ekhiol" path="res://features/world_map/ui/world_view_panel.gd" id="1_y3pvl"]
 
 [node name="WorldViewPanel" type="PanelContainer"]
 custom_minimum_size = Vector2(350, 0)

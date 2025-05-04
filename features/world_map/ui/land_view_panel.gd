@@ -5,7 +5,7 @@ Main container for the Land View UI, holding the interaction, world view, and in
 Usage: Attach to LandViewPanel.tscn root node.
 """
 
-class_name LandViewPanel
+# class_name LandViewPanel  # Removed to avoid global class conflict
 extends HSplitContainer
 
 #region CONSTANTS
@@ -21,7 +21,7 @@ func _ready() -> void:
 	# Get references to WorldViewPanel, TileInfoPanelNew, and TileInteractionPanel
 	var world_view_panel = $MiddleRightSplit/WorldViewPanel
 	var tile_info_panel = $MiddleRightSplit/TileInfoPanel
-	var tile_interaction_panel: TileInteractionPanelUI = $TileInteractionPanel
+	var tile_interaction_panel = $TileInteractionPanel
 
 	assert(world_view_panel != null)
 	assert(tile_info_panel != null)

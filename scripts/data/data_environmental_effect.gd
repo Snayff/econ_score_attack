@@ -62,11 +62,11 @@ static func from_dict(data: Dictionary) -> DataEnvironmentalEffect:
 	effect.resource_modifier = data.get("resource_modifier", 1.0)
 	effect.pollution_increase = data.get("pollution_increase", 0.0)
 	effect.spread_chance = data.get("spread_chance", 0.0)
-	
+
 	if data.has("affected_coords"):
 		for coord in data.affected_coords:
 			effect.affected_coords.append(Vector2i(coord.x, coord.y))
-	
+
 	return effect
 
 ## Converts the effect to a dictionary
@@ -74,7 +74,7 @@ func to_dict() -> Dictionary:
 	var coords_array := []
 	for coord in affected_coords:
 		coords_array.append({"x": coord.x, "y": coord.y})
-	
+
 	return {
 		"effect_id": effect_id,
 		"duration": duration,
@@ -90,4 +90,4 @@ func to_dict() -> Dictionary:
 #region PRIVATE FUNCTIONS
 
 
-#endregion 
+#endregion

@@ -2,8 +2,6 @@
 ## Handles communication between unrelated game systems
 extends Node
 
-const EnvironmentalSystem = preload("../core/environmental_system.gd")
-
 #region SIGNALS
 
 ## Emitted when a turn is completed

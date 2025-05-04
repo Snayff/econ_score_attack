@@ -129,34 +129,34 @@ func apply_disaster(disaster_type: DisasterType, origin: Vector2i) -> void:
 		"affected_coords": affected_coords,
 		"duration": _get_disaster_duration(disaster_type)
 	})
-	
+
 	disaster_occurred.emit(disaster_type, origin, affected_coords)
-	
+
 	for coord in affected_coords:
 		_apply_disaster_effects(disaster_type, coord)
 
 ## Updates pollution levels and spread
 func update_pollution() -> void:
 	var pollution_changes: Dictionary = {}
-	
+
 	# Calculate pollution spread
 	for y in range(_land_grid.size()):
 		for x in range(_land_grid[y].size()):
 			var coords: Vector2i = Vector2i(x, y)
 			var parcel: DataLandParcel = _land_grid[y][x]
-			
+
 			if parcel.pollution_level > MIN_POLLUTION_LEVEL:
 				# Calculate pollution decay
 				var decay: float = min(parcel.pollution_level, BASE_POLLUTION_DECAY)
 				pollution_changes[coords] = pollution_changes.get(coords, 0.0) - decay
-				
+
 				# Calculate spread to neighbours
 				var spread_amount: float = parcel.pollution_level * pollution_spread_rate
 				var neighbours: Array[Vector2i] = _get_neighbours(coords)
-				
+
 				for neighbour in neighbours:
 					pollution_changes[neighbour] = pollution_changes.get(neighbour, 0.0) + (spread_amount / neighbours.size())
-	
+
 	# Apply changes
 	for coords in pollution_changes:
 		var parcel: DataLandParcel = _land_grid[coords.y][coords.x]
@@ -167,32 +167,32 @@ func update_pollution() -> void:
 ## Gets the current resource generation modifier for a given coordinate
 func get_resource_modifier(coords: Vector2i) -> float:
 	var base_modifier := 1.0
-	
+
 	# Apply seasonal effects
 	base_modifier *= _get_seasonal_modifier(coords)
-	
+
 	# Apply disaster effects
 	for disaster in _active_disasters:
 		if coords in disaster.affected_coords:
 			base_modifier *= _get_disaster_modifier(disaster.type)
-	
+
 	# Apply pollution effects
 	var parcel: DataLandParcel = _land_grid[coords.y][coords.x]
 	base_modifier *= maxf(0.0, 1.0 - parcel.pollution_level)
-	
+
 	return base_modifier
 
 ## Updates all active effects and removes expired ones
 func update_effects(delta: float) -> void:
 	var expired_effects := []
-	
+
 	for effect_id in active_effects:
 		var effect = active_effects[effect_id]
 		effect.duration -= delta
-		
+
 		if effect.duration <= 0:
 			expired_effects.append(effect_id)
-	
+
 	for effect_id in expired_effects:
 		active_effects.erase(effect_id)
 
@@ -207,7 +207,7 @@ func _apply_seasonal_effects() -> void:
 		for x in range(_land_grid[y].size()):
 			var coords := Vector2i(x, y)
 			var modifier := _get_seasonal_modifier(coords)
-			
+
 			if modifier != 1.0:
 				effect_applied.emit("season_%s" % Season.keys()[current_season], coords, -1.0)
 
@@ -216,14 +216,14 @@ func _calculate_disaster_spread(disaster_type: DisasterType, origin: Vector2i) -
 	var affected: Array[Vector2i] = []
 	affected.append(origin)
 	var radius := _get_disaster_radius(disaster_type)
-	
+
 	for y in range(origin.y - radius, origin.y + radius + 1):
 		for x in range(origin.x - radius, origin.x + radius + 1):
 			if y >= 0 and y < _land_grid.size() and x >= 0 and x < _land_grid[y].size():
 				var coords := Vector2i(x, y)
 				if coords != origin and coords.distance_to(origin) <= radius:
 					affected.append(coords)
-	
+
 	return affected
 
 ## Gets the radius of effect for a disaster type
@@ -271,7 +271,7 @@ func _get_disaster_modifier(disaster_type: DisasterType) -> float:
 ## Gets the seasonal modifier for resource generation
 func _get_seasonal_modifier(coords: Vector2i) -> float:
 	var parcel: DataLandParcel = _land_grid[coords.y][coords.x]
-	
+
 	match current_season:
 		Season.SPRING:
 			return 1.2  # Bonus to growth
@@ -293,19 +293,19 @@ func _get_neighbours(coords: Vector2i) -> Array[Vector2i]:
 		Vector2i(0, -1),  # South
 		Vector2i(-1, 0)   # West
 	]
-	
+
 	for dir in directions:
 		var new_coords: Vector2i = coords + dir
 		if new_coords.y >= 0 and new_coords.y < _land_grid.size() and \
 		   new_coords.x >= 0 and new_coords.x < _land_grid[new_coords.y].size():
 			neighbours.append(new_coords)
-	
+
 	return neighbours
 
 ## Applies the effects of a disaster to a specific coordinate
 func _apply_disaster_effects(disaster_type: DisasterType, coords: Vector2i) -> void:
 	var parcel: DataLandParcel = _land_grid[coords.y][coords.x]
-	
+
 	match disaster_type:
 		DisasterType.FLOOD:
 			parcel.pollution_level += 0.2
@@ -316,8 +316,8 @@ func _apply_disaster_effects(disaster_type: DisasterType, coords: Vector2i) -> v
 		DisasterType.DROUGHT:
 			# Drought doesn't directly cause pollution
 			pass
-	
+
 	if parcel.pollution_level > 0.0:
 		pollution_updated.emit(coords, parcel.pollution_level)
 
-#endregion 
+#endregion

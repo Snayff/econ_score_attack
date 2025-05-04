@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bn2f4bby2e6wb"]
 
-[ext_resource type="Script" uid="uid://dkp0q5gotxeb0" path="res://scenes/ui/land_grid/tile_interaction_panel.gd" id="1_yvmk8"]
+[ext_resource type="Script" uid="uid://dvd5ogjrku0qe" path="res://features/world_map/ui/tile_interaction_panel.gd" id="1_yvmk8"]
 
 [node name="TileInteractionPanel" type="PanelContainer"]
 custom_minimum_size = Vector2(220, 0)
