@@ -14,6 +14,7 @@ This document describes the folder structure and organisational principles for t
 | globals/    | Global scripts, autoloads, constants, event buses, library   |
 | main/       | Main entry scene and script                                  |
 | data/       | Global static data files                                     |
+| dev_tools/tester/ | Test runner logic and configuration (test_suite.gd, test_runner.json) |
 
 ---
 

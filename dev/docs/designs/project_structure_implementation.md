@@ -249,7 +249,7 @@ This document outlines the phased approach for implementing the new project stru
 - **Action:** Ensure only dev-related tools/scripts are present. If any UI components or scenes are reusable, consider moving to `shared/ui/components/` or `shared/ui/scenes/`.
 
 #### 7. `config/` Directory
-- Contains: `test_runner.json`.
+- Contains: `dev_tools/tester/test_runner.json` (test runner config and logic now reside in dev_tools/tester/).
 - **Action:** Ensure only configuration files are present. Move feature-specific configs to the relevant feature folder if needed.
 
 #### 11. Documentation

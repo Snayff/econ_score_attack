@@ -31,9 +31,9 @@ var _config_cache: Dictionary = {}
 
 ## Configuration file paths by type
 const _CONFIG_FILES: Dictionary = {
-	"people": "res://data/people.json",
-	"demesne": "res://data/demesne.json",
-	"goods": "res://data/goods.json",
+	"people": "res://feature/economic_actor/data/people.json",
+	"demesne": "res://feature/demesne/data/demesne.json",
+	"goods": "res://feature/economy/data/goods.json",
 	"consumption_rules": "res://data/rules/consumption_rules.json",
 	"laws": "res://feature/law/data/laws.json",
 	"land": "res://feature/world_map/data/land_config.json",

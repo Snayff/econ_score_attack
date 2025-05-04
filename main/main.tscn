@@ -1,1 +1,41 @@
- 
+[gd_scene load_steps=5 format=3 uid="uid://b43wppeg5xjsl"]
+
+[ext_resource type="Script" uid="uid://c1elg2fvyt3v7" path="res://main/main.gd" id="1_c651c"]
+[ext_resource type="Script" uid="uid://bhjkkssint781" path="res://scripts/core/chrono.gd" id="2_3wy1v"]
+[ext_resource type="Script" uid="uid://oiriyke8dl2j" path="res://scripts/core/sim.gd" id="3_kfbq2"]
+[ext_resource type="PackedScene" uid="uid://cmkfp7f7dii75" path="res://main/ui/main_ui.tscn" id="4_4dugh"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_c651c")
+
+[node name="Chrono" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_3wy1v")
+
+[node name="TimerTurn" type="Timer" parent="Chrono"]
+
+[node name="Sim" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_kfbq2")
+
+[node name="UI" parent="." instance=ExtResource("4_4dugh")]
+
+[node name="RTLDemesneStockpile" parent="UI/TopBar" index="0" node_paths=PackedStringArray("sim")]
+sim = NodePath("../../../Sim")
+
+[node name="ViewPeople" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="0" node_paths=PackedStringArray("sim")]
+sim = NodePath("../../../../../../Sim")
+
+[node name="ViewLaws" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="1" node_paths=PackedStringArray("sim")]
+sim = NodePath("../../../../../../Sim")
+
+[node name="ViewEconomy" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="2" node_paths=PackedStringArray("sim")]
+sim = NodePath("../../../../../../Sim")
+
+[node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
+text = "Progress"
+
+[node name="NotificationSystem" parent="UI" index="5"]
+visible = true
+
+[editable path="UI"]

@@ -32,7 +32,7 @@ func _init() -> void:
     _stats.start_time = Time.get_datetime_string_from_system()
 
 func _load_config() -> void:
-    var config_path = "res://config/test_runner.json"
+    var config_path = "res://dev_tools/tester/test_runner.json"
     if not FileAccess.file_exists(config_path):
         push_error("Test runner configuration not found at: " + config_path)
         return

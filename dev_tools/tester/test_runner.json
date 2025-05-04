@@ -3,11 +3,11 @@
   "categories": {
     "unit": {
       "enabled": true,
-      "test_paths": ["tests/unit/"]
+      "test_paths": ["shared/tests/unit/"]
     },
     "integration": {
       "enabled": true,
-      "test_paths": ["tests/integration/"]
+      "test_paths": ["shared/tests/integration/"]
     }
   },
   "output_format": {
