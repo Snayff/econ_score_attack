@@ -17,14 +17,14 @@ config/icon="uid://6enbllaeljxy"
 
 [autoload]
 
-Logger="*res://dev_tools/logger/logger.gd"
-AspectManager="*res://scripts/core/aspect_manager.gd"
-SurveyManager="*res://scripts/core/survey_manager.gd"
 Constants="*res://globals/constants.gd"
-EventBusGame="*res://globals/event_bus_game.gd"
-EventBusUI="*res://globals/event_bus_ui.gd"
 Library="*res://globals/library.gd"
 World="*res://globals/world.gd"
+Logger="*res://dev_tools/logger/logger.gd"
+EventBusGame="*res://globals/event_bus_game.gd"
+EventBusUI="*res://globals/event_bus_ui.gd"
+AspectManager="*res://scripts/core/aspect_manager.gd"
+SurveyManager="*res://scripts/core/survey_manager.gd"
 
 [display]
 

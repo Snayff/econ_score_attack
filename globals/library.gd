@@ -29,18 +29,15 @@ func _ready() -> void:
 ## Cache of loaded configuration data by type
 var _config_cache: Dictionary = {}
 
-## Base path for all data files
-const DATA_PATH: String = "res://data/"
-
 ## Configuration file paths by type
 const _CONFIG_FILES: Dictionary = {
-	"people": "people.json",
-	"demesne": "demesne.json",
-	"goods": "goods.json",
-	"consumption_rules": "rules/consumption_rules.json",
-	"laws": "rules/laws.json",
-	"land": "land_config.json",
-	"land_aspects": "land_aspects.json"
+	"people": "res://data/people.json",
+	"demesne": "res://data/demesne.json",
+	"goods": "res://data/goods.json",
+	"consumption_rules": "res://data/rules/consumption_rules.json",
+	"laws": "res://data/rules/laws.json",
+	"land": "res://features/world_map/data/land_config.json",
+	"land_aspects": "res://features/world_map/data/land_aspects.json"
 }
 
 ## Default values by config type
@@ -209,7 +206,7 @@ func get_config(config_type: String) -> Dictionary:
 ## @param config_type: The type of configuration to load
 func _load_config(config_type: String) -> void:
 	var file_path: String = _CONFIG_FILES[config_type]
-	var full_path: String = DATA_PATH + file_path
+	var full_path: String = file_path
 
 	var file: FileAccess = FileAccess.open(full_path, FileAccess.READ)
 	if not file:
@@ -283,11 +280,13 @@ func get_all_consumption_rules() -> Array:
 	return get_config("consumption_rules").get("consumption_rules", [])
 
 func get_land_aspects() -> Array:
-	if _config_cache.has("land_aspects"):
-		return _config_cache.get("land_aspects", [])
-
-	_load_config("land_aspects")
-	return _config_cache.get("land_aspects", [])
+	var data = _config_cache.get("land_aspects", [])
+	if typeof(data) == TYPE_DICTIONARY and data.has("land_aspects"):
+		return data["land_aspects"]
+	elif typeof(data) == TYPE_ARRAY:
+		return data
+	else:
+		return []
 
 func get_land_aspect_by_id(aspect_id: String) -> Dictionary:
 	for aspect in get_land_aspects():

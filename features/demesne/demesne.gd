@@ -9,7 +9,7 @@ const Law = preload("res://scripts/laws/law.gd")
 const LawRegistry = preload("res://scripts/laws/law_registry.gd")
 const DemesneInheritance = preload("res://scripts/laws/demesne_inheritance.gd")
 const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
-const ResourceGenerator = preload("res://scripts/actors/actor_components/resource_generator.gd")
+const ResourceGenerator = preload("res://features/economic_actor/components/resource_generator.gd")
 const PathfindingSystem = preload("res://scripts/core/pathfinding_system.gd")
 const SurveyManager = preload("res://scripts/core/survey_manager.gd")
 

@@ -4,7 +4,7 @@
 This document outlines the architectural design decisions for organising the project's codebase. The structure emphasises modularity, scalability, and developer ergonomics, while supporting feature-driven development and testing.
 
 ## Design Goals
-- **Modularity**: Each feature should be self-contained with clear boundaries
+- **Modularity**: Each feature is self-contained with clear boundaries
 - **Scalability**: Easy addition of new features without restructuring
 - **Discoverability**: Intuitive navigation for new and experienced developers
 - **Testability**: Support for unit, integration, and cross-feature testing
@@ -15,6 +15,7 @@ This document outlines the architectural design decisions for organising the pro
 ### Core Principles
 1. **Feature-First Organisation**
    - Features are the primary organisational unit
+   - All code, scenes, data, and tests for a feature are stored under `features/<feature_name>/`, with relevant subfolders (e.g., `ui/`, `data/`, `tests/`)
    - Features can be grouped into domains for better navigation
    - Each feature contains all its specific code, scenes, data, and tests
 
@@ -37,24 +38,39 @@ This document outlines the architectural design decisions for organising the pro
 
 ### Top-Level Organisation
 ```
-features/     # Feature-specific code and resources
+features/     # Feature-specific code, scenes, data, and tests
 shared/       # Shared components and resources
 globals/      # Global scripts and autoloads
 main/         # Entry point scene and script
-data/         # Global data files
+data/         # Global data files (if not feature-specific)
 ```
 
 ### Feature Structure
-Features are organised by domain, then specific feature:
+Each feature is self-contained and may include subfolders for UI, data, and tests:
 ```
 features/
-  economic_actor/     # Domain
-    buildings/        # Feature
-    people/          # Feature
-    jobs/            # Feature
-  economy/           # Domain
-    market/          # Feature
-    production/      # Feature
+  world_map/
+    ui/                # UI scenes and scripts for the feature
+    data/              # Feature-specific data files (optional)
+    tests/             # Unit and integration tests for the feature
+    ...                # Other subfolders as needed (e.g., logic/, components/)
+    <feature_code>.gd  # Main script(s) for the feature
+```
+
+#### Example: World Map Feature
+```
+features/
+  world_map/
+    ui/
+      land_view_panel.tscn
+      land_view_panel.gd
+      ...
+    data/
+      land_config.json
+      ...
+    tests/
+      test_land_system.gd
+      ...
 ```
 
 ### Shared Resources
@@ -85,6 +101,7 @@ globals/
 - Makes feature boundaries explicit
 - Reduces cognitive load when working on a feature
 - Simplifies feature addition and removal
+- Keeps all relevant code, data, and tests together
 
 ### Why Shared Resources?
 - Prevents code duplication
@@ -110,6 +127,7 @@ globals/
 - Cross-feature communication via event buses
 - Feature-specific data stays with feature
 - Each feature has its own tests
+- Use subfolders (e.g., `ui/`, `data/`, `tests/`) for clarity and organisation
 
 ### Shared Resource Guidelines
 - Must be used by multiple features

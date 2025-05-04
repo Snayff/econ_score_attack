@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://scripts/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://scripts/ui/btn_sidebar_button.gd" id="1_4yfr8"]
-[ext_resource type="Script" uid="uid://dlvescq0873nh" path="res://scripts/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
+[ext_resource type="Script" uid="uid://bu3cfbf0y87bn" path="res://features/economy/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
 [ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://scripts/ui/rtl_people_info.gd" id="3_b1beo"]
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://scripts/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://scripts/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="Script" uid="uid://bpkg5efx4n6h6" path="res://scripts/ui/rtl_laws_info.gd" id="7_xxxxx"]
-[ext_resource type="PackedScene" uid="uid://cehbj0wwgyqcm" path="res://scenes/ui/land_grid/land_view_panel.tscn" id="8_oi40j"]
-[ext_resource type="PackedScene" uid="uid://dxxx" path="res://scenes/ui/view_economy.tscn" id="9_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://cehbj0wwgyqcm" path="res://features/world_map/ui/land_view_panel.tscn" id="8_oi40j"]
+[ext_resource type="PackedScene" uid="uid://dxxx" path="res://features/economy/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://scenes/ui/panel_header.tscn" id="10_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://brt22vvn80qvj" path="res://scenes/ui/notification_system.tscn" id="11_notify"]
 

@@ -2,7 +2,7 @@
 class_name TestPerson
 extends ABCTest
 
-const Person = preload("res://scripts/actors/person.gd")
+const Person = preload("res://features/economic_actor/people/person.gd")
 
 var _person: Person
 

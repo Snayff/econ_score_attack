@@ -6,8 +6,8 @@ class_name Sim
 extends Node
 
 const SalesTax = preload("res://scripts/laws/sales_tax.gd")
-const EconomicValidator = preload("res://scripts/economic_analysis/economic_validator.gd")
-const EconomicMetrics = preload("res://scripts/economic_analysis/economic_metrics.gd")
+const EconomicValidator = preload("res://features/economy/market/economic_validator.gd")
+const EconomicMetrics = preload("res://features/economy/market/economic_metrics.gd")
 
 #region SIGNALS
 signal sim_initialized

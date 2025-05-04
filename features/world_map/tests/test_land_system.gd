@@ -4,8 +4,8 @@ class_name TestLandSystem
 extends ABCTest
 
 const DataLandParcel = preload("res://scripts/data/data_land_parcel.gd")
-const Demesne = preload("res://scripts/actors/demesne.gd")
-const ResourceGenerator = preload("res://scripts/actors/actor_components/resource_generator.gd")
+const Demesne = preload("res://features/demesne/demesne.gd")
+const ResourceGenerator = preload("res://features/economic_actor/components/resource_generator.gd")
 
 var _demesne: Demesne
 var _resource_generator: ResourceGenerator

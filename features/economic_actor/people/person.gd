@@ -3,7 +3,7 @@
 class_name Person
 extends Node
 
-const ComponentConsumer = preload("res://scripts/actors/actor_components/component_consumer.gd")
+const ComponentConsumer = preload("res://features/economic_actor/components/component_consumer.gd")
 
 #region SIGNALS
 
