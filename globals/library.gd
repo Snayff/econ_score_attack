@@ -36,8 +36,8 @@ const _CONFIG_FILES: Dictionary = {
 	"goods": "res://data/goods.json",
 	"consumption_rules": "res://data/rules/consumption_rules.json",
 	"laws": "res://data/rules/laws.json",
-	"land": "res://features/world_map/data/land_config.json",
-	"land_aspects": "res://features/world_map/data/land_aspects.json"
+	"land": "res://feature/world_map/data/land_config.json",
+	"land_aspects": "res://feature/world_map/data/land_aspects.json"
 }
 
 ## Default values by config type

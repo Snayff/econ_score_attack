@@ -3,8 +3,8 @@ class_name TestMarketMechanics
 extends ABCTest
 
 const Sim = preload("res://scripts/core/sim.gd")
-const Demesne = preload("res://features/demesne/demesne.gd")
-const Person = preload("res://features/economic_actor/people/person.gd")
+const Demesne = preload("res://feature/demesne/demesne.gd")
+const Person = preload("res://feature/economic_actor/people/person.gd")
 
 var _sim: Sim
 var _demesne: Demesne
