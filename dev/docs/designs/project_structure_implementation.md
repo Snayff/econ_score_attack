@@ -14,15 +14,6 @@ This document outlines the phased approach for implementing the new project stru
    - `main/`
    - `data/`
 
-2. Set up testing infrastructure
-   - Move existing tests to appropriate locations
-   - Set up CI/CD pipeline for automated testing
-   - Create test templates for features
-
-3. Create initial UI framework
-   - Basic menu system
-   - Placeholder screens for features
-   - Loading/transition screens
 
 ### Testing Focus
 - Test harness setup
