@@ -76,18 +76,13 @@ This document outlines the phased approach for implementing the new project stru
 **Goal**: Group related features into domains and migrate them together.
 
 ### Tasks
-1. Migrate `economic_actor` domain
-   - Buildings system
-   - People system
-   - Jobs system
-   - Domain-specific UI
-
-2. Migrate `economy` domain
+1. Migrate `economy` domain
+	- economic actors
    - Market system
    - Production system
    - Economy UI components
 
-3. Update cross-feature communication
+2. Update cross-feature communication
    - Event bus connections
    - Shared state management
    - UI updates
