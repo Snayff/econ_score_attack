@@ -185,7 +185,7 @@ func set_parcel(x: int, y: int, parcel: DataLandParcel) -> bool:
 		"x": x,
 		"y": y,
 		"terrain_type": parcel.terrain_type,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 	return true
 
@@ -207,7 +207,7 @@ func process_production() -> void:
 		"demesne": demesne_name,
 		"people_count": people.size(),
 		"alive_count": people.filter(func(p): return p.is_alive).size(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 	# Update resources in all parcels
@@ -229,7 +229,7 @@ func process_production() -> void:
 	Logger.log_event("production_cycle_completed", {
 		"demesne": demesne_name,
 		"final_stockpile": stockpile.duplicate(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 ## Processes consumption for all people in the demesne
@@ -239,7 +239,7 @@ func process_consumption() -> void:
 		"people_count": people.size(),
 		"alive_count": people.filter(func(p): return p.is_alive).size(),
 		"initial_stockpile": stockpile.duplicate(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 	var was_alive: Array[Person] = []
@@ -259,7 +259,7 @@ func process_consumption() -> void:
 		"demesne": demesne_name,
 		"deaths_this_cycle": was_alive.filter(func(p): return not p.is_alive).size(),
 		"final_stockpile": stockpile.duplicate(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 ## Processes a person's death
@@ -270,7 +270,7 @@ func _handle_person_death(person: Person) -> void:
 		"person_name": person.f_name,
 		"person_job": person.job,
 		"person_stockpile": person.stockpile.duplicate(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 	# Check if demesne inheritance law is active
@@ -289,7 +289,7 @@ func add_person(person: Person) -> void:
 			"person_name": person.f_name,
 			"person_job": person.job,
 			"total_people": people.size(),
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 
 ## Removes a person from the demesne
@@ -303,7 +303,7 @@ func remove_person(person: Person) -> void:
 			"person_name": person.f_name,
 			"person_job": person.job,
 			"total_people": people.size(),
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 
 ## Adds resources to the demesne's stockpile
@@ -318,7 +318,7 @@ func add_resource(good_id: String, amount: int) -> void:
 		"good": good_id,
 		"amount": amount,
 		"new_total": stockpile[good_id],
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 
@@ -333,7 +333,7 @@ func remove_resource(good_id: String, amount: int) -> bool:
 			"good": good_id,
 			"amount_requested": amount,
 			"available": stockpile.get(good_id, 0),
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 		return false
 	stockpile[good_id] -= amount
@@ -342,7 +342,7 @@ func remove_resource(good_id: String, amount: int) -> bool:
 		"good": good_id,
 		"amount": amount,
 		"new_total": stockpile[good_id],
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 	emit_signal("stockpile_changed", good_id, stockpile[good_id])
 	return true
@@ -360,7 +360,7 @@ func enact_law(law_id: String) -> Law:
 				"demesne": demesne_name,
 				"law_id": law_id,
 				"law_name": existing_law.name,
-				"timestamp": Time.get_unix_time_from_system()
+
 			}, "Demesne")
 		return existing_law
 
@@ -370,7 +370,7 @@ func enact_law(law_id: String) -> Law:
 		Logger.log_event("law_creation_failed", {
 			"demesne": demesne_name,
 			"law_id": law_id,
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 		return null
 
@@ -382,7 +382,7 @@ func enact_law(law_id: String) -> Law:
 		"demesne": demesne_name,
 		"law_id": law_id,
 		"law_name": law.name,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 	return law
 
@@ -395,7 +395,7 @@ func repeal_law(law_id: String) -> bool:
 			"demesne": demesne_name,
 			"law_id": law_id,
 			"reason": "law_not_found",
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 		return false
 
@@ -407,7 +407,7 @@ func repeal_law(law_id: String) -> bool:
 		"demesne": demesne_name,
 		"law_id": law_id,
 		"law_name": law.name,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 	return true
 
@@ -444,10 +444,10 @@ func get_laws() -> Dictionary:
 ## @param y: Y coordinate of the parcel
 ## @return: Array of discovered aspect IDs
 func survey_parcel(x: int, y: int) -> Array[String]:
-	Logger.log_event("diagnostic_survey_parcel_called", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	Logger.log_event("diagnostic_survey_parcel_called", {"x": x, "y": y, "type_x": typeof(x), "type_y": typeof(y), }, "Demesne")
 	var parcel = World.get_parcel(x, y)
 	if not parcel:
-		Logger.log_event("diagnostic_survey_parcel_null_parcel", {"x": x, "y": y, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+		Logger.log_event("diagnostic_survey_parcel_null_parcel", {"x": x, "y": y, }, "Demesne")
 		return []
 
 	# Log parcel state before survey
@@ -460,11 +460,11 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 		"is_surveyed": parcel.is_surveyed,
 		"all_aspects": all_aspects_before,
 		"discovered_aspects": discovered_before,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 	surveyed_parcels[Vector2i(x, y)] = true
-	Logger.log_event("diagnostic_survey_parcel_set", {"key": str(Vector2i(x, y)), "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	Logger.log_event("diagnostic_survey_parcel_set", {"key": str(Vector2i(x, y)), }, "Demesne")
 
 	# Complete the survey on the parcel itself
 	var discovered_aspects: Array[String] = []
@@ -484,7 +484,7 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 		"all_aspects": all_aspects_after,
 		"discovered_aspects": discovered_after,
 		"newly_discovered": discovered_aspects,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "Demesne")
 
 	# Also run the resource generator's survey for any additional logic
@@ -536,7 +536,7 @@ func request_survey(x: int, y: int) -> bool:
 	if is_parcel_surveyed(x, y) or surveys_in_progress.has(key):
 		return false
 	surveys_in_progress[key] = SurveyManager.SURVEY_TURNS
-	Logger.log_event("survey_started", {"x": x, "y": y, "demesne": demesne_name, "timestamp": Time.get_unix_time_from_system()}, "Demesne")
+	Logger.log_event("survey_started", {"x": x, "y": y, "demesne": demesne_name, }, "Demesne")
 	return true
 
 ## Advances all surveys by 1 turn. Call this at the end of each turn.
@@ -558,7 +558,7 @@ func advance_turn() -> void:
 			"y": key.y,
 			"demesne": demesne_name,
 			"discovered_aspects": discovered_aspects,
-			"timestamp": Time.get_unix_time_from_system()
+
 		}, "Demesne")
 
 		# Emit signal with the properly typed array

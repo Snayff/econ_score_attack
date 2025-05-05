@@ -138,6 +138,5 @@ static func _load_aspect_definitions() -> void:
 
 	Logger.log_event("aspect_definitions_loaded", {
 		"count": _aspect_definitions.size(),
-		"timestamp": Time.get_unix_time_from_system()
 	}, "AspectManager")
 #endregion

@@ -60,10 +60,9 @@ const BASE_PERIOD: int = 10
 ## @param sim_state Dictionary containing current simulation state
 func update_metrics(sim_state: Dictionary) -> void:
 	Logger.log_event("metrics_update_started", {
-		"timestamp": Time.get_unix_time_from_system(),
 		"current_metrics": _metrics.duplicate()
 	}, "EconomicMetrics")
-	
+
 	_update_price_level(sim_state)
 	_update_trade_volume(sim_state)
 	_update_money_velocity(sim_state)
@@ -71,12 +70,11 @@ func update_metrics(sim_state: Dictionary) -> void:
 	_update_production_index(sim_state)
 	_update_wealth_distribution(sim_state)
 	_update_market_activity(sim_state)
-	
+
 	_check_thresholds()
 	_record_history()
-	
+
 	Logger.log_event("metrics_update_completed", {
-		"timestamp": Time.get_unix_time_from_system(),
 		"updated_metrics": _metrics.duplicate()
 	}, "EconomicMetrics")
 
@@ -93,7 +91,7 @@ func get_metric(metric_name: String) -> float:
 func get_metric_history(metric_name: String, periods: int = 10) -> Array:
 	if not _metric_history.has(metric_name):
 		return []
-	
+
 	var history = _metric_history[metric_name]
 	var start_idx = max(0, history.size() - periods)
 	return history.slice(start_idx)
@@ -105,9 +103,9 @@ func generate_report() -> Dictionary:
 		"current_metrics": _metrics.duplicate(),
 		"historical_trends": _calculate_trends(),
 		"alerts": _generate_alerts(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}
-	
+
 	Logger.log_event("economic_report_generated", report, "EconomicMetrics")
 	return report
 
@@ -119,7 +117,7 @@ func set_threshold(metric_name: String, threshold: float) -> void:
 	Logger.log_event("metric_threshold_set", {
 		"metric": metric_name,
 		"threshold": threshold,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "EconomicMetrics")
 
 #endregion
@@ -132,11 +130,11 @@ func _update_price_level(sim_state: Dictionary) -> void:
 	var prices = sim_state.get("market_prices", {})
 	if prices.is_empty():
 		return
-		
+
 	var total_price = 0.0
 	for good in prices:
 		total_price += prices[good]
-	
+
 	var new_price_level = total_price / prices.size()
 	_update_metric("average_price_level", new_price_level)
 
@@ -152,7 +150,7 @@ func _update_money_velocity(sim_state: Dictionary) -> void:
 	var total_value = 0.0
 	for transaction in transactions:
 		total_value += transaction.get("price", 0.0) * transaction.get("amount", 0)
-	
+
 	var money_supply = sim_state.get("total_money", 0.0)
 	var velocity = 0.0
 	if money_supply > 0:
@@ -164,12 +162,12 @@ func _update_unemployment(sim_state: Dictionary) -> void:
 	var people = sim_state.get("people", [])
 	if people.is_empty():
 		return
-		
+
 	var unemployed = 0
 	for person in people:
 		if person.job == "none" or person.job.is_empty():
 			unemployed += 1
-	
+
 	var rate = float(unemployed) / float(people.size())
 	_update_metric("unemployment_rate", rate)
 
@@ -178,11 +176,11 @@ func _update_production_index(sim_state: Dictionary) -> void:
 	var production = sim_state.get("production", {})
 	if production.is_empty():
 		return
-		
+
 	var total_production = 0
 	for good in production:
 		total_production += production[good]
-	
+
 	_update_metric("production_index", float(total_production))
 
 ## Updates wealth distribution metrics (Gini coefficient)
@@ -190,11 +188,11 @@ func _update_wealth_distribution(sim_state: Dictionary) -> void:
 	var people = sim_state.get("people", [])
 	if people.size() < 2:
 		return
-		
+
 	var wealth_values = []
 	for person in people:
 		wealth_values.append(person.stockpile.get("money", 0))
-	
+
 	var gini = _calculate_gini_coefficient(wealth_values)
 	_update_metric("wealth_gini", gini)
 
@@ -202,11 +200,11 @@ func _update_wealth_distribution(sim_state: Dictionary) -> void:
 func _update_market_activity(sim_state: Dictionary) -> void:
 	var transactions = sim_state.get("transactions", [])
 	var unique_participants = {}
-	
+
 	for transaction in transactions:
 		unique_participants[transaction.get("buyer", "")] = true
 		unique_participants[transaction.get("seller", "")] = true
-	
+
 	var activity = unique_participants.size()
 	_update_metric("market_activity", float(activity))
 
@@ -215,13 +213,13 @@ func _update_metric(metric_name: String, value: float) -> void:
 	var old_value = _metrics.get(metric_name, 0.0)
 	_metrics[metric_name] = value
 	emit_signal("metric_updated", metric_name, value)
-	
+
 	Logger.log_event("metric_updated", {
 		"metric": metric_name,
 		"old_value": old_value,
 		"new_value": value,
 		"change": value - old_value,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "EconomicMetrics")
 
 ## Checks if any metrics have crossed their thresholds
@@ -230,14 +228,14 @@ func _check_thresholds() -> void:
 		if _metrics.has(metric):
 			var current_value = _metrics[metric]
 			var threshold = _metric_thresholds[metric]
-			
+
 			if current_value > threshold:
 				emit_signal("threshold_crossed", metric, threshold, current_value)
 				Logger.log_event("metric_threshold_crossed", {
 					"metric": metric,
 					"threshold": threshold,
 					"current_value": current_value,
-					"timestamp": Time.get_unix_time_from_system()
+
 				}, "EconomicMetrics")
 
 ## Records current metrics in history
@@ -245,9 +243,9 @@ func _record_history() -> void:
 	for metric_name in _metrics:
 		if not _metric_history.has(metric_name):
 			_metric_history[metric_name] = []
-			
+
 		_metric_history[metric_name].append(_metrics[metric_name])
-		
+
 		# Keep history size manageable
 		if _metric_history[metric_name].size() > MAX_HISTORY_PERIODS:
 			_metric_history[metric_name].pop_front()
@@ -281,7 +279,7 @@ func _generate_alerts() -> Array:
 					"metric": metric,
 					"current_value": current_value,
 					"threshold": threshold,
-					"timestamp": Time.get_unix_time_from_system()
+
 				})
 	return alerts
 
@@ -289,20 +287,20 @@ func _generate_alerts() -> Array:
 func _calculate_gini_coefficient(values: Array) -> float:
 	if values.is_empty():
 		return 0.0
-		
+
 	values.sort()
 	var n = values.size()
 	var sum_numerator = 0.0
 	var sum_denominator = 0.0
-	
+
 	for i in range(n):
 		sum_numerator += (n - i) * values[i]
 		sum_denominator += values[i]
-	
+
 	if sum_denominator == 0:
 		return 0.0
-		
+
 	var gini = (2.0 * sum_numerator) / (n * sum_denominator) - (n + 1.0) / n
 	return max(0.0, min(1.0, gini))
 
-#endregion 
+#endregion

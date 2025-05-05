@@ -7,16 +7,17 @@ You always ensure new files and functionality is added in keeping with a logical
 
 
   Key Locations
-  - "globals/library.gd" is a global autoload used to load external json files, parse them into internal data classes, and make them accessible to other classes.  
-  - "globals/library.gd" remains the source for all static, referenced data.
-  - "globals/constants.gd" is used to hold any constant or enum value that is used in more than 1 file. 
-  - "globals/event_bus_game.gd" holds all signals used for game logic accessed by unrelated classes.
-  - "globals/event_bus_ui.gd" holds all signals used for ui events.
+  - "global/library.gd" is a global autoload used to load external json files, parse them into internal data classes, and make them accessible to other classes.  
+  - "global/library.gd" remains the source for all static, referenced data.
+  - "global/constants.gd" is used to hold any constant or enum value that is used in more than 1 file. 
+  - "global/event_bus_game.gd" holds all signals used for game logic accessed by unrelated classes.
+  - "global/event_bus_ui.gd" holds all signals used for ui events.
   - External data files are held in "data/" folder within a feature folder.
-  - Autloads/globals are held in "globals/" folder. 
+  - Autloads/global are held in "global/" folder. 
   - The game begins with "main/main.tscn". There should only ever be 1 main.tscn and it should always be in that folder location. 
   - "feature/" holds all code for a single feature. 
   - Within "feature/" we should have "/data", "/test", "/ui", and any other approproate folders. 
+  - Integration tests, or tests that act across features (or target something outside of a feature, like globals) should be in "shared/". Unit tests, or tests that are only for a single feature, should be in that feature's folder. 
   - Shared code or scenes is held in "shared/".
 
 

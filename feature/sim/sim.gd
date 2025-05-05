@@ -77,9 +77,9 @@ func _ready() -> void:
 		demesne.add_resource(resource, starting_resources[resource])
 
 	# Initialize good prices from Library
-	var goods_data = Library.get_config("goods").get("goods", {})
-	for good in goods_data:
-		good_prices[good] = goods_data[good].get("base_price", 0)
+	good_prices.clear()
+	for good in Library.get_all_goods_data():
+		good_prices[good.id] = good.base_price
 
 	# Set initial money for validation
 	var total_money = _calculate_total_money()
@@ -177,11 +177,11 @@ func resolve_turn() -> void:
 
 			for buyer in purchasers:
 				# make purchase
-				amount_to_buy = min(floor(buyer.stockpile["money"] / good_prices[good]), desired_goods[good][buyer])
+				amount_to_buy = min(floor(buyer.stockpile.get("money", 0) / good_prices.get(good, 0)), desired_goods[good][buyer])
 
 				# Apply sales tax if the law is active
 				var tax_amount: float = 0.0
-				var final_cost: int = good_prices[good] * amount_to_buy
+				var final_cost: int = good_prices.get(good, 0) * amount_to_buy
 				var sales_tax_law: SalesTax = demesne.get_law("sales_tax") as SalesTax
 				if sales_tax_law and sales_tax_law.active:
 					tax_amount = sales_tax_law.calculate_tax(final_cost)
@@ -189,21 +189,21 @@ func resolve_turn() -> void:
 					demesne.add_resource("money", tax_amount)
 
 				# Check if buyer can afford the purchase with tax
-				if buyer.stockpile["money"] < final_cost:
+				if buyer.stockpile.get("money", 0) < final_cost:
 					# Recalculate affordable amount
 					var tax_rate: float = sales_tax_law.get_parameter("tax_rate") if sales_tax_law else 0.0
-					amount_to_buy = floor(buyer.stockpile["money"] / (good_prices[good] * (1 + tax_rate / 100.0)))
-					final_cost = good_prices[good] * amount_to_buy
+					amount_to_buy = floor(buyer.stockpile.get("money", 0) / (good_prices.get(good, 0) * (1 + tax_rate / 100.0)))
+					final_cost = good_prices.get(good, 0) * amount_to_buy
 					if sales_tax_law and sales_tax_law.active:
 						tax_amount = sales_tax_law.calculate_tax(final_cost)
 						final_cost += tax_amount
 						demesne.add_resource("money", tax_amount)
 
-				buyer.stockpile["money"] -= final_cost
-				seller.stockpile["money"] += good_prices[good] * amount_to_buy  # Seller gets only the base cost
+				buyer.stockpile["money"] = buyer.stockpile.get("money", 0) - final_cost
+				seller.stockpile["money"] = seller.stockpile.get("money", 0) + good_prices.get(good, 0) * amount_to_buy  # Seller gets only the base cost
 
 				# Record the transaction
-				_record_transaction(good, amount_to_buy, good_prices[good], buyer.f_name, seller.f_name)
+				_record_transaction(good, amount_to_buy, good_prices.get(good, 0), buyer.f_name, seller.f_name)
 
 				# buyer doesnt want anything, move to next buyer
 				if amount_to_buy == 0:
@@ -212,8 +212,8 @@ func resolve_turn() -> void:
 				# add to buyers stockpile
 				if good not in buyer.stockpile:
 					buyer.stockpile[good] = 0
-				buyer.stockpile[good] += amount_to_buy
-				seller.stockpile[good] -= amount_to_buy
+				buyer.stockpile[good] = buyer.stockpile.get(good, 0) + amount_to_buy
+				seller.stockpile[good] = seller.stockpile.get(good, 0) - amount_to_buy
 
 				# update desired good and purchasers
 				desired_goods[good][buyer] -= amount_to_buy
@@ -223,7 +223,7 @@ func resolve_turn() -> void:
 				# update remaining
 				var goods_left: int = max(0, amount_to_sell - amount_to_buy)
 				saleable_goods[good][seller]["amount"] = goods_left
-				saleable_goods[good][seller]["money_made"] += good_prices[good] * amount_to_buy
+				saleable_goods[good][seller]["money_made"] += good_prices.get(good, 0) * amount_to_buy
 
 	Logger.info(">>> Market Closes", "Sim")
 

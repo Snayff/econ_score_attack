@@ -1,29 +1,39 @@
 {
-	"goods": {
-		"money": {
-			"base_price": 1,
-			"category": "currency",
-			"icon": "🪙"
-		},
-		"grain": {
-			"base_price": 10,
-			"category": "food",
+	"goods": [
+		{
+			"id": "grain",
+			"f_name": "Grain",
+			"base_price": 8.0,
+			"category": "basic",
 			"icon": "🌾"
 		},
-		"water": {
-			"base_price": 10,
+		{
+			"id": "water",
+			"f_name": "Water",
+			"base_price": 5.0,
 			"category": "resource",
 			"icon": "💧"
 		},
-		"wood": {
-			"base_price": 20,
+		{
+			"id": "wood",
+			"f_name": "Wood",
+			"base_price": 12.0,
 			"category": "material",
 			"icon": "🪵"
 		},
-		"bureaucracy": {
-			"base_price": 0,
+		{
+			"id": "bureaucracy",
+			"f_name": "Bureaucracy",
+			"base_price": 0.0,
 			"category": "service",
 			"icon": "📜"
+		},
+		{
+			"id": "money",
+			"f_name": "Money",
+			"base_price": 1.0,
+			"category": "currency",
+			"icon": "🪙"
 		}
-	}
+	]
 }

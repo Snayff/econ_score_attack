@@ -1,0 +1,14 @@
+{
+  "cultures": [
+	{
+	  "id": "northern",
+	  "base_preferences": {
+		"food": 1.2,
+		"entertainment": 0.8,
+		"luxury": 0.5
+	  },
+	  "savings_rate": 0.25,
+	  "shock_response": "hoard"
+	}
+  ]
+}

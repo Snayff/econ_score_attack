@@ -18,23 +18,21 @@ IMPLEMENT FEATURE PROPOSAL
 	Please implement the feature exactly as you have described. 
 	
 RECORD FEATURE PROPOSAL AS DESIGN
-	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking.
+	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking. Complement each phase with a detailed checklist of all of the items that must be completed for that phase to be successful. 
 
 IMPLEMENT DESIGN
 	Please review the @_design.md  and then implement phase x, as listed in @_implementation_phases.md.
+	Remember that today's date is DATE. Remember that file names should be in snake_case. 
+	
+DEBUGGING
+	Lets start some debugging to find out why. Reflect on the on the problem and consider where best we should add logging statements to help identify the root cause of this issue. Make sure that when adding any logging statements explicitly to find this bug we label them with something that makes them easy to find, for when we delete them after the bug is fixed. 
 
 #########
 # TO DO #
 #########
 
 ## NEXT
-- BUG we now have 2 survey buttons. 
-	The survey button on the right should move to the interaction panel. 
-	When clicking button on the right, after it completes, tile info isnt updated
-- "grid" is a term for the UI. ensure that the code distringuishes between land parcel and grid
-- max aspects per tile centrally set
-- aspects "amount" generated should be int
-- implement folder restructure as per res://dev/docs/docs/project_structure.md, and update rules in res://.cursor/rules/project-structure.mdc.
+
 
 ## NEW FEATURES / System
 - Continue - https://thomassimon.dev/ps/4 - Simulation 13.

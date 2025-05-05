@@ -63,7 +63,7 @@ func discover_all_aspects() -> Array:
 	Logger.log_event("diagnostic_discover_all_aspects_start", {
 		"aspect_count": aspects.size(),
 		"aspects": aspects.keys(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "AspectStorage")
 
 	for aspect_id in aspects.keys():
@@ -73,7 +73,7 @@ func discover_all_aspects() -> Array:
 
 	Logger.log_event("diagnostic_discover_all_aspects_end", {
 		"newly_discovered": newly_discovered,
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "AspectStorage")
 
 	return newly_discovered
@@ -130,7 +130,7 @@ func get_discovered_aspects() -> Dictionary:
 	Logger.log_event("diagnostic_get_discovered_aspects", {
 		"discovered_count": discovered.size(),
 		"discovered_ids": discovered.keys(),
-		"timestamp": Time.get_unix_time_from_system()
+
 	}, "AspectStorage")
 
 	return discovered

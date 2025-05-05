@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[node name="ActorDataInspector" type="Control"]
+
+[node name="lbl_actor_list" type="Label" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+text = "Actors:"
+
+[node name="lbl_culture_list" type="Label" parent="."]
+margin_left = 10.0
+margin_top = 100.0
+text = "Cultures:" 

@@ -55,7 +55,6 @@ func record_transaction(
 	seller: String
 ) -> void:
 	var transaction = {
-		"timestamp": Time.get_unix_time_from_system(),
 		"type": transaction_type,
 		"good": good,
 		"amount": amount,
@@ -85,7 +84,7 @@ func validate_money_conservation() -> bool:
 			"expected_total": expected_total,
 			"current_total": current_total,
 			"difference": current_total - expected_total,
-			"timestamp": Time.get_unix_time_from_system()
+
 		}
 		emit_signal("invariant_violated", "money_conservation", "Money not conserved: Expected %.2f, got %.2f" % [expected_total, current_total])
 		Logger.log_event("money_conservation_violated", details, "EconomicValidator")
@@ -106,7 +105,7 @@ func validate_closed_loop_economy() -> bool:
 				"produced": production_totals[good],
 				"consumed": consumed,
 				"difference": consumed - production_totals[good],
-				"timestamp": Time.get_unix_time_from_system()
+
 			}
 			emit_signal("invariant_violated", "closed_loop_economy", "More %s consumed than produced" % good)
 			Logger.log_event("closed_loop_economy_violated", details, "EconomicValidator")

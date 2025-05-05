@@ -244,25 +244,35 @@ func clear_cache() -> void:
 	emit_signal("cache_cleared")
 
 ## Get a good's icon
-## @param good_name: Name of the good
+## @param good_id: ID of the good
 ## @return: The good's icon or a fallback icon if not found
-func get_good_icon(good_name: String) -> String:
-	var goods_data = get_config("goods").get("goods", {})
-	return goods_data.get(good_name, {}).get("icon", "❓")
+func get_good_icon(good_id: String) -> String:
+	Logger.info("[ICON_DEBUG] get_good_icon called with id=%s" % good_id, "Library")
+	for good in get_all_goods_data():
+		Logger.info("[ICON_DEBUG] Checking DataGood: id=%s, icon=%s" % [good.id, good.icon], "Library")
+		if good.id == good_id:
+			Logger.info("[ICON_DEBUG] get_good_icon returning: %s" % good.icon, "Library")
+			return good.icon
+	Logger.info("[ICON_DEBUG] get_good_icon fallback for id=%s" % good_id, "Library")
+	return "❓"
 
 ## Get a good's base price
-## @param good_name: Name of the good
+## @param good_id: ID of the good
 ## @return: The good's base price or 0 if not found
-func get_good_base_price(good_name: String) -> int:
-	var goods_data = get_config("goods").get("goods", {})
-	return goods_data.get(good_name, {}).get("base_price", 0)
+func get_good_base_price(good_id: String) -> float:
+	for good in get_all_goods_data():
+		if good.id == good_id:
+			return good.base_price
+	return 0.0
 
 ## Get a good's category
-## @param good_name: Name of the good
+## @param good_id: ID of the good
 ## @return: The good's category or empty string if not found
-func get_good_category(good_name: String) -> String:
-	var goods_data = get_config("goods").get("goods", {})
-	return goods_data.get(good_name, {}).get("category", "")
+func get_good_category(good_id: String) -> String:
+	for good in get_all_goods_data():
+		if good.id == good_id:
+			return good.category
+	return ""
 
 ## Get consumption rules for a specific good
 ## @param good_id: ID of the good to get rules for
@@ -311,4 +321,79 @@ func get_aspect_data() -> Array:
 ## @return Dictionary containing the aspect data, or empty if not found
 func get_aspect_by_id(aspect_id: String) -> Dictionary:
 	return get_land_aspect_by_id(aspect_id)
+#endregion
+
+#region FACTORY METHODS
+var _goods_data_cache: Array = []
+
+## Returns an array of DataGood instances from loaded goods config
+## @return Array[DataGood]
+func get_all_goods_data() -> Array:
+	if _goods_data_cache.size() > 0:
+		return _goods_data_cache
+	var goods: Array = []
+	var config: Dictionary = get_config("goods")
+	Logger.info("[ICON_DEBUG] Raw goods config: " + str(config), "Library")
+	if not config.has("goods"):
+		push_error("Goods config missing 'goods' key.")
+		return goods
+	for entry in config["goods"]:
+		Logger.info("[ICON_DEBUG] Creating DataGood: id=%s, icon=%s" % [entry["id"], entry.get("icon", "❓")], "Library")
+		if not entry.has("id") or not entry.has("f_name") or not entry.has("base_price") or not entry.has("category"):
+			push_error("Invalid good entry: " + str(entry))
+			continue
+		goods.append(DataGood.new(
+			entry["id"],
+			entry["f_name"],
+			entry["base_price"],
+			entry["category"],
+			entry.get("icon", "❓")
+		))
+	for good in goods:
+		Logger.info("[ICON_DEBUG] Cached DataGood: id=%s, icon=%s" % [good.id, good.icon], "Library")
+	_goods_data_cache = goods
+	return goods
+
+## Returns an array of DataCulture instances from loaded cultures config
+## @return Array[DataCulture]
+func get_all_cultures_data() -> Array:
+	var cultures: Array = []
+	var config: Dictionary = get_config("cultures")
+	if not config.has("cultures"):
+		push_error("Culture config missing 'cultures' key.")
+		return cultures
+	for entry in config["cultures"]:
+		if not entry.has("id") or not entry.has("base_preferences") or not entry.has("savings_rate") or not entry.has("shock_response"):
+			push_error("Invalid culture entry: " + str(entry))
+			continue
+		cultures.append(DataCulture.new(
+			entry["id"],
+			entry["base_preferences"],
+			entry["savings_rate"],
+			entry["shock_response"]
+		))
+	return cultures
+
+## Returns an array of DataActor instances from loaded people config
+## @return Array[DataActor]
+func get_all_actors_data() -> Array:
+	var actors: Array = []
+	var config: Dictionary = get_config("people")
+	if not config.has("people"):
+		push_error("People config missing 'people' key.")
+		return actors
+	for entry in config["people"]:
+		if not entry.has("id") or not entry.has("culture_id") or not entry.has("ancestry_id") or not entry.has("needs") or not entry.has("savings_rate") or not entry.has("disposable_income") or not entry.has("decision_profile"):
+			push_error("Invalid actor entry: " + str(entry))
+			continue
+		actors.append(DataActor.new(
+			entry["id"],
+			entry["culture_id"],
+			entry["ancestry_id"],
+			entry["needs"],
+			entry["savings_rate"],
+			entry["disposable_income"],
+			entry["decision_profile"]
+		))
+	return actors
 #endregion

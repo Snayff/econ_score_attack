@@ -1,0 +1,13 @@
+{
+  "ancestries": [
+	{
+	  "id": "ancestral_1",
+	  "base_preferences": {
+		"food": 1.0,
+		"entertainment": 1.0,
+		"luxury": 0.7
+	  },
+	  "shock_response": "share"
+	}
+  ]
+}
