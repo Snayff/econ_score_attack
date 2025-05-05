@@ -55,7 +55,7 @@ var export_settings: Dictionary
 ### Core Components
 
 #### Performance Monitor
-The global autoload (`globals/performance_monitor.gd`) manages:
+The global autoload (`global/performance_monitor.gd`) manages:
 - Metric collection and tracking
 - Configuration loading
 - Data export

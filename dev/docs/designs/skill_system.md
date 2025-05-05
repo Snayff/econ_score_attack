@@ -37,14 +37,14 @@ The system tracks skill distribution across the population:
 ## Technical Implementation
 
 ### Constants
-Defined in `globals/constants.gd`:
+Defined in `global/constants.gd`:
 - SkillCompetence enum
 - Threshold values for each competence level
 
 ### Core Components
 
 #### Library Integration
-The Library singleton (`globals/library.gd`) manages:
+The Library singleton (`global/library.gd`) manages:
 - Loading skill definitions from JSON
 - Providing access to skill data
 - Skill competence calculations

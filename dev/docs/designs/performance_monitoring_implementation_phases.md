@@ -23,7 +23,7 @@ This document outlines the phased approach for implementing the performance moni
    - Configure export settings
 
 ### Step 1.3: Library Integration
-1. Update `globals/library.gd`:
+1. Update `global/library.gd`:
    - Add performance config loading
    - Implement access methods
    - Add validation checks
@@ -31,7 +31,7 @@ This document outlines the phased approach for implementing the performance moni
 ## Phase 2: Monitoring System
 
 ### Step 2.1: Performance Monitor
-1. Create `globals/performance_monitor.gd`:
+1. Create `global/performance_monitor.gd`:
    - Implement metric collection
    - Add configuration handling
    - Set up data management

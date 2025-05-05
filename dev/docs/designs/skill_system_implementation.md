@@ -6,7 +6,7 @@ This document outlines the phased approach for implementing the skill system. Ea
 ## Phase 1: Core Data Structures and Constants
 
 ### Step 1.1: Add Constants
-1. Create/update `globals/constants.gd`
+1. Create/update `global/constants.gd`
 2. Add SkillCompetence enum
 3. Add SKILL_THRESHOLDS dictionary
 4. Verify constants are accessible globally
@@ -32,7 +32,7 @@ This document outlines the phased approach for implementing the skill system. Ea
 ## Phase 2: Library Integration
 
 ### Step 2.1: Update Library Singleton
-1. Add skill loading functionality to `globals/library.gd`
+1. Add skill loading functionality to `global/library.gd`
 2. Implement skill data access methods
 3. Add error handling for missing/invalid skills
 4. Add type checking and assertions

@@ -90,7 +90,7 @@ var parcel = World.get_parcel(2, 3)
 - The World system is extensible and can be adapted for future features such as dynamic world resizing, advanced terrain, or multi-world support.
 
 ## Associated File
-- `globals/world.gd` (autoload singleton)
+- `global/world.gd` (autoload singleton)
 
 ## Last Updated
 2025-05-04 

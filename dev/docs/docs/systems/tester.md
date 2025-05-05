@@ -135,9 +135,9 @@ func after_each():
 - Review test output regularly to maintain code quality.
 
 ## Associated Files
-- `dev_tools/tester/test_suite.gd`
-- `dev_tools/tester/abc_test.gd`
-- `dev_tools/tester/test_runner.json`
+- `dev_tool/tester/test_suite.gd`
+- `dev_tool/tester/abc_test.gd`
+- `dev_tool/tester/test_runner.json`
 
 ## Last Updated
 2025-05-04 

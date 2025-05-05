@@ -53,7 +53,7 @@ if value > Constants.MAX_ALLOWED:
 - Use descriptive names and group related constants for clarity.
 
 ## Associated File
-- `globals/constants.gd` (autoload singleton)
+- `global/constants.gd` (autoload singleton)
 
 ## Last Updated
 2025-05-04

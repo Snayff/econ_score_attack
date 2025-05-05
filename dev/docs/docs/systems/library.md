@@ -6,7 +6,7 @@ The `Library` system is a global autoload singleton responsible for loading, cac
 
 ## Design
 
-- **Centralised Data Access:** Implemented as an autoload singleton (`globals/library.gd`), the Library ensures all static data is loaded once and made available to any system or feature that requires it.
+- **Centralised Data Access:** Implemented as an autoload singleton (`global/library.gd`), the Library ensures all static data is loaded once and made available to any system or feature that requires it.
 - **External JSON Files:** All static data is stored in external JSON files, referenced by type. The Library loads these files at runtime and caches their contents for efficient access.
 - **Signal-Based Error Handling:** Emits signals when configuration files are loaded or if loading fails, allowing other systems to respond to data availability or errors.
 - **Default Fallbacks:** If a configuration file cannot be loaded, the Library provides sensible default values to ensure the game remains functional.
@@ -61,7 +61,7 @@ if goods_data.has("grain"):
 - **Config Types:**
   - `people`, `demesne`, `goods`, `consumption_rules`, `laws`, `land`, `land_aspects`
 - **File Paths:**
-  - Each config type maps to a file path, e.g., `feature/economy/data/goods.json` for goods.
+  - Each config type maps to a file path, e.g., `feature/economy/market/data/goods.json` for goods.
 - **Cache:**
   - All loaded configs are stored in a cache dictionary, keyed by config type.
 - **Default Values:**
@@ -95,7 +95,7 @@ Library.connect("config_loaded", Callable(self, "_on_config_loaded"))
 - The Library supports future extensibility by allowing new config types and schemas to be added with minimal changes.
 
 ## Associated File
-- `globals/library.gd` (autoload singleton)
+- `global/library.gd` (autoload singleton)
 
 ## Last Updated
 2025-05-04 

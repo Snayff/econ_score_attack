@@ -3,6 +3,11 @@
 ## Overview
 This document outlines the design for a robust, modular system enabling economic actors (people) to make realistic, dynamic decisions about spending, saving, and adapting to market conditions in a closed-loop economy. The system is grounded in economic theory, supports diverse and emergent behaviours, and is designed for performance, extensibility, and testability.
 
+## Warning
+This design touches on aspects of other not-yet-implemented designs. We should build in a way that is in line with those designs, wherever possible. Known overlapping designs:
+- dev/docs/designs/ancestry_system_design.md
+- dev/docs/designs/market_system_design.md
+
 ---
 
 ## Core Components
@@ -128,7 +133,7 @@ var decision_profile: String
 
 ## Testability & Alignment
 - **Component-based, modular design:** All logic in components, not monolithic classes.
-- **Data-driven, external configs:** All static data in JSON, loaded via `globals/library.gd`.
+- **Data-driven, external configs:** All static data in JSON, loaded via `global/library.gd`.
 - **Signals for decoupling:** All cross-component communication via signals/event bus.
 - **Static typing, clear naming, code regions:** All code follows GDScript 2.0 conventions and project naming/region rules.
 - **Error handling, assertions, logging:** No silent failures, all errors are logged and asserted.

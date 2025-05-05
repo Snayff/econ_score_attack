@@ -102,8 +102,8 @@ EventBusUI.emit_signal("show_visual_feedback", "Action complete!", Vector2(100, 
 - Use `@warning_ignore("unused_signal")` for signals that may not always be connected.
 
 ## Associated Files
-- `globals/event_bus_game.gd` (autoload singleton)
-- `globals/event_bus_ui.gd` (autoload singleton)
+- `global/event_bus_game.gd` (autoload singleton)
+- `global/event_bus_ui.gd` (autoload singleton)
 
 ## Last Updated
 2025-05-04 

@@ -11,10 +11,10 @@ This document describes the folder structure and organisational principles for t
 |-------------|--------------------------------------------------------------|
 | features/   | All feature-specific code, scenes, data, and tests           |
 | shared/     | Shared UI, data classes, utilities, assets, and shared tests |
-| globals/    | Global scripts, autoloads, constants, event buses, library   |
+| global/     | Global scripts, autoloads, constants, event buses, library   |
 | main/       | Main entry scene and script                                  |
 | data/       | Global static data files                                     |
-| dev_tools/tester/ | Test runner logic and configuration (test_suite.gd, test_runner.json) |
+| dev_tool/tester/ | Test runner logic and configuration (test_suite.gd, test_runner.json) |
 
 ---
 
@@ -40,13 +40,13 @@ This document describes the folder structure and organisational principles for t
   - `shared/assets/`
   - `shared/tests/integration/`
 
-### globals/
+### global/
 - Contains global scripts, autoloads, constants, event buses, and the library loader.
 - Example:
-  - `globals/constants.gd`
-  - `globals/event_bus_game.gd`
-  - `globals/event_bus_ui.gd`
-  - `globals/library.gd`
+  - `global/constants.gd`
+  - `global/event_bus_game.gd`
+  - `global/event_bus_ui.gd`
+  - `global/library.gd`
 
 ### main/
 - Contains only the main entry scene (`main.tscn`) and its script (`main.gd`).
@@ -66,7 +66,7 @@ This document describes the folder structure and organisational principles for t
 ## Naming and Organisation Principles
 - Everything feature-specific lives in its feature folder.
 - Anything reused by multiple features goes in `shared/`.
-- Anything global, stateless, or cross-cutting goes in `globals/`.
+- Anything global, stateless, or cross-cutting goes in `global/`.
 - The main entry scene and script are in `main/`.
 - External data is in `data/` unless only used by one feature.
 - Assets are always in `shared/assets/`.
@@ -78,7 +78,7 @@ This document describes the folder structure and organisational principles for t
 2. Create the new folder structure as above.
 3. Move feature-specific files (scripts, scenes, data, tests) into their feature folders.
 4. Move shared components and assets into `shared/`.
-5. Move global scripts into `globals/`.
+5. Move global scripts into `global/`.
 6. Move main entry scene and script into `main/`.
 7. Move static data into `data/` (unless only used by one feature).
 8. Update all resource paths and imports in scripts and scenes.
@@ -150,7 +150,7 @@ shared/
     integration/
     performance/
 
-globals/
+global/
   constants.gd
   event_bus_game.gd
   event_bus_ui.gd

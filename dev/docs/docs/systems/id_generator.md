@@ -6,7 +6,7 @@ The `IDGenerator` system provides a centralised, robust, and debuggable way to g
 
 ## Design
 
-- **Centralised Singleton:** Implemented as an autoload singleton (`globals/id_generator.gd`), ensuring a single authoritative source for ID generation.
+- **Centralised Singleton:** Implemented as an autoload singleton (`global/id_generator.gd`), ensuring a single authoritative source for ID generation.
 - **Prefix + UUID Format:** IDs are generated in the format `{PREFIX}_{UUID}` (e.g., `ACT_123e4567-e89b-12d3-a456-426614174000`).
 - **Prefix Constants:** All valid prefixes are defined as constants within the class, ensuring consistency and preventing typos.
 - **UUID v4 Generation:** Uses a custom, cryptographically strong random UUID v4 generator implemented in GDScript, as Godot does not provide a built-in UUID class.
@@ -57,4 +57,7 @@ print(IDGenerator.get_uuid(building_id))   # UUID part
 - The system is fully decoupled and can be used by any feature or subsystem.
 
 ## Associated File
-- `globals/id_generator.gd` (autoload singleton) 
+- `global/id_generator.gd` (autoload singleton) 
+
+## Last Updated
+2025-05-04 

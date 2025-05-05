@@ -164,7 +164,7 @@ func update_resources(delta: float) -> void:
 The LandManager manages all land grids for all demesnes and responds to data requests via signals. To ensure modularity and maintainability, LandManager is now fully decoupled from the EventBusGame and EventBusUI globals. Instead of referencing these event buses directly, it uses dependency-injected callables for event bus access. This is set up at runtime, typically in main.gd, after all autoloads are initialised.
 
 **Rationale:**
-- Each global/autoload should be stand-alone and not directly depend on other globals.
+- Each global/autoload should be stand-alone and not directly depend on other global.
 - This approach improves testability, modularity, and future extensibility (e.g., supporting multiple event buses or test harnesses).
 
 ### Setup Example
@@ -282,7 +282,7 @@ SurveyManager.process_turn()
 - SurveyManager is a key part of the Land System, and its documentation is maintained here for clarity and cohesion.
 
 ### Associated File
-- `globals/survey_manager.gd` (autoload singleton)
+- `global/survey_manager.gd` (autoload singleton)
 
 ---
 
@@ -302,7 +302,7 @@ The Aspect System is responsible for defining, managing, and procedurally genera
 To ensure modularity and maintainability, `AspectManager` is fully decoupled from the `Library` global. Instead of referencing the data loader directly, it uses a dependency-injected callable for loading aspect definitions. This is set up at runtime, typically in `main.gd`, after all autoloads are initialised.
 
 **Rationale:**
-- Each global/autoload should be stand-alone and not directly depend on other globals.
+- Each global/autoload should be stand-alone and not directly depend on other global.
 - This approach improves testability, modularity, and future extensibility (e.g., supporting multiple data sources or test harnesses).
 
 ### Setup Example
@@ -345,7 +345,7 @@ var aspect_def = AspectManager.get_aspect_definition("fertile_soil")
 - The procedural generation logic can be extended to support new types of aspects or more complex rules as the game evolves.
 
 ### Associated File
-- `globals/aspect_manager.gd` (autoload singleton)
+- `global/aspect_manager.gd` (autoload singleton)
 
 ---
 
@@ -403,8 +403,8 @@ if sim_node and sim_node.demesne:
 - `scripts/core/land_manager.gd`
 - `scripts/ui/land_grid/land_grid_view.gd`
 - `data/land_config.json`
-- `globals/library.gd`
-- `globals/event_bus_game.gd`
+- `global/library.gd`
+- `global/event_bus_game.gd`
 
 ---
 

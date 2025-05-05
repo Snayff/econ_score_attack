@@ -17,7 +17,7 @@ The Logger System provides a centralised, configurable logging facility for the 
   - `Logger.warning(message: String, source: String = "")`
   - `Logger.error(message: String, source: String = "")`
 - Log standardised events using helper methods (e.g., `log_state_change`, `log_resource_change`, etc.).
-- The logger can be configured via `dev_tools/logger/config/logger_config.json`.
+- The logger can be configured via `dev_tool/logger/config/logger_config.json`.
 
 ## Log Retention Policy
 - **On every game start, old log files are deleted, retaining only the most recent as per the `max_log_files` config, regardless of whether file logging is enabled.**

@@ -2,7 +2,6 @@
 class_name TestSalesTax
 extends ABCTest
 
-const SalesTax = preload("res://feature/law/sales_tax.gd")
 
 var _sales_tax: SalesTax
 

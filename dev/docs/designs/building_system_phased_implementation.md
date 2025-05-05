@@ -10,7 +10,7 @@ This document outlines a phased approach for implementing the building system, o
 ### Goals
 - Define and implement the core data classes: `DataBuilding`, `DataJob`.
 - Create JSON schemas for building types, job types, and requirements.
-- Integrate static data loading via `globals/library.gd`.
+- Integrate static data loading via `global/library.gd`.
 
 ### Deliverables
 - Data classes with docstrings and validation.

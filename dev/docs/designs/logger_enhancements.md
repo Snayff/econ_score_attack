@@ -15,7 +15,7 @@ This document outlines the design for enhancing the logger system to improve per
 
 ### Component Structure
 ```plaintext
-dev_tools/logger/
+dev_tool/logger/
 ├── components/
 │   ├── log_entry_component.gd
 │   ├── log_storage_component.gd

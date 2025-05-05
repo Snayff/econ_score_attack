@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://ca3s1dvhwf7tm"]
+
+[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_file_selector.gd" id="1_b7p7t"]
+
+[node name="LogFileSelector" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+script = ExtResource("1_b7p7t")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Log File:"
+
+[node name="OptFiles" type="OptionButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="chk_AutoRefresh" type="CheckBox" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Auto-Refresh"
+
+[node name="BtnRefresh" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh"
