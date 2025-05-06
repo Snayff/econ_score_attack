@@ -283,3 +283,59 @@ The economic system forms the core of gameplay, implementing a closed-loop econo
 - Clear visual feedback for all actions
 - Regular validation of information density
 - Accessibility options for all features 
+
+
+## Actor Generation System
+
+### Overview
+The Actor Generation System is responsible for creating the population of economic actors (people) at game start. Rather than storing a static list of people in configuration files, actors are generated dynamically at runtime using a data-driven approach. This ensures flexibility, scalability, and alignment with the closed-loop economic simulation.
+
+### How It Works
+- **Data-Driven:**
+  - Actor generation is based on external JSON configuration files: `people.json`, `cultures.json`, and `ancestries.json`.
+  - `people.json` defines the number of starting people and allocation percentages for jobs, cultures, and ancestries.
+  - `cultures.json` and `ancestries.json` define possible names, savings rate ranges, decision profiles, and consumption rules for each group.
+
+- **Factory Pattern:**
+  - Actors are generated at runtime using the global `Factory` singleton (`Factory.generate_starting_people()`).
+  - For each actor:
+    - A culture and ancestry are assigned based on allocation percentages.
+    - Names, decision profiles, and consumption rules are merged from both culture and ancestry, then randomly selected or deduplicated as appropriate.
+    - The savings rate is randomly chosen between the lowest minimum and highest maximum from both culture and ancestry.
+    - Each actor is assigned a globally unique string ID using the `IDGenerator` singleton (e.g., `ACT_123e4567-e89b-12d3-a456-426614174000`).
+
+- **No Static List:**
+  - There is no longer a static list of actors in the configuration files. All actors are generated at runtime, ensuring the system can scale and adapt to changes in configuration.
+
+### Key Data Flows
+- **people.json:**
+  - `starting_num_people`: Number of actors to generate.
+  - `job_allocation`, `culture_allocation`, `ancestry_allocation`: Percentages for assigning jobs, cultures, and ancestries.
+- **cultures.json & ancestries.json:**
+  - Define possible names, savings rate ranges, decision profiles, and consumption rules for each group.
+- **ID Generation:**
+  - All actors receive a unique string ID via `IDGenerator.generate_id("ACT")`.
+
+### How to Use
+- To generate the starting population, call:
+  ```gdscript
+  var people = Factory.generate_starting_people()
+  ```
+- All references to actors should use their string-based unique IDs.
+- UI and systems should not assume a fixed order or integer-based indexing for actors.
+
+### Extending the System
+- To add new fields or logic to actor generation, update the factory logic in `global/factory.gd`.
+- To add new cultures or ancestries, update the relevant JSON files.
+- If you add new systems that reference actors, always use string IDs and the factory pattern for consistency.
+
+### Save/Load Considerations
+- When implementing save/load functionality, ensure that actor string IDs are serialised and deserialised correctly.
+- Actor generation should be deterministic if you require reproducibility (e.g., for testing or replays).
+
+### Documentation
+- This system replaces the previous approach of loading a static list of actors from configuration files.
+- All relevant UI, tests, and systems have been updated to use the new approach.
+
+## Last Updated
+2024-06-09 

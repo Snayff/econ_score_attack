@@ -23,7 +23,8 @@ extends Resource
 
 
 #region VARS
-var id: int
+var id: String
+var f_name: String
 var culture_id: String
 var ancestry_id: String
 var needs: Dictionary
@@ -35,15 +36,26 @@ var decision_profile: String
 
 #region PUBLIC FUNCTIONS
 ## Constructs a new DataActor instance.
-## @param id_: Unique integer ID for the actor.
+## @param id_: Unique string ID for the actor.
+## @param f_name_: Friendly name for actor.
 ## @param culture_id_: The culture ID this actor belongs to.
 ## @param ancestry_id_: The ancestry ID this actor belongs to.
 ## @param needs_: Dictionary of needs (e.g., hunger, comfort).
 ## @param savings_rate_: Proportion of income reserved as savings.
 ## @param disposable_income_: Money available for spending.
 ## @param decision_profile_: String describing decision logic profile.
-func _init(id_: int, culture_id_: String, ancestry_id_: String, needs_: Dictionary, savings_rate_: float, disposable_income_: float, decision_profile_: String) -> void:
+func _init(
+	id_: String, 
+	f_name_: String, 
+	culture_id_: String, 
+	ancestry_id_: String, 
+	needs_: Dictionary, 
+	savings_rate_: float, 
+	disposable_income_: float, 
+	decision_profile_: String
+	) -> void:
 	id = id_
+	f_name = f_name_
 	culture_id = culture_id_
 	ancestry_id = ancestry_id_
 	needs = needs_

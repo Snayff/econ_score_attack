@@ -1,5 +1,6 @@
 ## Unit tests for DataActor
 ## Last Updated: 2025-05-05
+# Requires Factory to be set as an autoload (singleton)
 extends Node
 
 var _test_actor: DataActor
@@ -10,8 +11,8 @@ func _ready() -> void:
 
 func test_constructor() -> void:
 	var needs = {"hunger": 0.5, "comfort": 0.8}
-	_test_actor = DataActor.new(1, "northern", "ancestral_1", needs, 0.25, 100.0, "greedy")
-	assert(_test_actor.id == 1)
+	_test_actor = DataActor.new("test_id_1", "northern", "ancestral_1", needs, 0.25, 100.0, "greedy")
+	assert(_test_actor.id == "test_id_1")
 	assert(_test_actor.culture_id == "northern")
 	assert(_test_actor.ancestry_id == "ancestral_1")
 	assert(_test_actor.needs == needs)
@@ -20,7 +21,7 @@ func test_constructor() -> void:
 	assert(_test_actor.decision_profile == "greedy")
 
 func test_json_loading() -> void:
-	var actors = Library.get_all_actors_data()
+	var actors = Factory.generate_starting_people()
 	assert(typeof(actors) == TYPE_ARRAY)
 	# If people.json is missing, should return empty array
 	if actors.size() == 0:

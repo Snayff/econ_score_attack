@@ -2,6 +2,7 @@
 ## Minimal debug UI for inspecting loaded DataActor and DataCulture data.
 ## Example usage:
 ## Add this Control node to a debug UI scene to view loaded actors and their preferences.
+# Requires Factory to be set as an autoload (singleton)
 extends Control
 
 #region CONSTANTS
@@ -34,7 +35,7 @@ func _ready() -> void:
 	assert(lbl_actor_list != null)
 	assert(lbl_culture_list != null)
 
-	_actors = Library.get_all_actors_data()
+	_actors = Factory.generate_starting_people()
 	_cultures = Library.get_all_cultures_data()
 	_update_ui()
 

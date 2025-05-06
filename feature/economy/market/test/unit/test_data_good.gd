@@ -11,7 +11,7 @@ func _ready() -> void:
 	test_json_loading()
 
 func test_constructor() -> void:
-	_test_good = DataGood.new("food", "Food", 10.0, "basic")
+	_test_good = DataGood.new("food", "Food", 10.0, "basic", "")
 	assert(_test_good.id == "food")
 	assert(_test_good.f_name == "Food")
 	assert(_test_good.base_price == 10.0)

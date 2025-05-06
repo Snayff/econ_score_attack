@@ -1,5 +1,6 @@
-## ctl_good_utility_debug_panel.gd
+## good_utility_debug_panel.gd
 ## Stand-alone debug UI for inspecting good utility calculations for actors.
+## Requires Factory to be set as an autoload (singleton)
 extends Control
 
 #region CONSTANTS
@@ -7,8 +8,8 @@ extends Control
 
 
 #region SIGNALS
-signal actor_selected(actor_id: int)
-signal evaluation_triggered(actor_id: int)
+signal actor_selected(actor_id: String)
+signal evaluation_triggered(actor_id: String)
 #endregion
 
 
@@ -43,12 +44,10 @@ func _ready() -> void:
 	assert(txt_goods_info != null)
 	assert(txt_result != null)
 
-	_actors = Library.get_all_actors_data()
+	_actors = Factory.generate_starting_people()
+	_goods = Library.get_all_goods_data()
 	Logger.info("[ACTOR_DEBUG_TRACE] UI ready, actors loaded: %s" % [_actors], "ActorDebug")
 	print("Loaded actors: ", _actors)
-	_goods = Library.get_all_goods_data()
-
-	# Build cultures dict
 	_cultures = {}
 	for culture in Library.get_all_cultures_data():
 		_cultures[culture.id] = culture
@@ -79,7 +78,7 @@ func _ready() -> void:
 
 func _on_actor_selected(index: int) -> void:
 	_select_actor(index)
-	emit_signal("actor_selected", _selected_actor.id)
+	emit_signal("actor_selected", str(_selected_actor.id))
 
 func _on_evaluate_pressed() -> void:
 	if _selected_actor == null:
@@ -88,7 +87,7 @@ func _on_evaluate_pressed() -> void:
 	var util_dict = GoodUtilityComponent.calculate_good_utility(_selected_actor, _goods, _cultures, _ancestries, _prices)
 	var best_good = GoodUtilityComponent.select_best_affordable_good(_selected_actor, _goods, _cultures, _ancestries, _prices)
 	_update_goods_info(util_dict, best_good)
-	emit_signal("evaluation_triggered", _selected_actor.id)
+	emit_signal("evaluation_triggered", str(_selected_actor.id))
 
 func _select_actor(index: int) -> void:
 	_selected_actor = _actors[index]

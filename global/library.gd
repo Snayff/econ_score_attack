@@ -365,33 +365,4 @@ func get_all_cultures_data() -> Array:
 			entry["shock_response"]
 		))
 	return cultures
-
-## Returns an array of DataActor instances from loaded people config
-## @return Array[DataActor]
-func get_all_actors_data() -> Array:
-	Logger.info("[ACTOR_DEBUG_TRACE] get_all_actors_data called", "ActorDebug")
-	var actors: Array = []
-	var config: Dictionary = get_config("people")
-	Logger.info("[ACTOR_DEBUG_TRACE] Loaded people config: %s" % [config], "ActorDebug")
-	if not config.has("people"):
-		Logger.info("[ACTOR_DEBUG_TRACE] People config missing 'people' key.", "ActorDebug")
-		return actors
-	for entry in config["people"]:
-		Logger.info("[ACTOR_DEBUG_TRACE] Parsing actor entry: %s" % [entry], "ActorDebug")
-		if not entry.has("id") or not entry.has("culture_id") or not entry.has("ancestry_id") or not entry.has("needs") or not entry.has("savings_rate") or not entry.has("disposable_income") or not entry.has("decision_profile"):
-			Logger.info("[ACTOR_DEBUG_TRACE] Invalid actor entry: %s" % [entry], "ActorDebug")
-			continue
-		var actor = DataActor.new(
-			entry["id"],
-			entry["culture_id"],
-			entry["ancestry_id"],
-			entry["needs"],
-			entry["savings_rate"],
-			entry["disposable_income"],
-			entry["decision_profile"]
-		)
-		Logger.info("[ACTOR_DEBUG_TRACE] Created DataActor: %s" % [actor], "ActorDebug")
-		actors.append(actor)
-	Logger.info("[ACTOR_DEBUG_TRACE] Returning actors array: %s" % [actors], "ActorDebug")
-	return actors
 #endregion
