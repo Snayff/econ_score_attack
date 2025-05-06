@@ -1,5 +1,5 @@
 {
-	"default_num_people": 4,
+	"starting_num_people": 4,
 	"people_names": [
 		"sally",
 		"reginald",
@@ -7,14 +7,23 @@
 		"bob"
 	],
 	"job_allocation": {
-		"farmer": 1,
-		"water collector": 1,
-		"woodcutter": 1
+		"farmer": 0.25,
+		"water collector": 0.25,
+		"woodcutter": 0.25,
+		"unemployed": 0.25
 	},
 	"starting_goods": {
 		"money": 100,
 		"grain": 3,
 		"water": 3,
 		"wood": 0
+	},
+	"culture_allocation": {
+		"northern": 0.5,
+		"merchant": 0.5
+	},
+	"ancestry_allocation": {
+		"northern": 0.75,
+		"southern": 0.25
 	}
 }

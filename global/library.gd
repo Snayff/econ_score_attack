@@ -247,13 +247,9 @@ func clear_cache() -> void:
 ## @param good_id: ID of the good
 ## @return: The good's icon or a fallback icon if not found
 func get_good_icon(good_id: String) -> String:
-	Logger.info("[ICON_DEBUG] get_good_icon called with id=%s" % good_id, "Library")
 	for good in get_all_goods_data():
-		Logger.info("[ICON_DEBUG] Checking DataGood: id=%s, icon=%s" % [good.id, good.icon], "Library")
 		if good.id == good_id:
-			Logger.info("[ICON_DEBUG] get_good_icon returning: %s" % good.icon, "Library")
 			return good.icon
-	Logger.info("[ICON_DEBUG] get_good_icon fallback for id=%s" % good_id, "Library")
 	return "❓"
 
 ## Get a good's base price
@@ -333,12 +329,10 @@ func get_all_goods_data() -> Array:
 		return _goods_data_cache
 	var goods: Array = []
 	var config: Dictionary = get_config("goods")
-	Logger.info("[ICON_DEBUG] Raw goods config: " + str(config), "Library")
 	if not config.has("goods"):
 		push_error("Goods config missing 'goods' key.")
 		return goods
 	for entry in config["goods"]:
-		Logger.info("[ICON_DEBUG] Creating DataGood: id=%s, icon=%s" % [entry["id"], entry.get("icon", "❓")], "Library")
 		if not entry.has("id") or not entry.has("f_name") or not entry.has("base_price") or not entry.has("category"):
 			push_error("Invalid good entry: " + str(entry))
 			continue
@@ -349,8 +343,6 @@ func get_all_goods_data() -> Array:
 			entry["category"],
 			entry.get("icon", "❓")
 		))
-	for good in goods:
-		Logger.info("[ICON_DEBUG] Cached DataGood: id=%s, icon=%s" % [good.id, good.icon], "Library")
 	_goods_data_cache = goods
 	return goods
 
@@ -377,16 +369,19 @@ func get_all_cultures_data() -> Array:
 ## Returns an array of DataActor instances from loaded people config
 ## @return Array[DataActor]
 func get_all_actors_data() -> Array:
+	Logger.info("[ACTOR_DEBUG_TRACE] get_all_actors_data called", "ActorDebug")
 	var actors: Array = []
 	var config: Dictionary = get_config("people")
+	Logger.info("[ACTOR_DEBUG_TRACE] Loaded people config: %s" % [config], "ActorDebug")
 	if not config.has("people"):
-		push_error("People config missing 'people' key.")
+		Logger.info("[ACTOR_DEBUG_TRACE] People config missing 'people' key.", "ActorDebug")
 		return actors
 	for entry in config["people"]:
+		Logger.info("[ACTOR_DEBUG_TRACE] Parsing actor entry: %s" % [entry], "ActorDebug")
 		if not entry.has("id") or not entry.has("culture_id") or not entry.has("ancestry_id") or not entry.has("needs") or not entry.has("savings_rate") or not entry.has("disposable_income") or not entry.has("decision_profile"):
-			push_error("Invalid actor entry: " + str(entry))
+			Logger.info("[ACTOR_DEBUG_TRACE] Invalid actor entry: %s" % [entry], "ActorDebug")
 			continue
-		actors.append(DataActor.new(
+		var actor = DataActor.new(
 			entry["id"],
 			entry["culture_id"],
 			entry["ancestry_id"],
@@ -394,6 +389,9 @@ func get_all_actors_data() -> Array:
 			entry["savings_rate"],
 			entry["disposable_income"],
 			entry["decision_profile"]
-		))
+		)
+		Logger.info("[ACTOR_DEBUG_TRACE] Created DataActor: %s" % [actor], "ActorDebug")
+		actors.append(actor)
+	Logger.info("[ACTOR_DEBUG_TRACE] Returning actors array: %s" % [actors], "ActorDebug")
 	return actors
 #endregion

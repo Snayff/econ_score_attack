@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://bysyb024tckvc"]
+
+[ext_resource type="Script" uid="uid://b2cd3ibd1uq78" path="res://feature/economic_actor/ui/actor_data_inspector.gd" id="1_x7wdq"]
 
 [node name="ActorDataInspector" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_x7wdq")
 
 [node name="lbl_actor_list" type="Label" parent="."]
-margin_left = 10.0
-margin_top = 10.0
+layout_mode = 0
 text = "Actors:"
 
 [node name="lbl_culture_list" type="Label" parent="."]
-margin_left = 10.0
-margin_top = 100.0
-text = "Cultures:" 
+layout_mode = 0
+text = "Cultures:"

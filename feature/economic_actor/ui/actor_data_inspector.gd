@@ -1,6 +1,5 @@
 ## ActorDataInspector
 ## Minimal debug UI for inspecting loaded DataActor and DataCulture data.
-## Last Updated: 2025-05-05
 ## Example usage:
 ## Add this Control node to a debug UI scene to view loaded actors and their preferences.
 extends Control

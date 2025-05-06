@@ -33,3 +33,11 @@ LandManager="*res://global/land_manager.gd"
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+
+[file_customization]
+
+folder_colors={
+"res://dev/": "gray",
+"res://dev_tool/": "purple",
+"res://feature/economy/market/data/goods.json": "gray"
+}

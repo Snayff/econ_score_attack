@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://bich51hjot16y"]
+
+[ext_resource type="Script" uid="uid://b0k183cngnpbj" path="res://feature/economic_actor/ui/good_utility_debug_panel.gd" id="1_hts1g"]
+
+[node name="GoodUtilityDebugPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hts1g")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.5)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 125.0
+offset_bottom = 277.0
+
+[node name="lst_actor" type="OptionButton" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="btn_evaluate" type="Button" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Evaluate Utility"
+
+[node name="txt_actor_info" type="RichTextLabel" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="txt_goods_info" type="RichTextLabel" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="txt_result" type="Label" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3

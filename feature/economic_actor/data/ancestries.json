@@ -1,13 +1,20 @@
 {
   "ancestries": [
 	{
-	  "id": "ancestral_1",
-	  "base_preferences": {
-		"food": 1.0,
-		"entertainment": 1.0,
-		"luxury": 0.7
-	  },
-	  "shock_response": "share"
+	  "id": "northern",
+	  "possible_names": ["bjorn", "astrid", "olaf"],
+	  "savings_rate_range": [0.08, 0.18],
+	  "decision_profiles": ["stoic", "pragmatic"],
+	  "shock_response": "hoard",
+	  "consumption_rule_ids": ["grain_basic", "water_basic"]
+	},
+	{
+	  "id": "southern",
+	  "possible_names": ["carlos", "maria", "sofia"],
+	  "savings_rate_range": [0.12, 0.22],
+	  "decision_profiles": ["gregarious", "optimistic"],
+	  "shock_response": "share",
+	  "consumption_rule_ids": ["grain_basic", "water_basic"]
 	}
   ]
 }

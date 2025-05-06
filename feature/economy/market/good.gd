@@ -19,7 +19,7 @@ signal good_produced(amount: int)
 
 #region EXPORTS
 # @export_group("Component Links")
-# @export var 
+# @export var
 #
 # @export_group("Details")
 #endregion
@@ -27,19 +27,19 @@ signal good_produced(amount: int)
 
 #region VARS
 var id: String:
-    get:
-        return id
-    set(value):
-        id = value
+	get:
+		return id
+	set(value):
+		id = value
 
 var amount: int:
-    get:
-        return amount
-    set(value):
-        var old_amount = amount
-        amount = value
-        if old_amount != value:
-            emit_signal("amount_changed", value)
+	get:
+		return amount
+	set(value):
+		var old_amount = amount
+		amount = value
+		if old_amount != value:
+			emit_signal("amount_changed", value)
 #endregion
 
 
@@ -61,17 +61,17 @@ var amount: int:
 ## @param consume_amount: Amount to consume
 ## @return: bool indicating if consumption was successful
 func consume(consume_amount: int) -> bool:
-    if amount >= consume_amount:
-        amount -= consume_amount
-        emit_signal("good_consumed", consume_amount)
-        return true
-    return false
+	if amount >= consume_amount:
+		amount -= consume_amount
+		emit_signal("good_consumed", consume_amount)
+		return true
+	return false
 
 ## Produces a specified amount of the good
 ## @param produce_amount: Amount to produce
 func produce(produce_amount: int) -> void:
-    amount += produce_amount
-    emit_signal("good_produced", produce_amount)
+	amount += produce_amount
+	emit_signal("good_produced", produce_amount)
 #endregion
 
 

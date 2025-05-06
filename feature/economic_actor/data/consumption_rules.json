@@ -1,6 +1,8 @@
 {
 	"consumption_rules": [
 		{
+			"id": "grain_basic",
+			"f_name": "Basic Grain Consumption",
 			"good_id": "grain",
 			"min_consumption_amount": 1,
 			"desired_consumption_amount": 2,
@@ -12,6 +14,8 @@
 			"desired_consumption_statement": "[consumer] enjoyed a hearty meal of [good]."
 		},
 		{
+			"id": "water_basic",
+			"f_name": "Basic Water Consumption",
 			"good_id": "water",
 			"min_consumption_amount": 2,
 			"desired_consumption_amount": 4,
