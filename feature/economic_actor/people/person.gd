@@ -4,6 +4,7 @@ class_name Person
 extends Node
 
 const ComponentConsumer = preload("res://feature/economic_actor/components/component_consumer.gd")
+const DataPerson = preload("res://feature/economic_actor/data_class/data_person.gd")
 
 #region SIGNALS
 
@@ -134,5 +135,17 @@ func get_goods_to_buy() -> Dictionary:
 				goods_to_buy[good_id] = amount_to_buy
 
 	return goods_to_buy
+
+static func from_data_person(data_person: DataPerson) -> Person:
+	## Creates a Person node from a DataPerson data class.
+	## Args:
+	##   data_person (DataPerson): The data class instance to convert.
+	## Returns:
+	##   Person: A new Person node with fields mapped from the DataPerson.
+	var job = data_person.needs.get("job", "unemployed") if data_person.needs.has("job") else "unemployed"
+	var starting_goods = {"money": data_person.disposable_income}
+	var person = Person.new(data_person.f_name, job, starting_goods)
+	# Optionally, map other needs or fields as required
+	return person
 
 #endregion

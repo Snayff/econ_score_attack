@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func test_constructor() -> void:
 	var needs = {"hunger": 0.5, "comfort": 0.8}
-	_test_actor = DataActor.new("test_id_1", "northern", "ancestral_1", needs, 0.25, 100.0, "greedy")
+	_test_actor = DataActor.new("test_id_1", "test_name", "northern", "ancestral_1", needs, 0.25, 100.0, "greedy")
 	assert(_test_actor.id == "test_id_1")
 	assert(_test_actor.culture_id == "northern")
 	assert(_test_actor.ancestry_id == "ancestral_1")
@@ -28,4 +28,4 @@ func test_json_loading() -> void:
 		print("No actors loaded (expected if people.json missing)")
 	else:
 		for actor in actors:
-			assert(actor is DataActor) 
+			assert(actor is DataActor)

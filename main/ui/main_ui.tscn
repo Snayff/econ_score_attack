@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cmkfp7f7dii75"]
 
-[ext_resource type="Script" uid="uid://ctykubwk8bs6x" path="res://main/ui/main_ui.gd" id="1_2k3m4"]
+[ext_resource type="Script" uid="uid://bk7em2tv1v35i" path="res://main/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://shared/ui/component/buttons/btn_sidebar_button.gd" id="1_4yfr8"]
 [ext_resource type="Script" uid="uid://bu3cfbf0y87bn" path="res://feature/economy/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
 [ext_resource type="Script" uid="uid://b0verrbxlu5as" path="res://feature/economic_actor/rtl_people_info.gd" id="3_b1beo"]

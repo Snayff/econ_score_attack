@@ -38,7 +38,7 @@ func create_law(law_id: String) -> Law:
 	if not _law_types.has(law_id):
 		return null
 
-	var law_data: Dictionary = Library.get_config("laws").get("laws", []).filter(
+	var law_data: Dictionary = Library.get_laws_data().get("laws", []).filter(
 		func(law): return law.get("id") == law_id
 	).front()
 
@@ -71,7 +71,7 @@ func create_law(law_id: String) -> Law:
 ## @param parameter_name: Name of the parameter
 ## @return: Array of available options or empty array if not found
 func get_parameter_options(law_id: String, parameter_name: String) -> Array:
-	var law_data: Dictionary = Library.get_config("laws").get("laws", []).filter(
+	var law_data: Dictionary = Library.get_laws_data().get("laws", []).filter(
 		func(law): return law.get("id") == law_id
 	).front()
 
@@ -85,7 +85,7 @@ func get_parameter_options(law_id: String, parameter_name: String) -> Array:
 ## @return: Array of law IDs that have the tag
 func get_laws_by_tag(tag: String) -> Array[String]:
 	var matching_laws: Array[String] = []
-	var all_laws = Library.get_config("laws").get("laws", [])
+	var all_laws = Library.get_laws_data().get("laws", [])
 
 	for law_data in all_laws:
 		if law_data.get("tags", []).has(tag):
@@ -99,7 +99,7 @@ func get_laws_by_tag(tag: String) -> Array[String]:
 ## @return: Array of law IDs that match the criteria
 func get_laws_by_category(category: String, subcategory: String = "") -> Array[String]:
 	var matching_laws: Array[String] = []
-	var all_laws = Library.get_config("laws").get("laws", [])
+	var all_laws = Library.get_laws_data().get("laws", [])
 
 	for law_data in all_laws:
 		if law_data.get("category") == category:

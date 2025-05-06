@@ -85,31 +85,12 @@ func _ready() -> void:
 	var total_money = _calculate_total_money()
 	_economic_validator.set_initial_money(total_money)
 
-	_create_people()
-	emit_signal("sim_initialized")
-
-## Creates the initial set of people for the simulation
-## Uses PeopleData to load configuration and create Person objects
-func _create_people() -> void:
-	var people_data: DataPeople = DataPeople.new()
-	var demesne_data: DataDemesne = DataDemesne.new()
-
-	var num_people: int = people_data.get_num_people()
-	var names: Array = people_data.get_names()
-	var job_allocation: Dictionary = demesne_data.get_job_allocation()
-	var starting_goods: Dictionary = people_data.get_starting_goods()
-
-	# put job allocation into an array
-	var jobs: Array[String] = []
-	if job_allocation.size() < num_people:
-		job_allocation["none"] = num_people - job_allocation.size()
-	for key in job_allocation:
-		jobs.append(key)
-
-	# assign job and starting goods
-	for i in range(num_people):
-		var person = Person.new(names[i], jobs[i], starting_goods.duplicate())
+	# Generate people using the Factory and add them to the demesne
+	var people = Factory.generate_starting_people()
+	for person in people:
 		demesne.add_person(person)
+
+	emit_signal("sim_initialized")
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations

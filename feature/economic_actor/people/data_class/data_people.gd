@@ -7,8 +7,8 @@ extends Node
 
 
 #region SIGNALS
-signal config_loaded
-signal err_config_load_failed(error: String)
+signal data_loaded
+signal err_data_load_failed(error: String)
 #endregion
 
 
@@ -24,43 +24,43 @@ signal err_config_load_failed(error: String)
 
 
 #region VARS
-## The loaded configuration data from the JSON file
-var _config: Dictionary = {}
+## The loaded data from the JSON file
+var _data: Dictionary = {}
 
-## The type of configuration this class handles
-const _CONFIG_TYPE: String = "people"
+## The type of data this class handles
+const _DATA_TYPE: String = "people"
 #endregion
 
 
 #region FUNCS
 func _init() -> void:
-	_load_config()
+	_load_data_file()
 
-## Loads the people configuration from the Library
-func _load_config() -> void:
-	_config = Library.get_config(_CONFIG_TYPE)
-	if _config.is_empty():
-		emit_signal("err_config_load_failed", "Failed to load people configuration")
+## Loads the people data from the Library
+func _load_data_file() -> void:
+	_data = Library.get_people_data()
+	if _data.is_empty():
+		emit_signal("err_data_load_failed", "Failed to load people data")
 		return
-	emit_signal("config_loaded")
+	emit_signal("data_loaded")
 
-## Returns the number of people from the configuration
+## Returns the number of people from the data
 ## @return The number of people as an integer
 func get_num_people() -> int:
-	return _config.get("default_num_people", 0)
+	return _data.get("default_num_people", 0)
 
-## Returns the list of people names from the configuration
+## Returns the list of people names from the data
 ## @return An array of people names
 func get_names() -> Array:
-	return _config.get("people_names", [])
+	return _data.get("people_names", [])
 
-## Returns the job allocation dictionary from the configuration
+## Returns the job allocation dictionary from the data
 ## @return A dictionary mapping job types to the number of people assigned
 func get_job_allocation() -> Dictionary:
-	return _config.get("job_allocation", {})
+	return _data.get("job_allocation", {})
 
-## Returns the starting goods configuration
+## Returns the starting goods data
 ## @return A dictionary of starting goods and their quantities
 func get_starting_goods() -> Dictionary:
-	return _config.get("starting_goods", {})
+	return _data.get("starting_goods", {})
 #endregion

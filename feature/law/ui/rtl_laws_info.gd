@@ -99,20 +99,20 @@ func _update_info() -> void:
 		laws_container.add_child(label)
 		return
 
-	var law_config = Library.get_config("laws")
-	if not law_config:
+	var law_data = Library.get_laws_data()
+	if not law_data:
 		var label = Label.new()
-		label.text = "No laws configuration available"
+		label.text = "No laws data available"
 		laws_container.add_child(label)
 		return
 
 	# Group laws by category
 	var laws_by_category = {}
-	for law_data in law_config.get("laws", []):
-		var category = law_data.get("category", "Uncategorized")
+	for law in law_data.get("laws", []):
+		var category = law.get("category", "Uncategorized")
 		if not laws_by_category.has(category):
 			laws_by_category[category] = []
-		laws_by_category[category].append(law_data)
+		laws_by_category[category].append(law)
 
 	# Display laws by category
 	for category in laws_by_category.keys():
@@ -123,12 +123,12 @@ func _update_info() -> void:
 		laws_container.add_child(category_label)
 
 		# Add laws in this category
-		for law_data in laws_by_category[category]:
-			var law_id = law_data.get("id")
+		for law in laws_by_category[category]:
+			var law_id = law.get("id")
 			var is_active = sim.demesne.is_law_active(law_id)
 
 			# Create law panel
-			var law_panel = _create_law_panel(law_data, is_active)
+			var law_panel = _create_law_panel(law, is_active)
 			laws_container.add_child(law_panel)
 
 

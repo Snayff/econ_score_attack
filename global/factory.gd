@@ -7,6 +7,8 @@
 extends Node
 
 #region CONSTANTS
+const Person = preload("res://feature/economic_actor/people/person.gd")
+const DataPerson = preload("res://feature/economic_actor/data_class/data_person.gd")
 #endregion
 
 
@@ -27,18 +29,18 @@ extends Node
 
 
 #region PUBLIC FUNCTIONS
-## Generates the starting people/actors for the game based on people, culture, and ancestry configs.
-## @return Array of DataActor instances
+## Generates the starting people for the game based on people, culture, and ancestry configs.
+## @return Array of Person instances
 static func generate_starting_people() -> Array:
-	var people_config: Dictionary = Library.get_config("people")
-	var cultures: Array = Library.get_config("cultures").get("cultures", [])
-	var ancestries: Array = Library.get_config("ancestries").get("ancestries", [])
-	var num_people: int = people_config.get("starting_num_people", 0)
+	var people_data: Dictionary = Library.get_people_data()
+	var cultures: Array = Library.get_all_cultures_data()
+	var ancestries: Array = Library.get_all_ancestries_data()
+	var num_people: int = people_data.get("starting_num_people", 0)
 	var people: Array = []
 
 	for i in num_people:
-		var culture_id: String = _pick_weighted_random(people_config.get("culture_allocation", {}))
-		var ancestry_id: String = _pick_weighted_random(people_config.get("ancestry_allocation", {}))
+		var culture_id: String = _pick_weighted_random(people_data.get("culture_allocation", {}))
+		var ancestry_id: String = _pick_weighted_random(people_data.get("ancestry_allocation", {}))
 		var culture: Dictionary = _find_by_id(cultures, culture_id)
 		var ancestry: Dictionary = _find_by_id(ancestries, ancestry_id)
 
@@ -56,8 +58,9 @@ static func generate_starting_people() -> Array:
 		var needs: Dictionary = {}
 		var disposable_income: float = 0.0
 
-		var actor = DataActor.new(
+		var data_person = DataPerson.new(
 			IDGenerator.generate_id("ACT"),
+			f_name,
 			culture_id,
 			ancestry_id,
 			needs,
@@ -65,7 +68,8 @@ static func generate_starting_people() -> Array:
 			disposable_income,
 			decision_profile
 		)
-		people.append(actor)
+		var person = Person.from_data_person(data_person)
+		people.append(person)
 	return people
 #endregion
 
@@ -106,4 +110,4 @@ static func _pick_random(array: Array) -> Variant:
 	if array.size() == 0:
 		return ""
 	return array[randi() % array.size()]
-#endregion 
+#endregion

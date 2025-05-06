@@ -79,8 +79,8 @@ var _path_cache: Dictionary = {}
 #region ON READY
 
 func _ready() -> void:
-	# Clear caches when configuration changes
-	Library.config_loaded.connect(_on_config_loaded)
+	# Clear caches when data changes
+	Library.data_loaded.connect(_on_data_loaded)
 
 #endregion
 
@@ -202,9 +202,9 @@ func _get_movement_cost(from: Vector2i, to: Vector2i) -> float:
 	var to_parcel: DataLandParcel = land_grid[to.y][to.x]
 	
 	# Get base movement costs from terrain
-	var land_config: Dictionary = Library.get_config("land")
-	var from_cost: float = land_config.terrain_types[from_parcel.terrain_type].movement_cost
-	var to_cost: float = land_config.terrain_types[to_parcel.terrain_type].movement_cost
+	var land_data: Dictionary = Library.get_data("land")
+	var from_cost: float = land_data.terrain_types[from_parcel.terrain_type].movement_cost
+	var to_cost: float = land_data.terrain_types[to_parcel.terrain_type].movement_cost
 	
 	# Average the costs of both tiles
 	var base_cost: float = (from_cost + to_cost) / 2.0
@@ -212,9 +212,9 @@ func _get_movement_cost(from: Vector2i, to: Vector2i) -> float:
 	# Apply road improvement modifiers
 	var road_multiplier: float = 1.0
 	if from_parcel.improvements.has("road"):
-		road_multiplier *= land_config.improvements.road.movement_cost_multiplier
+		road_multiplier *= land_data.improvements.road.movement_cost_multiplier
 	if to_parcel.improvements.has("road"):
-		road_multiplier *= land_config.improvements.road.movement_cost_multiplier
+		road_multiplier *= land_data.improvements.road.movement_cost_multiplier
 	
 	# Apply diagonal movement multiplier if needed
 	var is_diagonal: bool = from.x != to.x and from.y != to.y
@@ -297,10 +297,10 @@ func _clear_caches() -> void:
 	_path_cache.clear()
 
 
-## Handles config reloading
-## @param config_type: Type of config that was reloaded
-func _on_config_loaded(config_type: String) -> void:
-	if config_type == "land":
+## Handles data reloading
+## @param data_type: Type of data that was reloaded
+func _on_data_loaded(data_type: String) -> void:
+	if data_type == "land":
 		_clear_caches()
 
 #endregion 

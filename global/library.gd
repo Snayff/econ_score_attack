@@ -5,19 +5,19 @@ extends Node
 
 
 #region SIGNALS
-signal config_loaded(config_type: String)
-signal err_config_load_failed(config_type: String, error: String)
+signal data_loaded(data_type: String)
+signal err_data_load_failed(data_type: String, error: String)
 signal cache_cleared
 #endregion
 
 
 #region ON READY
 func _ready() -> void:
-	_load_config("goods")
-	_load_config("consumption_rules")
-	_load_config("laws")
-	_load_config("land")
-	_load_config("land_aspects")
+	_load_data_file("goods")
+	_load_data_file("consumption_rules")
+	_load_data_file("laws")
+	_load_data_file("land")
+	_load_data_file("land_aspects")
 #endregion
 
 
@@ -26,11 +26,11 @@ func _ready() -> void:
 
 
 #region VARS
-## Cache of loaded configuration data by type
-var _config_cache: Dictionary = {}
+## Cache of loaded data by type
+var _data_cache: Dictionary = {}
 
-## Configuration file paths by type
-const _CONFIG_FILES: Dictionary = {
+## Data file paths by type
+const _DATA_FILES: Dictionary = {
 	"people": "res://feature/economic_actor/data/people.json",
 	"demesne": "res://feature/demesne/data/demesne.json",
 	"goods": "res://feature/economy/market/data/goods.json",
@@ -40,8 +40,8 @@ const _CONFIG_FILES: Dictionary = {
 	"land_aspects": "res://feature/world/data/land_aspects.json"
 }
 
-## Default values by config type
-const _DEFAULT_CONFIGS: Dictionary = {
+## Default values by data type
+const _DATA_DEFAULT_VALUES: Dictionary = {
 	"people": {
 		"default_num_people": 3,
 		"people_names": ["sally", "reginald", "estaban"],
@@ -181,39 +181,38 @@ const _DEFAULT_CONFIGS: Dictionary = {
 	}
 }
 
-const _LAND_ASPECTS_FILE: String = "land_aspects.json"
-var _land_aspects: Array = []
+
 #endregion
 
 
 #region PUBLIC FUNCS
-## Gets configuration data for a specific type
-## @param config_type: The type of configuration to load (e.g., "people")
-## @return: Dictionary containing the configuration data
-func get_config(config_type: String) -> Dictionary:
-	if not _CONFIG_FILES.has(config_type):
-		var error_msg: String = "Unknown config type: " + config_type
-		emit_signal("err_config_load_failed", config_type, error_msg)
+## Gets data for a specific type
+## @param data_type: The type of data to load (e.g., "people")
+## @return: Dictionary containing the data
+func _get_data(data_type: String) -> Dictionary:
+	if not _DATA_FILES.has(data_type):
+		var error_msg: String = "Unknown data type: " + data_type
+		emit_signal("err_data_load_failed", data_type, error_msg)
 		push_error(error_msg)
 		return {}
 
-	if not _config_cache.has(config_type):
-		_load_config(config_type)
+	if not _data_cache.has(data_type):
+		_load_data_file(data_type)
 
-	return _config_cache[config_type]
+	return _data_cache[data_type]
 
-## Loads configuration data from file
-## @param config_type: The type of configuration to load
-func _load_config(config_type: String) -> void:
-	var file_path: String = _CONFIG_FILES[config_type]
+## Loads data from file
+## @param data_type: The type of data to load
+func _load_data_file(data_type: String) -> void:
+	var file_path: String = _DATA_FILES[data_type]
 	var full_path: String = file_path
 
 	var file: FileAccess = FileAccess.open(full_path, FileAccess.READ)
 	if not file:
 		var error_msg: String = "Failed to open file: " + full_path
-		emit_signal("err_config_load_failed", config_type, error_msg)
+		emit_signal("err_data_load_failed", data_type, error_msg)
 		push_error(error_msg)
-		_set_default_config(config_type)
+		_set_default_data(data_type)
 		return
 
 	var json: JSON = JSON.new()
@@ -222,25 +221,25 @@ func _load_config(config_type: String) -> void:
 
 	if parse_result != OK:
 		var error_msg: String = "Failed to parse JSON file: " + full_path
-		emit_signal("err_config_load_failed", config_type, error_msg)
+		emit_signal("err_data_load_failed", data_type, error_msg)
 		push_error(error_msg)
-		_set_default_config(config_type)
+		_set_default_data(data_type)
 		return
 
-	_config_cache[config_type] = json.get_data()
-	emit_signal("config_loaded", config_type)
+	_data_cache[data_type] = json.get_data()
+	emit_signal("data_loaded", data_type)
 
-## Sets default configuration values for a type
-## @param config_type: The type of configuration to set defaults for
-func _set_default_config(config_type: String) -> void:
-	if _DEFAULT_CONFIGS.has(config_type):
-		_config_cache[config_type] = _DEFAULT_CONFIGS[config_type].duplicate(true)
+## Sets default data values for a type
+## @param data_type: The type of data to set defaults for
+func _set_default_data(data_type: String) -> void:
+	if _DATA_DEFAULT_VALUES.has(data_type):
+		_data_cache[data_type] = _DATA_DEFAULT_VALUES[data_type].duplicate(true)
 	else:
-		_config_cache[config_type] = {}
+		_data_cache[data_type] = {}
 
-## Clears the configuration cache
+## Clears the data cache
 func clear_cache() -> void:
-	_config_cache.clear()
+	_data_cache.clear()
 	emit_signal("cache_cleared")
 
 ## Get a good's icon
@@ -274,7 +273,7 @@ func get_good_category(good_id: String) -> String:
 ## @param good_id: ID of the good to get rules for
 ## @return: Dictionary containing the consumption rules or empty dict if not found
 func get_consumption_rule(good_id: String) -> Dictionary:
-	var rules = get_config("consumption_rules").get("consumption_rules", [])
+	var rules = _get_data("consumption_rules").get("consumption_rules", [])
 	for rule in rules:
 		if rule.get("good_id") == good_id:
 			return rule
@@ -283,10 +282,10 @@ func get_consumption_rule(good_id: String) -> Dictionary:
 ## Get all consumption rules
 ## @return: Array of all consumption rules
 func get_all_consumption_rules() -> Array:
-	return get_config("consumption_rules").get("consumption_rules", [])
+	return _get_data("consumption_rules").get("consumption_rules", [])
 
 func get_land_aspects() -> Array:
-	var data = _config_cache.get("land_aspects", [])
+	var data = _data_cache.get("land_aspects", [])
 	if typeof(data) == TYPE_DICTIONARY and data.has("land_aspects"):
 		return data["land_aspects"]
 	elif typeof(data) == TYPE_ARRAY:
@@ -317,6 +316,30 @@ func get_aspect_data() -> Array:
 ## @return Dictionary containing the aspect data, or empty if not found
 func get_aspect_by_id(aspect_id: String) -> Dictionary:
 	return get_land_aspect_by_id(aspect_id)
+
+## Gets demesne data
+## @return Dictionary containing the demesne data
+func get_demesne_data() -> Dictionary:
+	return _get_data("demesne")
+
+## Gets people data
+## @return Dictionary containing the people data
+func get_people_data() -> Dictionary:
+	return _get_data("people")
+
+## Gets laws data
+## @return Dictionary containing the laws data
+func get_laws_data() -> Dictionary:
+	return _get_data("laws")
+
+## Gets all ancestries data
+## @return Array of all ancestries
+func get_all_ancestries_data() -> Array:
+	var config: Dictionary = _get_data("ancestries")
+	if not config.has("ancestries"):
+		push_error("Ancestries config missing 'ancestries' key.")
+		return []
+	return config["ancestries"]
 #endregion
 
 #region FACTORY METHODS
@@ -328,7 +351,7 @@ func get_all_goods_data() -> Array:
 	if _goods_data_cache.size() > 0:
 		return _goods_data_cache
 	var goods: Array = []
-	var config: Dictionary = get_config("goods")
+	var config: Dictionary = _get_data("goods")
 	if not config.has("goods"):
 		push_error("Goods config missing 'goods' key.")
 		return goods
@@ -350,7 +373,7 @@ func get_all_goods_data() -> Array:
 ## @return Array[DataCulture]
 func get_all_cultures_data() -> Array:
 	var cultures: Array = []
-	var config: Dictionary = get_config("cultures")
+	var config: Dictionary = _get_data("cultures")
 	if not config.has("cultures"):
 		push_error("Culture config missing 'cultures' key.")
 		return cultures
