@@ -19,7 +19,7 @@ extends Node
 
 
 #region VARS
-var _test_actor: DataActor
+var _test_actor: DataPerson
 var _test_goods: Array
 var _test_cultures: Dictionary
 var _test_ancestries: Dictionary
@@ -36,7 +36,7 @@ func _ready() -> void:
 
 func test_utility_basic() -> void:
 	# Actor with hunger need, one good
-	_test_actor = DataActor.new("1", "name", "northern", "ancestral_1", {"food": 1.0}, 0.2, 100.0, "greedy")
+	_test_actor = DataPerson.new("1", "name", "northern", "ancestral_1", {"food": 1.0}, 0.2, 100.0, "greedy")
 	var good = DataGood.new("food", "Food", 1.0, "basic", "")
 	_test_goods = [good]
 	_test_cultures = {"northern": DataCulture.new("northern", {"food": 1.5}, 0.2, "hoard")}
@@ -48,7 +48,7 @@ func test_utility_basic() -> void:
 
 func test_utility_culture_influence() -> void:
 	# Actor with different culture, higher preference for entertainment
-	_test_actor = DataActor.new("2", "name", "southern", "ancestral_2", {"entertainment": 1.0}, 0.2, 100.0, "greedy")
+	_test_actor = DataPerson.new("2", "name", "southern", "ancestral_2", {"entertainment": 1.0}, 0.2, 100.0, "greedy")
 	var good = DataGood.new("entertainment", "Entertainment", 1.0, "luxury", "")
 	_test_goods = [good]
 	_test_cultures = {"southern": DataCulture.new("southern", {"entertainment": 2.0}, 0.2, "share")}
@@ -59,7 +59,7 @@ func test_utility_culture_influence() -> void:
 
 func test_utility_edge_cases() -> void:
 	# No affordable goods
-	_test_actor = DataActor.new("3", "name", "northern", "ancestral_1", {"food": 1.0}, 0.2, 5.0, "greedy")
+	_test_actor = DataPerson.new("3", "name", "northern", "ancestral_1", {"food": 1.0}, 0.2, 5.0, "greedy")
 	var good = DataGood.new("food", "Food", 1.0, "basic", "")
 	_test_goods = [good]
 	_test_cultures = {"northern": DataCulture.new("northern", {"food": 1.5}, 0.2, "hoard")}
@@ -68,13 +68,13 @@ func test_utility_edge_cases() -> void:
 	var best_good = GoodUtilityComponent.select_best_affordable_good(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(best_good == "")
 	# Zero needs
-	_test_actor = DataActor.new("4", "name", "northern", "ancestral_1", {"food": 0.0}, 0.2, 100.0, "greedy")
+	_test_actor = DataPerson.new("4", "name", "northern", "ancestral_1", {"food": 0.0}, 0.2, 100.0, "greedy")
 	var util_dict = GoodUtilityComponent.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(util_dict["food"] <= 0.05)
 
 func test_select_best_affordable_good() -> void:
 	# Multiple goods, select highest utility affordable
-	_test_actor = DataActor.new("5", "name", "northern", "ancestral_1", {"food": 1.0, "luxury": 0.5}, 0.2, 20.0, "greedy")
+	_test_actor = DataPerson.new("5", "name", "northern", "ancestral_1", {"food": 1.0, "luxury": 0.5}, 0.2, 20.0, "greedy")
 	var good1 = DataGood.new("food", "Food", 1.0, "basic", "")
 	var good2 = DataGood.new("luxury", "Luxury", 1.0, "luxury", "")
 	_test_goods = [good1, good2]

@@ -15,7 +15,7 @@ const GOOD_UTILITY_DEBUG_PANEL_NODE_NAME: String = "GoodUtilityDebugPanel"
 #region ON READY
 func _ready() -> void:
 	# Initialise the world grid before anything else
-	World.initialise_from_config(Library.get_config("land"))
+	World.initialise_from_config(Library.get_land_data())
 	# Set up SurveyManager's parcel accessor to decouple it from the World global
 	SurveyManager.set_parcel_accessor(World.get_parcel)
 	# Set up AspectManager's aspect loader to decouple it from the Library global

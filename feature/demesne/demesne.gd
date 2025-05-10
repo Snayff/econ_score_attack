@@ -78,7 +78,7 @@ func _initialise_stockpile() -> void:
 
 ## Initialises the land grid with default size and terrain
 func _initialise_land_grid() -> void:
-	var land_config = Library.get_config("land")
+	var land_config = Library._get_data("land")
 	if not land_config:
 		Logger.error("Failed to load land configuration", "Demesne")
 		return

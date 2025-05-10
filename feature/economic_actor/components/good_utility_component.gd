@@ -23,7 +23,7 @@ extends Node
 #region PUBLIC FUNCTIONS
 ## Calculates the utility value for each good for the given actor.
 ## Args:
-## 	actor (DataActor): The actor evaluating goods.
+## 	actor (DataPerson): The actor evaluating goods.
 ## 	goods (Array): Array of DataGood.
 ##	cultures (Dictionary): culture_id -> DataCulture.
 ##	ancestries (Dictionary): ancestry_id -> ancestry Dictionary.
@@ -31,7 +31,7 @@ extends Node
 ## Returns:
 ##	Dictionary: good_id -> utility (float).
 static func calculate_good_utility(
-		actor: DataActor,
+		actor: DataPerson,
 		goods: Array,
 		cultures: Dictionary,
 		ancestries: Dictionary,
@@ -61,7 +61,7 @@ static func calculate_good_utility(
 
 ##	Selects the best affordable good for the actor based on calculated utility.
 ##	Args:
-##		actor (DataActor): The actor evaluating goods.
+##		actor (DataPerson): The actor evaluating goods.
 ##		goods (Array): Array of DataGood.
 ##		cultures (Dictionary): culture_id -> DataCulture.
 ##		ancestries (Dictionary): ancestry_id -> DataAncestry.
@@ -69,7 +69,7 @@ static func calculate_good_utility(
 ##	Returns:
 ##		String: good_id of the best affordable good, or "" if none.
 static func select_best_affordable_good(
-		actor: DataActor,
+		actor: DataPerson,
 		goods: Array,
 		cultures: Dictionary,
 		ancestries: Dictionary,

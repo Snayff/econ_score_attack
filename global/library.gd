@@ -26,12 +26,14 @@ func _ready() -> void:
 
 
 #region VARS
-## Cache of loaded data by type
-var _data_cache: Dictionary = {}
+## Cache of loaded data by type. Each data file is a "book".
+var _books: Dictionary = {}
 
 ## Data file paths by type
 const _DATA_FILES: Dictionary = {
 	"people": "res://feature/economic_actor/data/people.json",
+	"cultures": "res://feature/economic_actor/data/cultures.json",
+	"ancestries": "res://feature/economic_actor/data/ancestries.json",
 	"demesne": "res://feature/demesne/data/demesne.json",
 	"goods": "res://feature/economy/market/data/goods.json",
 	"consumption_rules": "res://feature/economic_actor/data/consumption_rules.json",
@@ -196,10 +198,10 @@ func _get_data(data_type: String) -> Dictionary:
 		push_error(error_msg)
 		return {}
 
-	if not _data_cache.has(data_type):
+	if not _books.has(data_type):
 		_load_data_file(data_type)
 
-	return _data_cache[data_type]
+	return _books[data_type]
 
 ## Loads data from file
 ## @param data_type: The type of data to load
@@ -226,20 +228,20 @@ func _load_data_file(data_type: String) -> void:
 		_set_default_data(data_type)
 		return
 
-	_data_cache[data_type] = json.get_data()
+	_books[data_type] = json.get_data()
 	emit_signal("data_loaded", data_type)
 
 ## Sets default data values for a type
 ## @param data_type: The type of data to set defaults for
 func _set_default_data(data_type: String) -> void:
 	if _DATA_DEFAULT_VALUES.has(data_type):
-		_data_cache[data_type] = _DATA_DEFAULT_VALUES[data_type].duplicate(true)
+		_books[data_type] = _DATA_DEFAULT_VALUES[data_type].duplicate(true)
 	else:
-		_data_cache[data_type] = {}
+		_books[data_type] = {}
 
 ## Clears the data cache
 func clear_cache() -> void:
-	_data_cache.clear()
+	_books.clear()
 	emit_signal("cache_cleared")
 
 ## Get a good's icon
@@ -285,7 +287,7 @@ func get_all_consumption_rules() -> Array:
 	return _get_data("consumption_rules").get("consumption_rules", [])
 
 func get_land_aspects() -> Array:
-	var data = _data_cache.get("land_aspects", [])
+	var data = _books.get("land_aspects", [])
 	if typeof(data) == TYPE_DICTIONARY and data.has("land_aspects"):
 		return data["land_aspects"]
 	elif typeof(data) == TYPE_ARRAY:
@@ -335,11 +337,29 @@ func get_laws_data() -> Dictionary:
 ## Gets all ancestries data
 ## @return Array of all ancestries
 func get_all_ancestries_data() -> Array:
+	var ancestries: Array = []
 	var config: Dictionary = _get_data("ancestries")
 	if not config.has("ancestries"):
 		push_error("Ancestries config missing 'ancestries' key.")
-		return []
-	return config["ancestries"]
+		return ancestries
+	for entry in config["ancestries"]:
+		if not entry.has("id") or not entry.has("possible_names") or not entry.has("savings_rate_range") or not entry.has("decision_profiles") or not entry.has("shock_response") or not entry.has("consumption_rule_ids"):
+			push_error("Invalid ancestry entry: " + str(entry))
+			continue
+		ancestries.append(DataAncestry.new(
+			entry["id"],
+			entry["possible_names"],
+			entry["savings_rate_range"],
+			entry["decision_profiles"],
+			entry["shock_response"],
+			entry["consumption_rule_ids"]
+		))
+	return ancestries
+
+## Gets the land config data
+## @return Dictionary containing the land config
+func get_land_data() -> Dictionary:
+	return _get_data("land")
 #endregion
 
 #region FACTORY METHODS
@@ -378,14 +398,16 @@ func get_all_cultures_data() -> Array:
 		push_error("Culture config missing 'cultures' key.")
 		return cultures
 	for entry in config["cultures"]:
-		if not entry.has("id") or not entry.has("base_preferences") or not entry.has("savings_rate") or not entry.has("shock_response"):
+		if not entry.has("id") or not entry.has("possible_names") or not entry.has("savings_rate_range") or not entry.has("decision_profiles") or not entry.has("shock_response") or not entry.has("consumption_rule_ids"):
 			push_error("Invalid culture entry: " + str(entry))
 			continue
 		cultures.append(DataCulture.new(
 			entry["id"],
-			entry["base_preferences"],
-			entry["savings_rate"],
-			entry["shock_response"]
+			entry["possible_names"],
+			entry["savings_rate_range"],
+			entry["decision_profiles"],
+			entry["shock_response"],
+			entry["consumption_rule_ids"]
 		))
 	return cultures
 #endregion

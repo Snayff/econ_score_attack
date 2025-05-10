@@ -25,10 +25,14 @@ func _process_consumption_statement(statement: String, good_id: String, amount: 
 	processed = processed.replace(TOKEN_AMOUNT, str(amount))
 	return processed
 
-func consume() -> bool:
+func consume() -> Dictionary:
 	for rule in Library.get_all_consumption_rules():
 		var good_id = rule.good_id
 		var icon = Library.get_good_icon(good_id)
+
+		# if we dont have any of good, return early with failure for this rule
+		if not stockpile.has(good_id):
+			continue
 
 		# Check for desired consumption
 		if stockpile[good_id] > rule.min_held_before_desired_consumption:
@@ -37,7 +41,7 @@ func consume() -> bool:
 				stockpile[good_id] -= rule.desired_consumption_amount
 				assert(stockpile[good_id] >= 0, "Stockpile for %s went negative after desired consumption!" % good_id)
 				Logger.log_resource_change(good_id, -rule.desired_consumption_amount, stockpile[good_id], "ComponentConsumer")
-				return true
+				return {"success": true, "rule": rule, "type": "desired"}
 			else:
 				continue # Not enough for desired, check required
 
@@ -48,12 +52,14 @@ func consume() -> bool:
 				stockpile[good_id] -= rule.min_consumption_amount
 				assert(stockpile[good_id] >= 0, "Stockpile for %s went negative after required consumption!" % good_id)
 				Logger.log_resource_change(good_id, -rule.min_consumption_amount, stockpile[good_id], "ComponentConsumer")
-				return true
+				return {"success": true, "rule": rule, "type": "required"}
 			else:
 				continue # Not enough for required, fail
 
-		# handle lack of good
+		# handle lack of good for this rule
 		else:
-			return false
-	return false
-#endregion 
+			# Not enough for even minimum consumption, return failure for this rule
+			return {"success": false, "rule": rule, "type": "failure"}
+	# If no rules matched at all
+	return {"success": false, "rule": null, "type": "none"}
+#endregion

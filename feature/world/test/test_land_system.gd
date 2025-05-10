@@ -66,7 +66,7 @@ func test_land_parcel_creation() -> void:
 
 func test_demesne_grid_initialization() -> void:
 	var dimensions = _demesne.get_grid_dimensions()
-	var land_config = Library.get_config("land")
+	var land_config: Dictionary = Library.get_config("land")
 	var default_size = land_config.get("grid", {}).get("default_size", {"width": 10, "height": 10})
 
 	assert_eq(
@@ -180,7 +180,7 @@ func test_resource_initialization() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
 	_resource_generator.initialise_resources(parcel)
 
-	var land_config = Library.get_config("land")
+	var land_config: Dictionary = Library.get_config("land")
 	var terrain_type = land_config.terrain_types[parcel.terrain_type]
 
 	for resource_id in terrain_type.resource_modifiers:
@@ -303,7 +303,7 @@ func test_movement_cost_calculation() -> void:
 	var end := Vector2i(1, 0)
 	var cost := _demesne.get_movement_cost(start, end)
 
-	var land_config := Library.get_config("land")
+	var land_config: Dictionary = Library.get_config("land")
 	var expected_cost: float = land_config.terrain_types["plains"].movement_cost
 
 	assert_eq(
@@ -323,7 +323,7 @@ func test_pathfinding_with_road() -> void:
 	parcel2.improvements["road"] = 1
 
 	var cost := _demesne.get_movement_cost(start, end)
-	var land_config := Library.get_config("land")
+	var land_config: Dictionary = Library.get_config("land")
 	var expected_cost: float = land_config.terrain_types["plains"].movement_cost * \
 							  land_config.improvements.road.movement_cost_multiplier * \
 							  land_config.improvements.road.movement_cost_multiplier

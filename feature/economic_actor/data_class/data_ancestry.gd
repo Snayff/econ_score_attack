@@ -1,8 +1,8 @@
-## DataCulture
-## Represents a culture, including possible names, savings rate range, decision profiles, shock response, and consumption rules for economic actors.
+## DataAncestry
+## Represents an ancestry, including possible names, savings rate range, decision profiles, shock response, and consumption rules for economic actors.
 ## Example usage:
-## var culture = DataCulture.new("agrarian", ["sally", "bob"], [0.05, 0.15], ["risk_averse"], "hoard", ["grain_basic"])
-class_name DataCulture
+## var ancestry = DataAncestry.new("northern", ["alfred", "edith"], [0.03, 0.12], ["risk_taker"], "adapt", ["meat_basic"])
+class_name DataAncestry
 extends Resource
 
 
@@ -33,10 +33,10 @@ var consumption_rule_ids: Array
 
 
 #region PUBLIC FUNCTIONS
-## Constructs a new DataCulture instance.
-## @param id_: Unique string ID for the culture.
-## @param possible_names_: Array of possible names for this culture.
-## @param savings_rate_range_: Array [min, max] savings rate for this culture.
+## Constructs a new DataAncestry instance.
+## @param id_: Unique string ID for the ancestry.
+## @param possible_names_: Array of possible names for this ancestry.
+## @param savings_rate_range_: Array [min, max] savings rate for this ancestry.
 ## @param decision_profiles_: Array of decision profile strings.
 ## @param shock_response_: String describing response to economic shocks.
 ## @param consumption_rule_ids_: Array of consumption rule IDs.

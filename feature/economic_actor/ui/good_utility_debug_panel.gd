@@ -32,7 +32,7 @@ var _goods: Array = []
 var _cultures: Dictionary = {}
 var _ancestries: Dictionary = {}
 var _prices: Dictionary = {}
-var _selected_actor: DataActor = null
+var _selected_actor: DataPerson = null
 #endregion
 
 

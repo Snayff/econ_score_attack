@@ -43,8 +43,8 @@ func _ready() -> void:
 ## Initialises aspects for a land parcel based on terrain type
 ## @param parcel: The land parcel to initialise aspects for
 func initialise_resources(parcel: DataLandParcel) -> void:
-	var land_config = Library.get_config("land")
-	var terrain_type = land_config.terrain_types[parcel.terrain_type]
+	var land_data = Library.get_land_data()
+	var terrain_type = land_data.terrain_types[parcel.terrain_type]
 	var resource_modifiers = terrain_type.resource_modifiers
 
 	# Load land aspects from Library
@@ -111,8 +111,8 @@ func update(parcel: DataLandParcel, delta: float) -> void:
 ## @param aspect_id: The aspect being checked
 ## @return: Float between 0 and 1 representing discovery chance
 func _calculate_discovery_chance(parcel: DataLandParcel, aspect_id: String) -> float:
-	var land_config = Library.get_config("land")
-	var terrain_type = land_config.terrain_types[parcel.terrain_type]
+	var land_data = Library.get_land_data()
+	var terrain_type = land_data.terrain_types[parcel.terrain_type]
 
 	# Get the aspect definition
 	var aspect_def = Library.get_land_aspect_by_id(aspect_id)

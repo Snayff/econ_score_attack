@@ -128,7 +128,7 @@ func test_path_with_road_improvement() -> void:
 	var cost := _pathfinding.get_movement_cost(start, end)
 
 	# Road should reduce movement cost
-	var land_config := Library.get_config("land")
+	var land_config: Dictionary = Library.get_config("land")
 	var expected_cost: float = land_config.terrain_types["plains"].movement_cost * \
 							  land_config.improvements.road.movement_cost_multiplier * \
 							  land_config.improvements.road.movement_cost_multiplier

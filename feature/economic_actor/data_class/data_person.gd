@@ -45,13 +45,13 @@ var decision_profile: String
 ## @param disposable_income_: Money available for spending.
 ## @param decision_profile_: String describing decision logic profile.
 func _init(
-	id_: String, 
-	f_name_: String, 
-	culture_id_: String, 
-	ancestry_id_: String, 
-	needs_: Dictionary, 
-	savings_rate_: float, 
-	disposable_income_: float, 
+	id_: String,
+	f_name_: String,
+	culture_id_: String,
+	ancestry_id_: String,
+	needs_: Dictionary,
+	savings_rate_: float,
+	disposable_income_: float,
 	decision_profile_: String
 	) -> void:
 	id = id_
@@ -66,4 +66,4 @@ func _init(
 
 
 #region PRIVATE FUNCTIONS
-#endregion 
+#endregion

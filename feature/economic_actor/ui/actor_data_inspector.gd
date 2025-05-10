@@ -1,5 +1,5 @@
 ## ActorDataInspector
-## Minimal debug UI for inspecting loaded DataActor and DataCulture data.
+## Minimal debug UI for inspecting loaded DataPerson and DataCulture data.
 ## Example usage:
 ## Add this Control node to a debug UI scene to view loaded actors and their preferences.
 # Requires Factory to be set as an autoload (singleton)

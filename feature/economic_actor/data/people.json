@@ -19,7 +19,7 @@
 		"wood": 0
 	},
 	"culture_allocation": {
-		"northern": 0.5,
+		"agrarian": 0.5,
 		"merchant": 0.5
 	},
 	"ancestry_allocation": {

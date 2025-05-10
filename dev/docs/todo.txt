@@ -38,7 +38,6 @@ DEBUGGING
 - Continue - https://thomassimon.dev/ps/4 - Simulation 13.
 - move good pricing to market class, to manage current price and price fluctuations, as per res://dev/docs/designs/market_system_design.md. 
 - ancestry system. as per res://dev/docs/designs/ancestry_system_design.md.
-- decision making / utility system. as per res://dev/docs/designs/economic_actor_decision_system_phased_implementation.md.
 - world generation. it was done on auto by ai, need to define actual rules as intended. 
 - faith system person can believe in 1 or more gods. This influences their preferences, and therefore the utility of goods and actions. At demesne level, the amount of faith in a god results in that god blessing the demesne with positive modifiers. e.g. increased producitivty in some job or other. 
 	! Need a way to determine the level of faith - why does a person believe in any given god?
@@ -59,6 +58,7 @@ DEBUGGING
 - add category to goods. Most things just need something from the category, and will use the cheapest by default. Some things need specific goods. 
 - notification system use toasts. 
 - split land_config.json into component parts (world def, improvmeents, terrain)
+- need to build some sort of validation to ensure that references in one data file are appropriate in another. e.g. if referring to a good, then that good should be in goods.json
  
 
 ## DEV
