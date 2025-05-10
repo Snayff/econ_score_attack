@@ -50,6 +50,7 @@ func _ready() -> void:
 #region PUBLIC FUNCTIONS
 
 ## Updates the displayed information
+## Only living people are shown. If no living people, displays a message.
 func update_info() -> void:
 	# Clear existing content
 	for child in people_container.get_children():
@@ -67,6 +68,16 @@ func update_info() -> void:
 		_add_error_message("No simulation data available (demesne is null)")
 		return
 
+	# Filter for living people only
+	var living_people = []
+	for person in sim.demesne.get_people():
+		if person.is_alive:
+			living_people.append(person)
+
+	if living_people.is_empty():
+		_add_error_message("No living people in the demesne.")
+		return
+
 	# Create the table header
 	var header = _create_person_row(
 		["Name", "Job", "Health", "Happiness", "Stockpile"],
@@ -75,7 +86,7 @@ func update_info() -> void:
 	header_container.add_child(header)
 
 	# Add person rows
-	for person in sim.demesne.get_people():
+	for person in living_people:
 		var row = _create_person_panel(person)
 		people_container.add_child(row)
 
