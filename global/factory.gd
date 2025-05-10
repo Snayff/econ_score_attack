@@ -38,6 +38,7 @@ static func generate_starting_people() -> Array:
 	var cultures: Array = Library.get_all_cultures_data()
 	var ancestries: Array = Library.get_all_ancestries_data()
 	var num_people: int = people_data.get("starting_num_people", 0)
+	var starting_goods: Dictionary = people_data.get("starting_goods", {})
 	var people: Array = []
 
 	for i in num_people:
@@ -70,7 +71,7 @@ static func generate_starting_people() -> Array:
 			disposable_income,
 			decision_profile
 		)
-		var person = Person.from_data_person(data_person)
+		var person = Person.from_data_person(data_person, starting_goods)
 		people.append(person)
 	return people
 #endregion

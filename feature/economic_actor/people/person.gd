@@ -134,15 +134,16 @@ func get_goods_to_buy() -> Dictionary:
 
 	return goods_to_buy
 
-static func from_data_person(data_person: DataPerson) -> Person:
+static func from_data_person(data_person: DataPerson, starting_goods: Dictionary = {}) -> Person:
 	## Creates a Person node from a DataPerson data class.
 	## Args:
 	##   data_person (DataPerson): The data class instance to convert.
+	##   starting_goods (Dictionary): The starting goods for the person.
 	## Returns:
 	##   Person: A new Person node with fields mapped from the DataPerson.
 	var job = data_person.needs.get("job", "unemployed") if data_person.needs.has("job") else "unemployed"
-	var starting_goods = {"money": data_person.disposable_income}
-	var person = Person.new(data_person.f_name, job, starting_goods)
+	var goods_dict = starting_goods.duplicate() if starting_goods.size() > 0 else {"money": data_person.disposable_income}
+	var person = Person.new(data_person.f_name, job, goods_dict)
 	# Optionally, map other needs or fields as required
 	return person
 
