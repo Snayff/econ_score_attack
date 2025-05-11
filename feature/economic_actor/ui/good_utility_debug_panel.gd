@@ -1,6 +1,6 @@
 ## good_utility_debug_panel.gd
-## Stand-alone debug UI for inspecting good utility calculations for actors.
-## Requires Factory to be set as an autoload (singleton)
+## debug UI for inspecting good utility calculations for actors.
+
 extends Control
 
 #region CONSTANTS

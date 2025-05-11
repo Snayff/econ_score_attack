@@ -2,7 +2,7 @@
 ## ViewPeople2: Updated people view using ABCView layout.
 ## Displays information about people in the simulation using the standardised UI layout.
 ## Usage: Add this scene to a parent UI node. Populates the centre panel of ABCView with people info.
-## Last Updated: 2025-05-11
+## Last Updated: 2024-06-10
 ##
 extends ABCView
 
@@ -56,11 +56,17 @@ func update_info() -> void:
 
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
-	# Add debug button to left sidebar
-	var btn_debug = Button.new()
-	btn_debug.text = "Debug Actor Data"
-	btn_debug.pressed.connect(_on_debug_actor_data_pressed)
-	left_sidebar.add_child(btn_debug)
+	# Add Population button to top bar
+	var btn_population = Button.new()
+	btn_population.text = "Population"
+	btn_population.pressed.connect(_on_population_pressed)
+	top_bar.add_child(btn_population)
+
+	# Add Decision Inspector button to top bar
+	var btn_decision_inspector = Button.new()
+	btn_decision_inspector.text = "Decision Inspector"
+	btn_decision_inspector.pressed.connect(_on_debug_actor_data_pressed)
+	top_bar.add_child(btn_decision_inspector)
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
@@ -154,5 +160,9 @@ func _on_reference_registered(key: int, value: Object) -> void:
 ## Sets the sim reference and updates info
 func _set_sim(sim_ref: Sim) -> void:
 	_sim = sim_ref
+	update_info()
+
+## Handles Population button press to refresh the people list.
+func _on_population_pressed() -> void:
 	update_info()
 #endregion
