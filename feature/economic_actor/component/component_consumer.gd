@@ -28,7 +28,6 @@ func _process_consumption_statement(statement: String, good_id: String, amount: 
 func consume() -> Dictionary:
 	for rule in Library.get_all_consumption_rules():
 		var good_id = rule.good_id
-		var icon = Library.get_good_icon(good_id)
 
 		# if we dont have any of good, return early with failure for this rule
 		if not stockpile.has(good_id):
@@ -37,7 +36,6 @@ func consume() -> Dictionary:
 		# Check for desired consumption
 		if stockpile[good_id] > rule.min_held_before_desired_consumption:
 			if stockpile[good_id] >= rule.desired_consumption_amount:
-				var old_amount = stockpile[good_id]
 				stockpile[good_id] -= rule.desired_consumption_amount
 				assert(stockpile[good_id] >= 0, "Stockpile for %s went negative after desired consumption!" % good_id)
 				Logger.log_resource_change(good_id, -rule.desired_consumption_amount, stockpile[good_id], "ComponentConsumer")
@@ -48,7 +46,6 @@ func consume() -> Dictionary:
 		# Check for required consumption
 		elif stockpile[good_id] >= rule.min_consumption_amount:
 			if stockpile[good_id] >= rule.min_consumption_amount:
-				var old_amount = stockpile[good_id]
 				stockpile[good_id] -= rule.min_consumption_amount
 				assert(stockpile[good_id] >= 0, "Stockpile for %s went negative after required consumption!" % good_id)
 				Logger.log_resource_change(good_id, -rule.min_consumption_amount, stockpile[good_id], "ComponentConsumer")

@@ -94,9 +94,6 @@ var _land_grid: Array[Array]
 ## Currently active disasters
 var _active_disasters: Array[Dictionary] = []
 
-## Cache of affected coordinates for quick lookup
-var _affected_coords: Dictionary = {}
-
 #endregion
 
 

@@ -1,0 +1,42 @@
+; TEMPLATE ONLY: This scene provides the standardised view layout. Do not use directly. Instance and amend for your specific view. See abc_view.gd for details.
+
+[gd_scene format=3]
+; This scene is a template for standardised view layout. Do not use directly. Instance and amend for your specific view.
+
+[ext_resource path="res://shared/ui/component/panels/abc_view.gd" type="Script" id=1]
+
+[node name="TemplateView" type="Control"]
+script = ExtResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+
+[node name="LeftSidebar" type="VBoxContainer" parent="HBoxContainer"]
+anchor_right = 0.0
+anchor_bottom = 1.0
+size_flags_horizontal = 1 # Fill
+size_flags_vertical = 3 # Expand + Fill
+
+[node name="MainArea" type="VBoxContainer" parent="HBoxContainer"]
+anchor_right = 0.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3 # Expand + Fill
+size_flags_vertical = 3 # Expand + Fill
+
+[node name="TopBar" type="HBoxContainer" parent="HBoxContainer/MainArea"]
+anchor_right = 1.0
+anchor_bottom = 0.0
+size_flags_horizontal = 3 # Expand + Fill
+size_flags_vertical = 1 # Fill
+
+[node name="CentrePanel" type="PanelContainer" parent="HBoxContainer/MainArea"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3 # Expand + Fill
+size_flags_vertical = 3 # Expand + Fill
+
+[node name="RightSidebar" type="VBoxContainer" parent="HBoxContainer"]
+anchor_right = 0.0
+anchor_bottom = 1.0
+size_flags_horizontal = 1 # Fill
+size_flags_vertical = 3 # Expand + Fill
+visible = true 

@@ -151,9 +151,9 @@ static func from_data_person(data_person: DataPerson, starting_goods: Dictionary
 	##   starting_goods (Dictionary): The starting goods for the person.
 	## Returns:
 	##   Person: A new Person node with fields mapped from the DataPerson.
-	var job = data_person.needs.get("job", "unemployed") if data_person.needs.has("job") else "unemployed"
+	var job_ = data_person.needs.get("job", "unemployed") if data_person.needs.has("job") else "unemployed"
 	var goods_dict = starting_goods.duplicate() if starting_goods.size() > 0 else {"money": data_person.disposable_income}
-	var person = Person.new(data_person.f_name, job, goods_dict)
+	var person = Person.new(data_person.f_name, job_, goods_dict)
 	# Optionally, map other needs or fields as required
 	return person
 

@@ -25,10 +25,10 @@ extends RefCounted
 ## @param location: Vector2i - The grid location of the tile.
 ## @param is_surveyed: bool - Whether the tile has been surveyed.
 ## @param aspects: Array - List of discovered aspect data dictionaries (e.g., [{"f_name": "Fertile Soil", "description": "Rich in nutrients", "amount": 5, "is_finite": true}]).
-func _init(location: Vector2i, is_surveyed: bool, aspects: Array) -> void:
-	self.location = location
-	self.is_surveyed = is_surveyed
-	self.aspects = aspects
+func _init(location_: Vector2i, is_surveyed_: bool, aspects_: Array) -> void:
+	self.location = location_
+	self.is_surveyed = is_surveyed_
+	self.aspects = aspects_
 
 #endregion
 

@@ -10,8 +10,6 @@
 class_name TestComponentConsumer
 extends ABCTest
 
-const ComponentConsumer = preload("res://feature/economic_actor/components/component_consumer.gd")
-
 var _consumer
 var _mock_stockpile
 var _original_library
@@ -78,4 +76,4 @@ func test_edge_case_exactly_at_desired_threshold() -> void:
 	# min_held_before_desired_consumption is 3, so 5 > 3, and 5 >= 5
 	var result = _consumer.consume()
 	assert_true(result, "Should consume desired amount when exactly enough")
-	assert_eq(_mock_stockpile["grain"], 0, "Stockpile should be zero after desired consumption") 
+	assert_eq(_mock_stockpile["grain"], 0, "Stockpile should be zero after desired consumption")
