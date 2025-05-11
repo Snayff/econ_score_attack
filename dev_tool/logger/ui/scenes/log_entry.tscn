@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://g6fpgxxtsdpd"]
 
-[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_entry.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5olq3hc1e8aj" path="res://dev_tool/logger/ui/components/log_entry.gd" id="1_script"]
 
 [node name="LogEntry" type="PanelContainer"]
 script = ExtResource("1_script")
@@ -38,4 +38,4 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text_overrun_behavior = 1
-autowrap_mode = 1 
+autowrap_mode = 1

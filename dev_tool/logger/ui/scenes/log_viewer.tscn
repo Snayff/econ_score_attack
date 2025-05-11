@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dxxx"]
 
-[ext_resource type="Script" uid="uid://ci4wge818g8bh" path="res://dev_tool/logger/ui/log_viewer.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dkxm7n2q6hi62" path="res://dev_tool/logger/ui/log_viewer.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://ca3s1dvhwf7tm" path="res://dev_tool/logger/ui/scenes/log_file_selector.tscn" id="2_scene"]
 [ext_resource type="PackedScene" uid="uid://ceucr0l84tu51" path="res://dev_tool/logger/ui/scenes/log_header.tscn" id="3_scene"]
 [ext_resource type="PackedScene" uid="uid://b8r6q5n2xkpgw" path="res://dev_tool/logger/ui/scenes/log_filters.tscn" id="4_scene"]
-[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_content.gd" id="5_script"]
+[ext_resource type="Script" uid="uid://bqm7kc1ksn5oq" path="res://dev_tool/logger/ui/components/log_content.gd" id="5_script"]
 
 [node name="LogViewer" type="Control"]
 layout_mode = 3

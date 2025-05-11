@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://b43wppeg5xjsl"]
 
-[ext_resource type="Script" uid="uid://c1elg2fvyt3v7" path="res://main/main.gd" id="1_c651c"]
+[ext_resource type="Script" uid="uid://di7w6b5iamif" path="res://main/main.gd" id="1_c651c"]
 [ext_resource type="Script" uid="uid://b05yq4fujwy8t" path="res://feature/sim/chrono.gd" id="2_3wy1v"]
-[ext_resource type="Script" uid="uid://b3pxhh8xsoamx" path="res://feature/sim/sim.gd" id="3_kfbq2"]
+[ext_resource type="Script" uid="uid://beos0v4hpj3t4" path="res://feature/sim/sim.gd" id="3_kfbq2"]
 [ext_resource type="PackedScene" uid="uid://cmkfp7f7dii75" path="res://main/ui/main_ui.tscn" id="4_4dugh"]
 
 [node name="Main" type="Node"]

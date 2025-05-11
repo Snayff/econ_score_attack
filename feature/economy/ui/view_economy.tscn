@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dxxx"]
 
-[ext_resource type="Script" uid="uid://ccjaw4o82hfxf" path="res://features/economy/ui/rtl_economy_info.gd" id="1_xxxxx"]
+[ext_resource type="Script" uid="uid://ccjaw4o82hfxf" path="res://feature/economy/ui/rtl_economy_info.gd" id="1_xxxxx"]
 
 [node name="ViewEconomy" type="Control"]
 layout_mode = 3

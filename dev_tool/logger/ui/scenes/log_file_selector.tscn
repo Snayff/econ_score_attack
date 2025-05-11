@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ca3s1dvhwf7tm"]
 
-[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_file_selector.gd" id="1_b7p7t"]
+[ext_resource type="Script" uid="uid://drk17p1wp58lg" path="res://dev_tool/logger/ui/components/log_file_selector.gd" id="1_b7p7t"]
 
 [node name="LogFileSelector" type="HBoxContainer"]
 anchors_preset = 10

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ceucr0l84tu51"]
 
-[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_header.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bphe763uiqrs3" path="res://dev_tool/logger/ui/components/log_header.gd" id="1_script"]
 
 [node name="LogHeader" type="PanelContainer"]
 anchors_preset = 15
@@ -68,4 +68,4 @@ text = "Total:"
 [node name="lbl_TotalCount" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "0" 
+text = "0"

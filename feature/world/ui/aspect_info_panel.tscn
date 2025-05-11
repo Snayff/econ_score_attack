@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://db2o3bnwn2mss"]
 
-[ext_resource type="Script" path="res://features/world/ui/land_grid/aspect_info_panel.gd" id="1_k8qv1"]
+[sub_resource type="Resource" id="Resource_2efq1"]
+metadata/__load_path__ = "res://features/world/ui/land_grid/aspect_info_panel.gd"
 
 [node name="AspectInfoPanel" type="Panel"]
 custom_minimum_size = Vector2(300, 0)
@@ -11,7 +12,7 @@ anchor_bottom = 1.0
 offset_left = -300.0
 grow_horizontal = 0
 grow_vertical = 2
-script = ExtResource("1_k8qv1")
+script = SubResource("Resource_2efq1")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -91,4 +92,4 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Survey Parcel" 
+text = "Survey Parcel"

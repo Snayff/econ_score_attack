@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b8r6q5n2xkpgw"]
 
-[ext_resource type="Script" path="res://dev_tool/logger/ui/components/log_filters.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://doefs87shp7ot" path="res://dev_tool/logger/ui/components/log_filters.gd" id="1_script"]
 
 [node name="LogFilters" type="PanelContainer"]
 anchors_preset = 15
@@ -114,4 +114,4 @@ placeholder_text = "YYYY-MM-DD HH:MM:SS"
 clear_button_enabled = true
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2 
+layout_mode = 2

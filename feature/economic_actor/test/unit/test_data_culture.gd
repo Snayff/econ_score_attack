@@ -9,12 +9,25 @@ func _ready() -> void:
 	test_json_loading()
 
 func test_constructor() -> void:
-	var prefs = {"food": 1.2, "entertainment": 0.8}
-	_test_culture = DataCulture.new("northern", prefs, 0.25, "hoard")
+	var possible_names = ["alfred", "edith"]
+	var savings_rate_range = [0.05, 0.15]
+	var decision_profiles = ["risk_averse"]
+	var shock_response = "hoard"
+	var consumption_rule_ids = ["grain_basic"]
+	_test_culture = DataCulture.new(
+		"northern",
+		possible_names,
+		savings_rate_range,
+		decision_profiles,
+		shock_response,
+		consumption_rule_ids
+	)
 	assert(_test_culture.id == "northern")
-	assert(_test_culture.base_preferences == prefs)
-	assert(_test_culture.savings_rate == 0.25)
-	assert(_test_culture.shock_response == "hoard")
+	assert(_test_culture.possible_names == possible_names)
+	assert(_test_culture.savings_rate_range == savings_rate_range)
+	assert(_test_culture.decision_profiles == decision_profiles)
+	assert(_test_culture.shock_response == shock_response)
+	assert(_test_culture.consumption_rule_ids == consumption_rule_ids)
 
 func test_json_loading() -> void:
 	var cultures = Library.get_all_cultures_data()

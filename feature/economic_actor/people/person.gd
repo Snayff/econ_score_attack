@@ -1,4 +1,8 @@
 ## A person in the simulation that can produce and consume goods
+##
+## Person nodes must always be instantiated using the constructor:
+##   Person.new(f_name: String, job: String, starting_goods: Dictionary)
+## The job must never be empty or null. This is validated in _ready().
 #@icon("")
 class_name Person
 extends Node
@@ -51,6 +55,15 @@ func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
 		stockpile[good] = starting_goods[good]
 
 	consumer = ComponentConsumer.new(f_name, stockpile)
+
+func _ready() -> void:
+	## Validates that the job is set and not empty. Logs an error if not.
+	assert(job != null and job != "", "Person initialised without a job. This is not allowed.")
+	if job == null or job == "":
+		Logger.log_event("person_job_invalid", {
+			"f_name": f_name,
+			"error": "Person initialised without a job. This is not allowed."
+		}, "Person")
 
 func produce() -> void:
 	match job:
