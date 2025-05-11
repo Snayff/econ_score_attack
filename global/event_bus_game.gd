@@ -96,4 +96,8 @@ signal request_build(x: int, y: int, building_id: String)
 @warning_ignore("unused_signal")
 signal land_grid_updated()
 
+## Emitted when the simulation is initialised
+@warning_ignore("unused_signal")
+signal sim_initialised
+
 #endregion

@@ -4,9 +4,9 @@
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://shared/ui/component/buttons/btn_sidebar_button.gd" id="1_4yfr8"]
 [ext_resource type="Script" uid="uid://bu3cfbf0y87bn" path="res://feature/economy/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://feature/sim/ui/btn_progress_turn.gd" id="4_t0li6"]
-[ext_resource type="PackedScene" uid="uid://cc3ql4w1mu63c" path="res://feature/economic_actor/ui/view_people.tscn" id="5_aklal"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://feature/sim/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="PackedScene" uid="uid://cpi6wrt2u86aq" path="res://feature/law/ui/view_laws.tscn" id="6_l61sg"]
+[ext_resource type="PackedScene" uid="uid://ddcy3mhwj4kj6" path="res://feature/economic_actor/ui/view_people_2.tscn" id="8_aklal"]
 [ext_resource type="PackedScene" uid="uid://cehbj0wwgyqcm" path="res://feature/world/ui/land_view_panel.tscn" id="8_oi40j"]
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://feature/economy/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://main/ui/panel_header.tscn" id="10_xxxxx"]
@@ -137,7 +137,7 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ViewPeople" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("5_aklal")]
+[node name="ViewPeople" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_aklal")]
 unique_name_in_owner = true
 layout_mode = 2
 

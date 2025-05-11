@@ -48,7 +48,7 @@ func _ready() -> void:
 		sim = get_node("/root/Main/Sim")
 
 	if sim:
-		sim.sim_initialized.connect(_on_sim_initialized)
+		sim.sim_initialised.connect(_on_sim_initialised)
 		EventBusGame.turn_complete.connect(update_info)
 
 	update_info()
@@ -68,7 +68,7 @@ func update_info() -> void:
 
 #region PRIVATE FUNCTIONS
 
-func _on_sim_initialized() -> void:
+func _on_sim_initialised() -> void:
 	if sim and sim.demesne:
 		sim.demesne.law_enacted.connect(_on_law_enacted)
 		sim.demesne.law_repealed.connect(_on_law_repealed)

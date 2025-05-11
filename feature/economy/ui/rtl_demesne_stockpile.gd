@@ -20,7 +20,7 @@ func _ready() -> void:
 	# Connect to signals for updates
 	EventBusGame.turn_complete.connect(update_info)
 	if sim:
-		sim.sim_initialized.connect(_on_sim_initialized)
+		sim.sim_initialised.connect(_on_sim_initialised)
 
 	# Set up the UI
 	horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -52,11 +52,11 @@ func update_info() -> void:
 	text = info_text
 
 ## Handles stockpile changes from the demesne
-func _on_stockpile_changed(good_id: String, new_amount: int) -> void:
+func _on_stockpile_changed(_good_id: String, _new_amount: int) -> void:
 	update_info()
 
-## Called when the simulation is initialized
-func _on_sim_initialized() -> void:
+## Called when the simulation is initialised
+func _on_sim_initialised() -> void:
 	# Connect to demesne's stockpile_changed signal
 	if sim and sim.demesne:
 		sim.demesne.stockpile_changed.connect(_on_stockpile_changed)

@@ -1,42 +1,61 @@
-; TEMPLATE ONLY: This scene provides the standardised view layout. Do not use directly. Instance and amend for your specific view. See abc_view.gd for details.
+[gd_scene load_steps=2 format=3 uid="uid://dh7eil46mmi2a"]
 
-[gd_scene format=3]
-; This scene is a template for standardised view layout. Do not use directly. Instance and amend for your specific view.
-
-[ext_resource path="res://shared/ui/component/panels/abc_view.gd" type="Script" id=1]
+[ext_resource type="Script" uid="uid://c56t75d1ug0jh" path="res://shared/ui/component/panels/templates/abc_view.gd" id="1_l74j8"]
 
 [node name="TemplateView" type="Control"]
-script = ExtResource( 1 )
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_l74j8")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
 
 [node name="LeftSidebar" type="VBoxContainer" parent="HBoxContainer"]
-anchor_right = 0.0
-anchor_bottom = 1.0
-size_flags_horizontal = 1 # Fill
-size_flags_vertical = 3 # Expand + Fill
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BGLeftSidebarDebug" type="ColorRect" parent="HBoxContainer/LeftSidebar"]
+unique_name_in_owner = true
+layout_mode = 2
+color = Color(0.6, 0.7, 1, 0.5)
 
 [node name="MainArea" type="VBoxContainer" parent="HBoxContainer"]
-anchor_right = 0.0
-anchor_bottom = 1.0
-size_flags_horizontal = 3 # Expand + Fill
-size_flags_vertical = 3 # Expand + Fill
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="TopBar" type="HBoxContainer" parent="HBoxContainer/MainArea"]
-anchor_right = 1.0
-anchor_bottom = 0.0
-size_flags_horizontal = 3 # Expand + Fill
-size_flags_vertical = 1 # Fill
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BGTopBarDebug" type="ColorRect" parent="HBoxContainer/MainArea/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+color = Color(0.7, 1, 0.7, 0.5)
 
 [node name="CentrePanel" type="PanelContainer" parent="HBoxContainer/MainArea"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 3 # Expand + Fill
-size_flags_vertical = 3 # Expand + Fill
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BGCentrePanelDebug" type="ColorRect" parent="HBoxContainer/MainArea/CentrePanel"]
+unique_name_in_owner = true
+layout_mode = 2
+color = Color(1, 1, 1, 0.5)
 
 [node name="RightSidebar" type="VBoxContainer" parent="HBoxContainer"]
-anchor_right = 0.0
-anchor_bottom = 1.0
-size_flags_horizontal = 1 # Fill
-size_flags_vertical = 3 # Expand + Fill
-visible = true 
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BGRightSidebarDebug" type="ColorRect" parent="HBoxContainer/RightSidebar"]
+unique_name_in_owner = true
+layout_mode = 2
+color = Color(0.8, 0.8, 0.8, 0.5)

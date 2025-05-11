@@ -42,7 +42,7 @@ func _ready() -> void:
 		sim = get_node("/root/Main/Sim")
 
 	if sim:
-		sim.sim_initialized.connect(update_info)
+		sim.sim_initialised.connect(update_info)
 
 	update_info()
 

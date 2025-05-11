@@ -7,7 +7,7 @@ extends Node
 
 
 #region SIGNALS
-signal sim_initialized
+signal sim_initialised
 #endregion
 
 
@@ -90,7 +90,8 @@ func _ready() -> void:
 	for person in people:
 		demesne.add_person(person)
 
-	emit_signal("sim_initialized")
+	emit_signal("sim_initialised")
+	EventBusGame.emit_signal("sim_initialised", self)
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
