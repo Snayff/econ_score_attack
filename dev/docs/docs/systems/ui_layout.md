@@ -1,12 +1,12 @@
-# UI Viewport Layout System
+# UI Layout System
 
-## Last Updated: 2024-06-11
+## Last Updated: 2025-05-11
 
 ---
 
 ## Overview
 
-The UI Viewport Layout System standardises the structure and presentation of all major views in the game, ensuring a consistent, modular, and accessible user experience. Each view is composed of a set of defined regions—sidebars, top bar, and centre panel—using reusable UI components. This approach supports keyboard-only, controller-only, and keyboard-and-mouse navigation, and is designed for scalability and maintainability.
+The UI Layout System standardises the structure and presentation of all major views in the game, ensuring a consistent, modular, and accessible user experience. Each view is composed of a set of defined regions—sidebars, top bar, and centre panel—using reusable UI components. This approach supports keyboard-only, controller-only, and keyboard-and-mouse navigation, and is designed for scalability and maintainability.
 
 ---
 
@@ -26,7 +26,7 @@ The UI Viewport Layout System standardises the structure and presentation of all
 | Region           | Purpose                        | Example Components                | Folder Location                      |
 |------------------|-------------------------------|-----------------------------------|--------------------------------------|
 | GlobalTopBar     | Key demesne/player info        | Status indicators, labels         | main/ui/                             |
-| GlobalSidebar    | Navigation between Views       | btn_sidebar_button                | shared/ui/component/buttons/         |
+| GlobalSidebar    | Navigation between Views       | btn_sidebar_button, main_sidebar.tscn | main/ui/                        |
 | TurnPanel        | Turn controls/info             | Buttons, labels                   | main/ui/                             |
 | Viewport         | Hosts the current Viewport*    | ViewportPanel                     | main/ui/                             |
 
@@ -48,7 +48,7 @@ The UI Viewport Layout System standardises the structure and presentation of all
 ```
 MainUI (Control)
  ├── GlobalTopBar (HBoxContainer)
- ├── GlobalSidebar (VBoxContainer)
+ ├── GlobalSidebar (PanelContainer, instanced from main_sidebar.tscn)
  ├── TurnPanel (Panel)
  └── ViewportPanel (PanelContainer)
       ├── ViewportTopBar (HBoxContainer)
@@ -97,14 +97,14 @@ MainUI (Control)
 - The ViewportContentPanel is populated with feature-specific content, while sidebars and top bar use shared components.
 
 ### 4. Main UI Integration
-- The main UI scene (e.g., `main/ui/`) contains the global sidebar and a container for loading the current viewport.
+- The main UI scene (e.g., `main/ui/`) contains the GlobalSidebar (instanced from `main_sidebar.tscn`) and a container for loading the current viewport.
 - When the player selects a view, the corresponding scene is loaded into the container.
 - Navigation and focus are managed to support keyboard and controller input, using Godot's focus system and `FocusNeighbour` properties.
 
 ### 5. Signals and Decoupling
 - All communication between UI regions and the main UI is handled via signals, not direct node references.
-- Example signals: `viewport_left_action_selected`, `viewport_top_tab_selected`, `viewport_right_info_requested`.
-- Signals are connected in `_ready()` and disconnected on node removal.
+- **Sidebar button presses are emitted as signals from `main_sidebar.gd` and relayed via the global `EventBusUI` autoload. The main UI listens for these signals to switch views.**
+- Example signals: `sidebar_people_pressed`, `sidebar_laws_pressed`, etc.
 
 ### 6. Accessibility and Responsiveness
 - Ensure all regions are accessible via keyboard/controller, with logical tab order and focus management.
@@ -112,7 +112,7 @@ MainUI (Control)
 - Allow optional hiding of the right sidebar for viewports that do not require it.
 
 ### 7. Documentation and Maintenance
-- This document is maintained in `dev/docs/docs/systems/ui_view_layout.md`.
+- This document is maintained in `dev/docs/docs/systems/ui_layout.md`.
 - Update this document whenever the layout system or component library is changed.
 - Each new viewport should include a class docstring referencing this system and describing its specific usage.
 
