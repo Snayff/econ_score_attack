@@ -67,3 +67,6 @@ The game consists of several interconnected systems, each detailed in their own 
 - Population skills affect production output
 - Market conditions influence population behaviour
 - Governance choices affect all other systems 
+
+## Last Updated
+2025-05-04 

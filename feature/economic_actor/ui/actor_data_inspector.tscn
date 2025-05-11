@@ -14,3 +14,7 @@ text = "Actors:"
 [node name="lbl_culture_list" type="Label" parent="."]
 layout_mode = 0
 text = "Cultures:"
+
+[node name="BtnDebugActorData" type="Button" parent="."]
+layout_mode = 0
+text = "Open Debug UI"

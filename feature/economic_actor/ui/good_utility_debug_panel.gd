@@ -84,8 +84,8 @@ func _on_evaluate_pressed() -> void:
 	if _selected_actor == null:
 		txt_result.text = "No actor selected."
 		return
-	var util_dict = GoodUtilityComponent.calculate_good_utility(_selected_actor, _goods, _cultures, _ancestries, _prices)
-	var best_good = GoodUtilityComponent.select_best_affordable_good(_selected_actor, _goods, _cultures, _ancestries, _prices)
+	var util_dict = ComponentGoodUtility.calculate_good_utility(_selected_actor, _goods, _cultures, _ancestries, _prices)
+	var best_good = ComponentGoodUtility.select_best_affordable_good(_selected_actor, _goods, _cultures, _ancestries, _prices)
 	_update_goods_info(util_dict, best_good)
 	emit_signal("evaluation_triggered", str(_selected_actor.id))
 

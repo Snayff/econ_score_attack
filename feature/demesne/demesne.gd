@@ -44,7 +44,7 @@ var grid_width: int = 0
 var grid_height: int = 0
 
 ## Resource generator component
-var _resource_generator: ResourceGenerator
+var _resource_generator: ComponentResourceGenerator
 
 ## Pathfinding system component
 var _pathfinding: PathfindingSystem
@@ -106,7 +106,7 @@ func _initialise_land_grid() -> void:
 
 ## Sets up the resource generator component
 func _setup_resource_generator() -> void:
-	_resource_generator = ResourceGenerator.new()
+	_resource_generator = ComponentResourceGenerator.new()
 	add_child(_resource_generator)
 
 	# Connect signals

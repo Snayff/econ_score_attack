@@ -1,11 +1,13 @@
- ##
-## GoodUtilityComponent: Calculates utility values for goods for a given actor, and selects the best affordable good.
+##
+## ComponentGoodUtility: Calculates utility values for goods for a given actor, and selects the best affordable good.
 ## Usage Example:
-##   var util_dict = GoodUtilityComponent.calculate_good_utility(actor, goods, cultures, ancestries, prices)
-##   var best_good = GoodUtilityComponent.select_best_affordable_good(actor, goods, cultures, ancestries, prices)
+##   var util_dict = ComponentGoodUtility.calculate_good_utility(actor, goods, cultures, ancestries, prices)
+##   var best_good = ComponentGoodUtility.select_best_affordable_good(actor, goods, cultures, ancestries, prices)
 ## Note: ancestry is a Dictionary, not a class.
-## Last Updated: DATE
-class_name GoodUtilityComponent
+##
+## Last Updated: 2025-05-11
+
+class_name ComponentGoodUtility
 extends Node
 
 #region CONSTANTS
@@ -86,7 +88,28 @@ static func select_best_affordable_good(
 			if util > best_utility:
 				best_utility = util
 				best_good = good.id
+	# If a purchase is made, handle it
+	if best_good != "":
+		handle_purchase(actor, best_good, float(prices.get(best_good, 1.0)))
 	return best_good
+
+## Handles the purchase of a good, updates savings and disposable income, and logs the purchase decision.
+## @param actor: DataPerson making the purchase.
+## @param good_id: String ID of the good being purchased.
+## @param price: Price of the good (float).
+## @return: void
+static func handle_purchase(actor: DataPerson, good_id: String, price: float) -> void:
+	# Deduct from disposable income
+	actor.disposable_income -= price
+	# Update savings (total money - disposable_income)
+	# (Assume total_money = disposable_income + savings)
+	# Log the purchase
+	Logger.log_event("actor_purchase", {
+		"actor_id": actor.id,
+		"good_id": good_id,
+		"price": price,
+		"remaining_disposable_income": actor.disposable_income
+	}, "ComponentGoodUtility")
 
 #endregion
 

@@ -1,4 +1,4 @@
-## Unit tests for GoodUtilityComponent
+## Unit tests for ComponentGoodUtility
 ## Last Updated: DATE
 extends Node
 
@@ -49,7 +49,7 @@ func test_utility_basic() -> void:
 	)}
 	_test_ancestries = {"ancestral_1": {"base_preferences": {"food": 1.0}, "shock_response": "share"}}
 	_test_prices = {"food": 10.0}
-	var util_dict = GoodUtilityComponent.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
+	var util_dict = ComponentGoodUtility.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(util_dict.has("food"))
 	assert(util_dict["food"] > 0.0)
 
@@ -68,7 +68,7 @@ func test_utility_culture_influence() -> void:
 	)}
 	_test_ancestries = {"ancestral_2": {"base_preferences": {"entertainment": 1.0}, "shock_response": "share"}}
 	_test_prices = {"entertainment": 15.0}
-	var util_dict = GoodUtilityComponent.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
+	var util_dict = ComponentGoodUtility.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(util_dict["entertainment"] > 0.0)
 
 func test_utility_edge_cases() -> void:
@@ -86,11 +86,11 @@ func test_utility_edge_cases() -> void:
 	)}
 	_test_ancestries = {"ancestral_1": {"base_preferences": {"food": 1.0}, "shock_response": "share"}}
 	_test_prices = {"food": 10.0}
-	var best_good = GoodUtilityComponent.select_best_affordable_good(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
+	var best_good = ComponentGoodUtility.select_best_affordable_good(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(best_good == "")
 	# Zero needs
 	_test_actor = DataPerson.new("4", "name", "northern", "ancestral_1", {"food": 0.0}, 0.2, 100.0, "greedy")
-	var util_dict = GoodUtilityComponent.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
+	var util_dict = ComponentGoodUtility.calculate_good_utility(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(util_dict["food"] <= 0.05)
 
 func test_select_best_affordable_good() -> void:
@@ -109,7 +109,7 @@ func test_select_best_affordable_good() -> void:
 	)}
 	_test_ancestries = {"ancestral_1": {"base_preferences": {"food": 1.0, "luxury": 0.7}, "shock_response": "share"}}
 	_test_prices = {"food": 10.0, "luxury": 15.0}
-	var best_good = GoodUtilityComponent.select_best_affordable_good(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
+	var best_good = ComponentGoodUtility.select_best_affordable_good(_test_actor, _test_goods, _test_cultures, _test_ancestries, _test_prices)
 	assert(best_good in ["food", "luxury"])
 #endregion
 

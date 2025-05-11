@@ -18,24 +18,4 @@ script = ExtResource("2_3wy1v")
 unique_name_in_owner = true
 script = ExtResource("3_kfbq2")
 
-[node name="UI" parent="." instance=ExtResource("4_4dugh")]
-
-[node name="RTLDemesneStockpile" parent="UI/TopBar" index="0" node_paths=PackedStringArray("sim")]
-sim = NodePath("../../../Sim")
-
-[node name="ViewPeople" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="0" node_paths=PackedStringArray("sim")]
-sim = NodePath("../../../../../../Sim")
-
-[node name="ViewLaws" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="1" node_paths=PackedStringArray("sim")]
-sim = NodePath("../../../../../../Sim")
-
-[node name="ViewEconomy" parent="UI/CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" index="2" node_paths=PackedStringArray("sim")]
-sim = NodePath("../../../../../../Sim")
-
-[node name="BtnProgressTurn" parent="UI/HBoxTime" index="0"]
-text = "Progress"
-
-[node name="NotificationSystem" parent="UI" index="5"]
-visible = true
-
-[editable path="UI"]
+[node name="MainUI" parent="." instance=ExtResource("4_4dugh")]

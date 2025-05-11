@@ -1,10 +1,11 @@
 extends Control
 
+## ViewPeople
 ## Displays information about people in the simulation.
 ## Shows their health, happiness, and stockpile in a scrollable panel.
 ##
 ## Example usage:
-## var people_info = preload("res://scenes/ui/people_info.tscn").instantiate()
+## var people_info = preload("res://feature/economic_actor/view_people.gd").instantiate()
 
 
 #region EXPORTS
@@ -30,6 +31,8 @@ extends Control
 
 @onready var people_container: VBoxContainer = %PeopleContainer
 @onready var header_container: VBoxContainer = $MarginContainer/VBoxContainer/HeaderContainer
+@onready var btn_debug_actor_data: Button = $MarginContainer/VBoxContainer/BtnDebugActorData
+var _debug_panel: Control = null
 
 func _ready() -> void:
 	EventBusGame.turn_complete.connect(update_info)
@@ -42,6 +45,9 @@ func _ready() -> void:
 		sim.sim_initialized.connect(update_info)
 
 	update_info()
+
+	# Connect debug button
+	btn_debug_actor_data.pressed.connect(_on_debug_actor_data_pressed)
 
 
 #endregion
@@ -174,6 +180,16 @@ func _create_person_panel(person: Person) -> PanelContainer:
 			stockpile_container.add_child(good_label)
 
 	return panel
+
+
+## Opens the debug actor data inspector panel
+func _on_debug_actor_data_pressed() -> void:
+	if _debug_panel == null:
+		_debug_panel = preload("res://feature/economic_actor/ui/actor_data_inspector.tscn").instantiate()
+		add_child(_debug_panel)
+		_debug_panel.set_position(Vector2(100, 100))
+	else:
+		_debug_panel.visible = not _debug_panel.visible
 
 
 #endregion

@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://bk7em2tv1v35i" path="res://main/ui/main_ui.gd" id="1_2k3m4"]
 [ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://shared/ui/component/buttons/btn_sidebar_button.gd" id="1_4yfr8"]
 [ext_resource type="Script" uid="uid://bu3cfbf0y87bn" path="res://feature/economy/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
-[ext_resource type="Script" uid="uid://cmk04mfvh7sii" path="res://feature/economic_actor/rtl_people_info.gd" id="3_b1beo"]
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://feature/sim/ui/btn_progress_turn.gd" id="4_t0li6"]
+[ext_resource type="PackedScene" uid="uid://cc3ql4w1mu63c" path="res://feature/economic_actor/ui/view_people.tscn" id="5_aklal"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://feature/sim/ui/lbl_turn_info.gd" id="5_oxwcw"]
-[ext_resource type="Script" uid="uid://c7qqy26mls4qj" path="res://feature/law/ui/rtl_laws_info.gd" id="7_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://cpi6wrt2u86aq" path="res://feature/law/ui/view_laws.tscn" id="6_l61sg"]
 [ext_resource type="PackedScene" uid="uid://cehbj0wwgyqcm" path="res://feature/world/ui/land_view_panel.tscn" id="8_oi40j"]
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://feature/economy/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://main/ui/panel_header.tscn" id="10_xxxxx"]
@@ -137,70 +137,13 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ViewPeople" type="Control" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("3_b1beo")
-
-[node name="MarginContainer" type="MarginContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewPeople"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewPeople/MarginContainer"]
-layout_mode = 2
-
-[node name="HeaderContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewPeople/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewPeople/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="PeopleContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewPeople/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="ViewPeople" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("5_aklal")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
 
-[node name="ViewLaws" type="Control" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("7_xxxxx")
-
-[node name="MarginContainer" type="MarginContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewLaws"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewLaws/MarginContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewLaws/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="LawsContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer/ViewLaws/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="ViewLaws" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("6_l61sg")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
 
 [node name="ViewEconomy" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("9_xxxxx")]
 unique_name_in_owner = true

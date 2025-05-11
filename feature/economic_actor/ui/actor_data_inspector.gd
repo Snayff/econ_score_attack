@@ -26,6 +26,7 @@ extends Control
 #region VARS
 var _actors: Array = []
 var _cultures: Array = []
+var _last_purchases: Dictionary = {}
 #endregion
 
 
@@ -43,13 +44,22 @@ func _ready() -> void:
 func _update_ui() -> void:
 	var actor_text := "Actors:\n"
 	for actor in _actors:
-		actor_text += "ID: %s, Culture: %s, Needs: %s\n" % [str(actor.id), actor.culture_id, str(actor.needs)]
+		actor_text += "ID: %s, Culture: %s, Needs: %s, Savings Rate: %.2f, Disposable Income: %.2f" % [str(actor.id), actor.culture_id, str(actor.needs), actor.savings_rate, actor.disposable_income]
+		# Show last purchase if available
+		if _last_purchases.has(actor.id):
+			actor_text += ", Last Purchase: %s" % _last_purchases[actor.id]
+		actor_text += "\n"
 	lbl_actor_list.text = actor_text
 
 	var culture_text := "Cultures:\n"
 	for culture in _cultures:
 		culture_text += "ID: %s, Prefs: %s\n" % [culture.id, str(culture.base_preferences)]
 	lbl_culture_list.text = culture_text
+
+## Call this to record a purchase for an actor (for debug display)
+## @param actor_id: String, @param purchase: String
+func record_purchase(actor_id: String, purchase: String) -> void:
+	_last_purchases[actor_id] = purchase
 #endregion
 
 

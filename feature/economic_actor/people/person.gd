@@ -7,9 +7,6 @@
 class_name Person
 extends Node
 
-const ComponentConsumer = preload("res://feature/economic_actor/components/component_consumer.gd")
-const DataPerson = preload("res://feature/economic_actor/data_class/data_person.gd")
-
 #region SIGNALS
 
 #endregion

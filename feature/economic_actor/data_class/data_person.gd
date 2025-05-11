@@ -28,7 +28,9 @@ var f_name: String
 var culture_id: String
 var ancestry_id: String
 var needs: Dictionary
+## Proportion of income reserved as savings. Value between 0 and 1.
 var savings_rate: float
+## Money available for spending after savings are set aside.
 var disposable_income: float
 var decision_profile: String
 #endregion
@@ -62,6 +64,14 @@ func _init(
 	savings_rate = savings_rate_
 	disposable_income = disposable_income_
 	decision_profile = decision_profile_
+
+## Updates disposable_income based on total_money and savings_rate.
+## @param total_money: The actor's total money (float).
+## @return: The updated disposable_income (float).
+func update_disposable_income(total_money: float) -> float:
+	# Disposable income is the portion of money not reserved for savings.
+	disposable_income = total_money * (1.0 - savings_rate)
+	return disposable_income
 #endregion
 
 
