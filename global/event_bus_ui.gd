@@ -25,6 +25,22 @@ signal show_notification(message: String, type: String)
 @warning_ignore("unused_signal")
 signal survey_completed(x: int, y: int)
 
+## Emitted when the sidebar "People" button is pressed
+@warning_ignore("unused_signal")
+signal sidebar_people_pressed
+
+## Emitted when the sidebar "Laws" button is pressed
+@warning_ignore("unused_signal")
+signal sidebar_laws_pressed
+
+## Emitted when the sidebar "Land" button is pressed
+@warning_ignore("unused_signal")
+signal sidebar_land_pressed
+
+## Emitted when the sidebar "Economy" button is pressed
+@warning_ignore("unused_signal")
+signal sidebar_economy_pressed
+
 #endregion
 
 

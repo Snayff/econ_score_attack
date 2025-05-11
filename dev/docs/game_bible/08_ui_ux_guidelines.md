@@ -1,5 +1,7 @@
 # UI/UX Guidelines
 
+## Last Updated: 2025-05-11
+
 ## Core Design Principles
 
 ### 1. Input Method Flexibility
@@ -44,7 +46,7 @@
   - Basic displays initially
   - Advanced analytics unlock with research
   - Automation tools as rewards
-  - Enhanced visualization options
+  - Enhanced visualisation options
   - Advanced prediction capabilities
 
 ## Interface Standards
@@ -59,11 +61,11 @@
   - Radial menu for system switching
   - Hot-key support for common actions
   - Recent actions history
-  - Favorite tools marking
+  - Favourite tools marking
   - Emergency action shortcuts
 
 ### 2. Visual Language
-- **Color Coding**
+- **Colour Coding**
   - Economic: Gold/Yellow
   - Population: Blue
   - Production: Orange
@@ -76,7 +78,7 @@
   - Warning: Yellow glow
   - Positive: Green shimmer
   - Neutral: White
-  - Inactive: Gray
+  - Inactive: Grey
 
 ### 3. Common Elements
 - **Information Cards**
@@ -97,39 +99,52 @@
 
 ### Main Game View
 ```
-+------------------------------------------+
-|              Top Status Bar              |
-|  [Time] [Speed] [Wealth] [Alert Count]   |
-+------------------+---------------------+--+
-|                  |                     |
-|                  |                     |
-|    Main View     |   System Panel     |
-|     (Game        |    (Context-       |
-|     World)       |    Sensitive)      |
-|                  |                     |
-|                  |                     |
-+------------------+---------------------+
-|           Bottom Action Bar            |
-|   [Quick Actions] [System Selector]    |
-+------------------------------------------+
++-------------------------------------------------------------+
+|                      GlobalTopBar                          |
+|   [Time] [Speed] [Wealth] [Alert Count]                    |
++-------------------+---------------------------------------+|
+|                   |                                       ||
+|                   |                                       ||
+|   GlobalSidebar   |             ViewportPanel              ||
+|                   |                                       ||
+|                   |                                       ||
+|   TurnPanel       |                                       ||
++-------------------+---------------------------------------++
 ```
 
-### System Selection Menu
+### ViewportPanel Layout
 ```
-         [Production]
-            /|\
-[Population] | [Economic]
-    \       |      /
-     \      |     /
-      \     |    /
-[Environment]-[Tech]
-      /     |    \
-     /      |     \
-    /       |      \
-[Social]    |  [Governance]
-           \|/
-        [Options]
++-----------------------------------------------------------+
+|                   ViewportTopBar                          |
++-------------------+---------------------+----------------+
+| ViewportSidebar   | ViewportContentPanel| ViewportSidebar|
+|      Left         |     (Main)          |     Right      |
+|                   |                     |   (optional)   |
++-------------------+---------------------+----------------+
 ```
+
+- The ViewportSidebarRight is optional. If hidden, ViewportContentPanel expands to fill the space.
+- Tab order flows: GlobalSidebar → GlobalTopBar → TurnPanel → ViewportTopBar → ViewportSidebarLeft → ViewportContentPanel → ViewportSidebarRight (if present).
+
+---
+
+## Tab Focus and Navigation
+
+- All interactive elements are included in a logical tab order, starting from GlobalSidebar, then GlobalTopBar, TurnPanel, and finally the ViewportPanel and its children.
+- Within the ViewportPanel, tab order proceeds: ViewportTopBar → ViewportSidebarLeft → ViewportContentPanel → ViewportSidebarRight (if present).
+- Godot's `FocusNeighbour` properties are set to ensure predictable keyboard/controller navigation, supporting both vertical and horizontal movement.
+- When switching Views or Sub Views, focus is automatically set to the most contextually relevant element (e.g., the first button in ViewportTopBar or the first actionable item in ViewportSidebarLeft).
+- All regions are accessible via keyboard/controller, and focus is visually indicated.
+
+---
+
+## Optional Right Sidebar (ViewportSidebarRight)
+
+- The ViewportSidebarRight is optional and can be shown or hidden based on the requirements of the current Sub View.
+- When hidden, the ViewportContentPanel expands to use the available space, ensuring no wasted UI real estate.
+- The presence or absence of ViewportSidebarRight is managed via a property or method in the ViewportPanel script, and the layout updates dynamically.
+
+---
 
 ## Standard UI Elements
 
@@ -193,7 +208,7 @@
 5. Consistent padding (16px standard)
 
 ### Accessibility Requirements
-1. Color-blind friendly palette
+1. Colour-blind friendly palette
 2. High contrast mode support
 3. Screen reader compatibility
 4. Alternative control schemes
@@ -255,23 +270,23 @@
 ### 2. Intermediate Features (Unlock via Progress)
 - Advanced analytics
 - Detailed tracking systems
-- Enhanced visualization
+- Enhanced visualisation
 - Prediction tools
 - Automation options
 
 ### 3. Advanced Systems (Technology/Law Dependent)
-- Complex modeling
+- Complex modelling
 - AI assistance
 - Advanced forecasting
 - Multi-system integration
-- Optimization tools
+- Optimisation tools
 
 ## Accessibility Considerations
 
 ### 1. Visual Accessibility
 - High contrast mode
 - Adjustable text size
-- Colorblind-friendly palette
+- Colourblind-friendly palette
 - Clear icon designs
 - Screen reader support
 
@@ -284,12 +299,9 @@
 
 ## Implementation Guidelines
 - Use consistent button mapping across all systems
-- Maintain uniform color coding
+- Maintain uniform colour coding
 - Ensure all actions possible with any input method
 - Keep information density appropriate
 - Provide clear feedback for all actions
 - Progressive complexity in tutorial flow
 - Regular playtesting for intuitive use 
-
-## Last Updated
-2025-05-04 

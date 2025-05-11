@@ -1,7 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cmkfp7f7dii75"]
 
 [ext_resource type="Script" uid="uid://bk7em2tv1v35i" path="res://main/ui/main_ui.gd" id="1_2k3m4"]
-[ext_resource type="Script" uid="uid://b3g1qmcxr7jru" path="res://shared/ui/component/buttons/btn_sidebar_button.gd" id="1_4yfr8"]
 [ext_resource type="Script" uid="uid://bu3cfbf0y87bn" path="res://feature/economy/ui/rtl_demesne_stockpile.gd" id="2_46cp5"]
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://feature/sim/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://feature/sim/ui/lbl_turn_info.gd" id="5_oxwcw"]
@@ -11,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dxxx" path="res://feature/economy/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://main/ui/panel_header.tscn" id="10_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://brt22vvn80qvj" path="res://shared/ui/notifications/notification_system.tscn" id="11_notify"]
+[ext_resource type="PackedScene" uid="uid://bdmsj6dhvu586" path="res://main/ui/main_sidebar.tscn" id="12_sidebar"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bvp3"]
 device = -1
@@ -45,49 +45,11 @@ anchor_bottom = 1.0
 offset_right = 95.0
 grow_vertical = 2
 
-[node name="Sidebar" type="PanelContainer" parent="HBoxContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Sidebar"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Sidebar/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="BtnPeople" type="Button" parent="HBoxContainer/Sidebar/MarginContainer/VBoxContainer"]
+[node name="GlobalSidebar" parent="HBoxContainer" instance=ExtResource("12_sidebar")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "People"
-script = ExtResource("1_4yfr8")
-button_text = "People"
 
-[node name="BtnLaws" type="Button" parent="HBoxContainer/Sidebar/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Laws"
-script = ExtResource("1_4yfr8")
-button_text = "Laws"
-
-[node name="BtnLand" type="Button" parent="HBoxContainer/Sidebar/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Land"
-script = ExtResource("1_4yfr8")
-button_text = "Land"
-
-[node name="BtnEconomy" type="Button" parent="HBoxContainer/Sidebar/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Economy"
-script = ExtResource("1_4yfr8")
-button_text = "Economy"
-
-[node name="TopBar" type="PanelContainer" parent="."]
+[node name="GlobalTopBar" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -97,13 +59,13 @@ offset_right = -300.0
 offset_bottom = 51.0
 grow_horizontal = 2
 
-[node name="RTLDemesneStockpile" type="RichTextLabel" parent="TopBar"]
+[node name="RTLDemesneStockpile" type="RichTextLabel" parent="GlobalTopBar"]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 script = ExtResource("2_46cp5")
 
-[node name="CentrePanel" type="PanelContainer" parent="."]
+[node name="ViewportPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -118,44 +80,44 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.08053, 0.960313)
 
-[node name="MarginContainer" type="MarginContainer" parent="CentrePanel"]
+[node name="MarginContainer" type="MarginContainer" parent="ViewportPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CentrePanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ViewportPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="PanelHeader" parent="CentrePanel/MarginContainer/VBoxContainer" instance=ExtResource("10_xxxxx")]
+[node name="PanelHeader" parent="ViewportPanel/MarginContainer/VBoxContainer" instance=ExtResource("10_xxxxx")]
 unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CentrePanel/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ViewportPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ViewPeople" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_aklal")]
+[node name="ViewPeople" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_aklal")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ViewLaws" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("6_l61sg")]
+[node name="ViewLaws" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("6_l61sg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ViewEconomy" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("9_xxxxx")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="ViewLand" parent="CentrePanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_oi40j")]
+[node name="ViewEconomy" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("9_xxxxx")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HBoxTime" type="HBoxContainer" parent="."]
+[node name="ViewLand" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_oi40j")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="TurnDisplay" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -169,13 +131,13 @@ grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(1, 1.28)
 
-[node name="BtnProgressTurn" type="Button" parent="HBoxTime"]
+[node name="BtnProgressTurn" type="Button" parent="TurnDisplay"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 shortcut = SubResource("Shortcut_yc0ux")
 script = ExtResource("4_t0li6")
 
-[node name="LblTurnInfo" type="Label" parent="HBoxTime"]
+[node name="LblTurnInfo" type="Label" parent="TurnDisplay"]
 layout_mode = 2
 script = ExtResource("5_oxwcw")
 
