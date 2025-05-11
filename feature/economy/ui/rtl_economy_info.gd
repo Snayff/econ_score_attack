@@ -7,7 +7,7 @@ extends Control
 
 #region EXPORTS
 
-@export var sim: Sim
+@export var _sim: Sim
 
 #endregion
 
@@ -57,13 +57,13 @@ func _ready() -> void:
 	# Ensure we have our required nodes
 	assert(metrics_container != null, "MetricsContainer node not found!")
 
-	# Find the Sim node if not provided
-	if not sim:
-		sim = get_node("/root/Main/Sim")
+	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
+	EventBusGame.turn_complete.connect(update_info)
 
-	if sim:
-		sim.sim_initialised.connect(_on_sim_initialised)
-		EventBusGame.turn_complete.connect(update_info)
+	# Attempt to get _sim if already registered
+	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	if sim_ref:
+		_set_sim(sim_ref)
 
 	update_info()
 
@@ -79,8 +79,14 @@ func update_info() -> void:
 
 
 #region PRIVATE FUNCTIONS
+## Handles updates from the ReferenceRegistry
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
 
-func _on_sim_initialised() -> void:
+## Sets the _sim reference
+func _set_sim(sim_ref: Sim) -> void:
+	_sim = sim_ref
 	update_info()
 
 func _update_info() -> void:
@@ -93,20 +99,20 @@ func _update_info() -> void:
 	for child in metrics_container.get_children():
 		child.queue_free()
 
-	if not sim:
+	if not _sim:
 		var label = Label.new()
 		label.text = "No simulation data available"
 		metrics_container.add_child(label)
 		return
 
-	if not sim._economic_metrics:
+	if not _sim._economic_metrics:
 		var label = Label.new()
 		label.text = "No economic metrics available"
 		metrics_container.add_child(label)
 		return
 
 	# Get the economic report
-	var report = sim._economic_metrics.generate_report()
+	var report = _sim._economic_metrics.generate_report()
 	var current_metrics = report.get("current_metrics", {})
 	var trends = report.get("historical_trends", {})
 	var alerts = report.get("alerts", [])

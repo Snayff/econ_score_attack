@@ -69,7 +69,7 @@ func set_grid_and_demesne(width: int, height: int, demesne: Node) -> void:
 ## Handles tile selection signal from WorldViewPanel.
 ## @param tile_id: int, the selected tile's id
 ## @param tile_data: DataLandParcel, the selected tile's data
-func _on_tile_selected(tile_id: int, tile_data) -> void:
+func _on_tile_selected(_tile_id: int, tile_data: DataLandParcel) -> void:
 	if _tile_info_panel:
 		# Use to_tile_info() if available, otherwise build DataTileInfo with correct structure
 		var data_tile_info = tile_data.to_tile_info() if tile_data and tile_data.has_method("to_tile_info") else null
@@ -143,7 +143,7 @@ func _on_survey_completed(x: int, y: int) -> void:
 		EventBusUI.show_visual_feedback.emit("Surveyed!", panel_rect.position + panel_rect.size / 2)
 
 
-func _on_parcel_surveyed(x: int, y: int, discovered_resources: Array) -> void:
+func _on_parcel_surveyed(x: int, y: int, _discovered_resources: Array) -> void:
 	# Now the survey is truly complete; emit UI feedback
 	EventBusUI.survey_completed.emit(x, y)
 	# If the surveyed tile is currently selected, update the info panel

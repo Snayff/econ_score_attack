@@ -27,7 +27,8 @@ var _sim: Sim
 #region PUBLIC FUNCTIONS
 ## Updates the displayed information in the centre panel.
 func update_info() -> void:
-	centre_panel.clear_children()
+	for child in centre_panel.get_children():
+		child.queue_free()
 	if not _sim:
 		_add_error_message("No simulation data available (_sim is null)")
 		return
@@ -61,11 +62,15 @@ func _ready() -> void:
 	btn_debug.pressed.connect(_on_debug_actor_data_pressed)
 	left_sidebar.add_child(btn_debug)
 
-	# Listen for simulation initialisation via the event bus
-	if EventBusGame.has_signal("sim_initialised"):
-		EventBusGame.sim_initialised.connect(_on_sim_initialised)
+	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
 		EventBusGame.turn_complete.connect(update_info)
+
+	# Attempt to get sim if already registered
+	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	if sim_ref:
+		_set_sim(sim_ref)
+
 	# Do not call update_info immediately; wait for sim_initialised or turn_complete
 
 func _add_error_message(message: String) -> void:
@@ -141,8 +146,13 @@ func _on_debug_actor_data_pressed() -> void:
 	else:
 		_debug_panel.visible = not _debug_panel.visible
 
-## take and hold the reference to the Sim
-func _on_sim_initialised(sim_ref: Sim) -> void:
+## Handles updates from the ReferenceRegistry
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
+
+## Sets the sim reference and updates info
+func _set_sim(sim_ref: Sim) -> void:
 	_sim = sim_ref
 	update_info()
 #endregion

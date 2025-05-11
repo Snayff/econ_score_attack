@@ -5,7 +5,7 @@
 ##  Inherit from this script in a new .gd file. Attach to the instanced template.
 ##
 ## See: dev/docs/docs/systems/ui_view_layout.md
-## Last Updated: 2025-05-11
+## Last Updated: 2024-06-09
 ##
 class_name ABCView
 extends Control
@@ -31,7 +31,6 @@ signal right_info_requested(info_id: int)
 @onready var right_sidebar_bg: ColorRect = %BGRightSidebarDebug
 @onready var centre_panel: PanelContainer = %CentrePanel
 @onready var centre_panel_bg: ColorRect = %BGCentrePanelDebug
-
 #endregion
 
 #region EXPORTS

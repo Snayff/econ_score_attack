@@ -38,3 +38,16 @@ extends Node
 
 
 #endregion
+
+
+#region CONSTANTS
+
+## Enum for valid keys in the ReferenceRegistry.
+enum ReferenceKey {
+    SIM,
+    PLAYER,
+    DEMESNE,
+    # Add more as needed
+}
+
+#endregion

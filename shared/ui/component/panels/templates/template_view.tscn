@@ -2,60 +2,61 @@
 
 [ext_resource type="Script" uid="uid://c56t75d1ug0jh" path="res://shared/ui/component/panels/templates/abc_view.gd" id="1_l74j8"]
 
-[node name="TemplateView" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="TemplateView" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_l74j8")
+show_debug_backgrounds = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
-
-[node name="LeftSidebar" type="VBoxContainer" parent="HBoxContainer"]
+[node name="TopBar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 300)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
-[node name="BGLeftSidebarDebug" type="ColorRect" parent="HBoxContainer/LeftSidebar"]
+[node name="BGTopBarDebug" type="ColorRect" parent="TopBar"]
 unique_name_in_owner = true
-layout_mode = 2
-color = Color(0.6, 0.7, 1, 0.5)
-
-[node name="MainArea" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="TopBar" type="HBoxContainer" parent="HBoxContainer/MainArea"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 40)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BGTopBarDebug" type="ColorRect" parent="HBoxContainer/MainArea/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
 color = Color(0.7, 1, 0.7, 0.5)
 
-[node name="CentrePanel" type="PanelContainer" parent="HBoxContainer/MainArea"]
+[node name="MainContent" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LeftSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 300)
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="BGLeftSidebarDebug" type="ColorRect" parent="MainContent/LeftSidebar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0.6, 0.7, 1, 0.5)
+
+[node name="CentrePanel" type="PanelContainer" parent="MainContent"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="BGCentrePanelDebug" type="ColorRect" parent="HBoxContainer/MainArea/CentrePanel"]
+[node name="BGCentrePanelDebug" type="ColorRect" parent="MainContent/CentrePanel"]
 unique_name_in_owner = true
 layout_mode = 2
 color = Color(1, 1, 1, 0.5)
 
-[node name="RightSidebar" type="VBoxContainer" parent="HBoxContainer"]
+[node name="RightSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 300)
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="BGRightSidebarDebug" type="ColorRect" parent="MainContent/RightSidebar"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="BGRightSidebarDebug" type="ColorRect" parent="HBoxContainer/RightSidebar"]
-unique_name_in_owner = true
-layout_mode = 2
 color = Color(0.8, 0.8, 0.8, 0.5)

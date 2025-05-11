@@ -15,7 +15,7 @@ extends Control
 
 #region EXPORTS
 
-@export var sim: Sim
+@export var _sim: Sim
 
 #endregion
 
@@ -43,13 +43,13 @@ func _ready() -> void:
 	# Ensure we have our required nodes
 	assert(laws_container != null, "LawsContainer node not found!")
 
-	# Find the Sim node if not provided
-	if not sim:
-		sim = get_node("/root/Main/Sim")
+	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
+	EventBusGame.turn_complete.connect(update_info)
 
-	if sim:
-		sim.sim_initialised.connect(_on_sim_initialised)
-		EventBusGame.turn_complete.connect(update_info)
+	# Attempt to get _sim if already registered
+	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	if sim_ref:
+		_set_sim(sim_ref)
 
 	update_info()
 
@@ -68,10 +68,16 @@ func update_info() -> void:
 
 #region PRIVATE FUNCTIONS
 
-func _on_sim_initialised() -> void:
-	if sim and sim.demesne:
-		sim.demesne.law_enacted.connect(_on_law_enacted)
-		sim.demesne.law_repealed.connect(_on_law_repealed)
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
+
+
+func _set_sim(sim_ref: Sim) -> void:
+	_sim = sim_ref
+	if _sim.demesne:
+		_sim.demesne.law_enacted.connect(_on_law_enacted)
+		_sim.demesne.law_repealed.connect(_on_law_repealed)
 	update_info()
 
 
@@ -93,7 +99,7 @@ func _update_info() -> void:
 	for child in laws_container.get_children():
 		child.queue_free()
 
-	if not sim or not sim.demesne:
+	if not _sim or not _sim.demesne:
 		var label = Label.new()
 		label.text = "No simulation data available"
 		laws_container.add_child(label)
@@ -125,7 +131,7 @@ func _update_info() -> void:
 		# Add laws in this category
 		for law in laws_by_category[category]:
 			var law_id = law.get("id")
-			var is_active = sim.demesne.is_law_active(law_id)
+			var is_active = _sim.demesne.is_law_active(law_id)
 
 			# Create law panel
 			var law_panel = _create_law_panel(law, is_active)
@@ -192,11 +198,11 @@ func _create_law_panel(law_data: Dictionary, is_active: bool) -> PanelContainer:
 		# Add parameter controls
 		for param_name in parameters:
 			var param_info = parameters[param_name]
-			var options = sim.demesne.law_registry.get_parameter_options(law_id, param_name)
+			var options = _sim.demesne.law_registry.get_parameter_options(law_id, param_name)
 			if not options.is_empty():
 				var current_value = param_info.default
 				if is_active:
-					var law = sim.demesne.get_law(law_id)
+					var law = _sim.demesne.get_law(law_id)
 					if law:
 						current_value = law.get_parameter(param_name)
 
@@ -221,15 +227,15 @@ func _create_law_panel(law_data: Dictionary, is_active: bool) -> PanelContainer:
 
 func _on_law_button_pressed(law_id: String, is_active: bool) -> void:
 	if is_active:
-		sim.demesne.repeal_law(law_id)
+		_sim.demesne.repeal_law(law_id)
 	else:
-		sim.demesne.enact_law(law_id)
+		_sim.demesne.enact_law(law_id)
 
 	update_info()
 
 
 func _on_parameter_button_pressed(law_id: String, param_name: String, value: float) -> void:
-	var law = sim.demesne.get_law(law_id)
+	var law = _sim.demesne.get_law(law_id)
 	if law:
 		law.set_parameter(param_name, value)
 		update_info()
