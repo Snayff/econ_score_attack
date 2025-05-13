@@ -5,7 +5,7 @@
 ##  Inherit from this script in a new .gd file. Attach to the instanced template.
 ##
 ## See: dev/docs/docs/systems/ui_view_layout.md
-## Last Updated: 2025-05-11
+## Last Updated: 2025-05-13
 ##
 class_name ABCView
 extends Control
@@ -34,7 +34,20 @@ signal right_info_requested(info_id: int)
 #endregion
 
 #region EXPORTS
-@export var show_right_sidebar: bool = true
+@export var sidebar_width: int = 120:
+	set(value):
+		sidebar_width = value
+		if not is_node_ready():
+			return
+		_update_sidebar_widths()
+
+@export var show_right_sidebar: bool = true:
+	set(value):
+		show_right_sidebar = value
+		if not is_node_ready():
+			return
+		set_right_sidebar_visible(value)
+
 @export var show_debug_backgrounds: bool = false:
 	set(v):
 		show_debug_backgrounds = v
@@ -69,6 +82,13 @@ func _ready() -> void:
 	assert(centre_panel_bg != null)
 	assert(right_sidebar_bg != null)
 	right_sidebar.visible = show_right_sidebar
+	_update_sidebar_widths()
+
+func _update_sidebar_widths() -> void:
+	if left_sidebar:
+		left_sidebar.custom_minimum_size.x = sidebar_width
+	if right_sidebar:
+		right_sidebar.custom_minimum_size.x = sidebar_width
 
 ## Update the visibility of the debug backgrounds to align to show_debug_backgrounds
 func _update_bg_visibility():
