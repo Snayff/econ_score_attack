@@ -1,8 +1,13 @@
 ##
-## ViewPeople2: Updated people view using ABCView layout.
-## Displays information about people in the simulation using the standardised UI layout.
-## Usage: Add this scene to a parent UI node. Populates the centre panel of ABCView with people info.
-## Last Updated: 2024-06-10
+## ViewPeople2: People view using the standardised ABCView layout system.
+## Displays information about people in the simulation using the modular UI layout.
+## Usage:
+##  Inherit from ABCView. Implement update_view() to populate the centre panel and any other regions as needed, using set_centre_content, set_top_bar_content, etc. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
+##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
+##  Error and empty state handling is managed by the base class.
+##
+## See: dev/docs/docs/systems/ui_layout.md
+## Last Updated: 2025-05-13
 ##
 extends ABCView
 
@@ -26,9 +31,10 @@ var _sim: Sim
 
 #region PUBLIC FUNCTIONS
 ## Updates the displayed information in the centre panel.
+## Populates the centre panel with a list of living people and their details.
+## @return void
 func update_info() -> void:
-	for child in centre_panel.get_children():
-		child.queue_free()
+	_clear_all_children(centre_panel)
 	if not _sim:
 		_add_error_message("No simulation data available (_sim is null)")
 		return
@@ -51,22 +57,44 @@ func update_info() -> void:
 	for person in living_people:
 		var row = _create_person_panel(person)
 		vbox.add_child(row)
-	centre_panel.add_child(vbox)
+	set_centre_content([vbox])
+
+func update_view() -> void:
+	if not _sim:
+		return
+	if not _sim.demesne:
+		return
+	var living_people = []
+	for person in _sim.demesne.get_people():
+		if person.is_alive:
+			living_people.append(person)
+	if living_people.is_empty():
+		return
+	var vbox = VBoxContainer.new()
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# Header row
+	var header = _create_person_row(["Name", "Job", "Health", "Happiness", "Stockpile"], true)
+	vbox.add_child(header)
+	# Person rows
+	for person in living_people:
+		var row = _create_person_panel(person)
+		vbox.add_child(row)
+	set_centre_content([vbox])
 #endregion
 
 #region PRIVATE FUNCTIONS
+## Called when the node is added to the scene tree. Sets up top bar buttons and connects signals.
+## @return void
 func _ready() -> void:
 	# Add Population button to top bar
 	var btn_population = Button.new()
 	btn_population.text = "Population"
 	btn_population.pressed.connect(_on_population_pressed)
-	top_bar.add_child(btn_population)
-
 	# Add Decision Inspector button to top bar
 	var btn_decision_inspector = Button.new()
 	btn_decision_inspector.text = "Decision Inspector"
 	btn_decision_inspector.pressed.connect(_on_debug_actor_data_pressed)
-	top_bar.add_child(btn_decision_inspector)
+	set_top_bar_content([btn_population, btn_decision_inspector])
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
@@ -79,12 +107,21 @@ func _ready() -> void:
 
 	# Do not call update_info immediately; wait for sim_initialised or turn_complete
 
+## @null
+## Adds an error message label to the centre panel.
+## @param message (String): The error message to display.
+## @return void
 func _add_error_message(message: String) -> void:
+	_clear_all_children(centre_panel)
 	var label = Label.new()
 	label.text = message
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	centre_panel.add_child(label)
 
+## Creates a row of labels for person data.
+## @param values (Array): The values to display in the row.
+## @param is_header (bool): Whether this row is a header row.
+## @return HBoxContainer: The constructed row container.
 func _create_person_row(values: Array, is_header: bool = false) -> HBoxContainer:
 	var row = HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -99,6 +136,9 @@ func _create_person_row(values: Array, is_header: bool = false) -> HBoxContainer
 		row.add_child(label)
 	return row
 
+## Creates a panel displaying a person's details.
+## @param person (Person): The person whose details to display.
+## @return PanelContainer: The constructed panel container.
 func _create_person_panel(person: Person) -> PanelContainer:
 	var panel = PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -144,6 +184,8 @@ func _create_person_panel(person: Person) -> PanelContainer:
 			stockpile_container.add_child(good_label)
 	return panel
 
+## Handles the Decision Inspector button press, toggling the debug panel.
+## @return void
 func _on_debug_actor_data_pressed() -> void:
 	if _debug_panel == null:
 		_debug_panel = preload("res://feature/economic_actor/ui/actor_data_inspector.tscn").instantiate()
@@ -152,17 +194,23 @@ func _on_debug_actor_data_pressed() -> void:
 	else:
 		_debug_panel.visible = not _debug_panel.visible
 
-## Handles updates from the ReferenceRegistry
+## Handles updates from the ReferenceRegistry.
+## @param key (int): The reference key.
+## @param value (Object): The reference value.
+## @return void
 func _on_reference_registered(key: int, value: Object) -> void:
 	if key == Constants.ReferenceKey.SIM:
 		_set_sim(value)
 
-## Sets the sim reference and updates info
+## Sets the sim reference and updates info.
+## @param sim_ref (Sim): The simulation reference.
+## @return void
 func _set_sim(sim_ref: Sim) -> void:
 	_sim = sim_ref
 	update_info()
 
 ## Handles Population button press to refresh the people list.
+## @return void
 func _on_population_pressed() -> void:
 	update_info()
 #endregion

@@ -1,8 +1,12 @@
-## ViewLaws2: Updated laws view using ABCView layout.
-## Displays information about laws in the simulation using the standardised UI layout system.
-## Usage: Add this scene to a parent UI node. Populates the centre panel of ABCView with laws info.
+## ViewLaws2: Laws view using the standardised ABCView layout system.
+## Displays information about laws in the simulation using the modular UI layout.
+## Usage:
+##  Inherit from ABCView. Implement update_view() to populate the centre panel and any other regions as needed, using set_centre_content, set_left_sidebar_content, etc. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
+##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
+##  Error and empty state handling is managed by the base class.
+##
 ## See: dev/docs/docs/systems/ui_layout.md
-## Last Updated: 2024-06-10
+## Last Updated: 2025-05-13
 ##
 extends ABCView
 
@@ -29,9 +33,10 @@ var _law_panels: Dictionary = {}
 
 #region PUBLIC FUNCTIONS
 ## Updates the displayed information in the centre panel.
+## Populates the centre panel with a list of laws grouped by category, and highlights the selected law.
+## @return void
 func update_info() -> void:
-	for child in centre_panel.get_children():
-		child.queue_free()
+	_clear_all_children(centre_panel)
 	_law_panels.clear()
 	var first_law_id := ""
 	if not _sim or not _sim.demesne:
@@ -67,79 +72,20 @@ func update_info() -> void:
 			var law_panel: Button = _create_law_panel(law, is_active, law_id)
 			_law_panels[law_id] = law_panel
 			vbox.add_child(law_panel)
-	centre_panel.add_child(vbox)
+	set_centre_content([vbox])
 	# Select the first law by default if none selected
 	if _selected_law_id == "" and first_law_id != "":
 		_on_law_panel_selected(first_law_id)
 	elif _selected_law_id in _law_panels:
 		_highlight_selected_law()
-#endregion
 
-#region PRIVATE FUNCTIONS
-func _ready() -> void:
-	show_right_sidebar = true
-	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
-	if EventBusGame.has_signal("turn_complete"):
-		EventBusGame.turn_complete.connect(update_info)
-	# Attempt to get sim if already registered
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
-	if sim_ref:
-		_set_sim(sim_ref)
-	update_info()
-
-func _add_error_message(message: String) -> void:
-	var label := Label.new()
-	label.text = message
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	centre_panel.add_child(label)
-
-func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
-		_set_sim(value)
-
-func _set_sim(sim_ref: Sim) -> void:
-	_sim = sim_ref
-	if _sim.demesne:
-		_sim.demesne.law_enacted.connect(_on_law_enacted)
-		_sim.demesne.law_repealed.connect(_on_law_repealed)
-	update_info()
-
-func _on_law_enacted(law: Law) -> void:
-	update_info()
-
-func _on_law_repealed(law_id: String) -> void:
-	update_info()
-
-func _create_law_panel(law_data: Dictionary, is_active: bool, law_id: String) -> Button:
-	var panel := Button.new()
-	panel.name = law_id
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.toggle_mode = true
-	panel.focus_mode = Control.FOCUS_ALL
-	panel.text = law_data.get("name") + "\n" + law_data.get("description")
-	panel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	panel.pressed.connect(_on_law_panel_selected.bind(law_id))
-	panel.mouse_entered.connect(panel.grab_focus)
-	# Highlight if selected
-	if law_id == _selected_law_id:
-		panel.button_pressed = true
-	else:
-		panel.button_pressed = false
-	return panel
-
-func _highlight_selected_law() -> void:
-	for law_id in _law_panels.keys():
-		_law_panels[law_id].button_pressed = (law_id == _selected_law_id)
-
-func _on_law_panel_selected(law_id: String) -> void:
-	_selected_law_id = law_id
-	_highlight_selected_law()
-	_update_left_sidebar(law_id)
-
+## Updates the left sidebar with law details and actions.
+## @param law_id (String): The law's ID.
+## @return void
 func _update_left_sidebar(law_id: String) -> void:
-	for child in left_sidebar.get_children():
-		child.queue_free()
+	var sidebar_content: Array[Control] = []
 	if not _sim or not _sim.demesne:
+		set_left_sidebar_content([])
 		return
 	var law = null
 	var law_data = null
@@ -149,6 +95,7 @@ func _update_left_sidebar(law_id: String) -> void:
 			law_data = l
 			break
 	if not law_data:
+		set_left_sidebar_content([])
 		return
 	if _sim.demesne.is_law_active(law_id):
 		law = _sim.demesne.get_law(law_id)
@@ -157,8 +104,7 @@ func _update_left_sidebar(law_id: String) -> void:
 	name_label.text = law_data.get("name")
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.add_theme_font_size_override("font_size", 18)
-	left_sidebar.add_child(name_label)
-
+	sidebar_content.append(name_label)
 	# Enact/Repeal buttons
 	var actions_hbox := HBoxContainer.new()
 	var enact_button := Button.new()
@@ -171,7 +117,7 @@ func _update_left_sidebar(law_id: String) -> void:
 	repeal_button.disabled = not _sim.demesne.is_law_active(law_id)
 	repeal_button.pressed.connect(_on_law_button_pressed.bind(law_id, true))
 	actions_hbox.add_child(repeal_button)
-	left_sidebar.add_child(actions_hbox)
+	sidebar_content.append(actions_hbox)
 	# Parameters (if any)
 	var parameters: Dictionary = law_data.get("parameters", {})
 	if not parameters.is_empty():
@@ -203,8 +149,13 @@ func _update_left_sidebar(law_id: String) -> void:
 				# Add the FlowContainer to the wrapper
 				options_wrapper.add_child(options_flow)
 				param_vbox.add_child(options_wrapper)
-		left_sidebar.add_child(param_vbox)
+			sidebar_content.append(param_vbox)
+	set_left_sidebar_content(sidebar_content)
 
+## Handles enact/repeal button presses for a law.
+## @param law_id (String): The law's ID.
+## @param is_active (bool): Whether the law is currently active.
+## @return void
 func _on_law_button_pressed(law_id: String, is_active: bool) -> void:
 	if is_active:
 		_sim.demesne.repeal_law(law_id)
@@ -212,9 +163,106 @@ func _on_law_button_pressed(law_id: String, is_active: bool) -> void:
 		_sim.demesne.enact_law(law_id)
 	update_info()
 
+## Handles parameter value selection for a law.
+## @param law_id (String): The law's ID.
+## @param param_name (String): The parameter name.
+## @param value (float): The selected value.
+## @return void
 func _on_param_value_selected(law_id: String, param_name: String, value: float) -> void:
 	var law = _sim.demesne.get_law(law_id)
 	if law:
 		law.set_parameter(param_name, value)
 		update_info()
+#endregion
+
+#region PRIVATE FUNCTIONS
+## Called when the node is added to the scene tree. Sets up signals and initialises the view.
+## @return void
+func _ready() -> void:
+	show_right_sidebar = true
+	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
+	if EventBusGame.has_signal("turn_complete"):
+		EventBusGame.turn_complete.connect(update_info)
+	# Attempt to get sim if already registered
+	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	if sim_ref:
+		_set_sim(sim_ref)
+	update_info()
+
+## @null
+## Adds an error message label to the centre panel.
+## @param message (String): The error message to display.
+## @return void
+func _add_error_message(message: String) -> void:
+	_clear_all_children(centre_panel)
+	var label := Label.new()
+	label.text = message
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	centre_panel.add_child(label)
+
+## Handles updates from the ReferenceRegistry.
+## @param key (int): The reference key.
+## @param value (Object): The reference value.
+## @return void
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
+
+## Sets the sim reference and connects law signals.
+## @param sim_ref (Sim): The simulation reference.
+## @return void
+func _set_sim(sim_ref: Sim) -> void:
+	_sim = sim_ref
+	if _sim.demesne:
+		_sim.demesne.law_enacted.connect(_on_law_enacted)
+		_sim.demesne.law_repealed.connect(_on_law_repealed)
+	update_info()
+
+## Handles the law_enacted signal to refresh the view.
+## @param law (Law): The enacted law.
+## @return void
+func _on_law_enacted(law: Law) -> void:
+	update_info()
+
+## Handles the law_repealed signal to refresh the view.
+## @param law_id (String): The repealed law's ID.
+## @return void
+func _on_law_repealed(law_id: String) -> void:
+	update_info()
+
+## Creates a law panel button for a given law.
+## @param law_data (Dictionary): The law's data.
+## @param is_active (bool): Whether the law is currently active.
+## @param law_id (String): The law's ID.
+## @return Button: The constructed law panel button.
+func _create_law_panel(law_data: Dictionary, is_active: bool, law_id: String) -> Button:
+	var panel := Button.new()
+	panel.name = law_id
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.toggle_mode = true
+	panel.focus_mode = Control.FOCUS_ALL
+	panel.text = law_data.get("name") + "\n" + law_data.get("description")
+	panel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.pressed.connect(_on_law_panel_selected.bind(law_id))
+	panel.mouse_entered.connect(panel.grab_focus)
+	# Highlight if selected
+	if law_id == _selected_law_id:
+		panel.button_pressed = true
+	else:
+		panel.button_pressed = false
+	return panel
+
+## Highlights the currently selected law panel.
+## @return void
+func _highlight_selected_law() -> void:
+	for law_id in _law_panels.keys():
+		_law_panels[law_id].button_pressed = (law_id == _selected_law_id)
+
+## Handles law panel selection and updates the left sidebar.
+## @param law_id (String): The selected law's ID.
+## @return void
+func _on_law_panel_selected(law_id: String) -> void:
+	_selected_law_id = law_id
+	_highlight_selected_law()
+	_update_left_sidebar(law_id)
 #endregion
