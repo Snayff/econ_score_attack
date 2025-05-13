@@ -39,6 +39,8 @@ var _economic_metrics: EconomicMetrics
 
 ## Transactions in the current turn
 var _turn_transactions: Array[Dictionary] = []
+
+const GameFactory = preload("res://global/game_factory.gd")
 #endregion
 
 
@@ -85,8 +87,8 @@ func _ready() -> void:
 	var total_money = _calculate_total_money()
 	_economic_validator.set_initial_money(total_money)
 
-	# Generate people using the Factory and add them to the demesne
-	var people = Factory.generate_starting_people()
+	# Generate people using the GameFactory and add them to the demesne
+	var people = GameFactory.generate_starting_people()
 	for person in people:
 		demesne.add_person(person)
 
@@ -138,7 +140,6 @@ func resolve_turn() -> void:
 	var purchasers: Array = []
 	var amount_to_buy: int = 0
 	var sellers: Array = []
-	var saleable_remaining: int = 0
 
 	for good in saleable_goods:
 		# no buyers, move on

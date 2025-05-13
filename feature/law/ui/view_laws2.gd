@@ -4,11 +4,13 @@
 ##  Inherit from ABCView. Implement update_view() to populate the centre panel and any other regions as needed, using set_centre_content, set_left_sidebar_content, etc. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
 ##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
 ##  Error and empty state handling is managed by the base class.
+##  Uses UIFactory (global autoload) for standard UI element creation.
+##  UIFactory is available as a global autoload; if your linter complains, suppress or ignore the warning.
 ##
-## See: dev/docs/docs/systems/ui_layout.md
+## See: dev/docs/docs/systems/ui.md
 ## Last Updated: 2025-05-13
-##
 extends ABCView
+
 
 #region CONSTANTS
 const PARAMETER_VALUES := {
@@ -100,28 +102,21 @@ func _update_left_sidebar(law_id: String) -> void:
 	if _sim.demesne.is_law_active(law_id):
 		law = _sim.demesne.get_law(law_id)
 	# Law name and description
-	var name_label := Label.new()
-	name_label.text = law_data.get("name")
-	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	name_label.add_theme_font_size_override("font_size", 18)
+	var name_label: Label = UIFactory.create_viewport_sidebar_header_label(law_data.get("name"))
 	sidebar_content.append(name_label)
 	# Enact/Repeal buttons
-	var actions_hbox := HBoxContainer.new()
-	var enact_button := Button.new()
-	enact_button.text = "Enact"
+	var actions_hbox: HBoxContainer = HBoxContainer.new()
+	var enact_button: Button = UIFactory.create_button("Enact", _on_law_button_pressed.bind(law_id, false))
 	enact_button.disabled = _sim.demesne.is_law_active(law_id)
-	enact_button.pressed.connect(_on_law_button_pressed.bind(law_id, false))
 	actions_hbox.add_child(enact_button)
-	var repeal_button := Button.new()
-	repeal_button.text = "Repeal"
+	var repeal_button: Button = UIFactory.create_button("Repeal", _on_law_button_pressed.bind(law_id, true))
 	repeal_button.disabled = not _sim.demesne.is_law_active(law_id)
-	repeal_button.pressed.connect(_on_law_button_pressed.bind(law_id, true))
 	actions_hbox.add_child(repeal_button)
 	sidebar_content.append(actions_hbox)
 	# Parameters (if any)
 	var parameters: Dictionary = law_data.get("parameters", {})
 	if not parameters.is_empty():
-		var param_vbox := VBoxContainer.new()
+		var param_vbox: VBoxContainer = VBoxContainer.new()
 		for param_name in parameters:
 			var param_info = parameters[param_name]
 			var options = _sim.demesne.law_registry.get_parameter_options(law_id, param_name)
@@ -129,26 +124,19 @@ func _update_left_sidebar(law_id: String) -> void:
 				var current_value = param_info.default
 				if law:
 					current_value = law.get_parameter(param_name)
-				var param_label := Label.new()
+				var param_label: Label = Label.new()
 				param_label.text = param_info.name + ": "
 				param_vbox.add_child(param_label)
-				# Wrap FlowContainer in a Control to constrain width to sidebar_width
-				var options_wrapper := Control.new()
-				options_wrapper.custom_minimum_size.x = self.sidebar_width # Ensures fixed sidebar width
-				var options_flow := FlowContainer.new()
-				options_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				# Use UIFactory for sidebar button container
+				var options_flow: FlowContainer = UIFactory.create_viewport_sidebar_button_container()
 				# Add value buttons to the FlowContainer
 				for value in options:
-					var value_button := Button.new()
-					value_button.text = str(value) + "%"
+					var value_button: Button = UIFactory.create_button(str(value) + "%", _on_param_value_selected.bind(law_id, param_name, value))
 					value_button.toggle_mode = true
 					value_button.button_pressed = (law and is_equal_approx(value, current_value))
 					value_button.disabled = not law
-					value_button.pressed.connect(_on_param_value_selected.bind(law_id, param_name, value))
 					options_flow.add_child(value_button)
-				# Add the FlowContainer to the wrapper
-				options_wrapper.add_child(options_flow)
-				param_vbox.add_child(options_wrapper)
+				param_vbox.add_child(options_flow)
 			sidebar_content.append(param_vbox)
 	set_left_sidebar_content(sidebar_content)
 

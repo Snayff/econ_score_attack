@@ -3,7 +3,7 @@
 ##
 ## Provides methods to generate people/actors at game start, merging culture and ancestry data as per allocation rules.
 ## Example usage:
-##   var people = Factory.generate_starting_people()
+##   var people = GameFactory.generate_starting_people()
 extends Node
 
 #region CONSTANTS

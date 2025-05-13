@@ -4,7 +4,6 @@
 class_name SalesTax
 extends Law
 
-const Law = preload("res://feature/law/law.gd")
 
 #region VARS
 ## Minimum allowed tax rate

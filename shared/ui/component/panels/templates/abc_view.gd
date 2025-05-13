@@ -5,8 +5,9 @@
 ##  Implement update_view() in your subclass to populate all regions. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
 ##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
 ##  Error and empty state handling is managed by the base class.
+##  For all standard UI elements (headers, buttons, sidebar containers), use UIFactory (see global/ui_factory.gd).
 ##
-## See: dev/docs/docs/systems/ui_layout.md
+## See: dev/docs/docs/systems/ui.md
 ## Last Updated: 2025-05-13
 ##
 class_name ABCView
@@ -107,8 +108,8 @@ func clear_top_bar() -> void:
 ## Shows or hides the right sidebar.
 ## @param visible (bool): Whether the right sidebar should be visible.
 ## @return void
-func set_right_sidebar_visible(visible: bool) -> void:
-	right_sidebar.visible = visible
+func set_right_sidebar_visible(visible_: bool) -> void:
+	right_sidebar.visible = visible_
 
 ## Standard refresh pattern: clears all regions, calls update_view, then fills empty regions with a default message.
 ## @return void

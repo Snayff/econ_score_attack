@@ -3,6 +3,8 @@
 # Requires Factory to be set as an autoload (singleton)
 extends Node
 
+const GameFactory = preload("res://global/game_factory.gd")
+
 var _test_person: DataPerson
 
 func _ready() -> void:
@@ -21,7 +23,7 @@ func test_constructor() -> void:
 	assert(_test_person.decision_profile == "greedy")
 
 func test_json_loading() -> void:
-	var people = Factory.generate_starting_people()
+	var people = GameFactory.generate_starting_people()
 	assert(typeof(people) == TYPE_ARRAY)
 	# If people.json is missing, should return empty array
 	if people.size() == 0:

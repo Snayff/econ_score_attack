@@ -95,7 +95,7 @@ func survey_parcel(parcel: DataLandParcel) -> Array[String]:
 ## Updates aspect generation for a parcel
 ## @param parcel: The land parcel to update
 ## @param delta: Time elapsed since last update
-func update(parcel: DataLandParcel, delta: float) -> void:
+func update(_parcel: DataLandParcel, delta: float) -> void:
 	if delta < MIN_UPDATE_INTERVAL:
 		return
 

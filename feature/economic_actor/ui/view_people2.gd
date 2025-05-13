@@ -6,7 +6,7 @@
 ##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
 ##  Error and empty state handling is managed by the base class.
 ##
-## See: dev/docs/docs/systems/ui_layout.md
+## See: dev/docs/docs/systems/ui.md
 ## Last Updated: 2025-05-13
 ##
 extends ABCView

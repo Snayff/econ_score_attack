@@ -4,6 +4,7 @@
 extends Control
 
 #region CONSTANTS
+const GameFactory = preload("res://global/game_factory.gd")
 #endregion
 
 
@@ -44,7 +45,7 @@ func _ready() -> void:
 	assert(txt_goods_info != null)
 	assert(txt_result != null)
 
-	_actors = Factory.generate_starting_people()
+	_actors = GameFactory.generate_starting_people()
 	_goods = Library.get_all_goods_data()
 	Logger.info("[ACTOR_DEBUG_TRACE] UI ready, actors loaded: %s" % [_actors], "ActorDebug")
 	print("Loaded actors: ", _actors)

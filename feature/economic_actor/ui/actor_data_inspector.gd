@@ -6,6 +6,7 @@
 extends Control
 
 #region CONSTANTS
+const GameFactory = preload("res://global/game_factory.gd")
 #endregion
 
 
@@ -36,7 +37,7 @@ func _ready() -> void:
 	assert(lbl_actor_list != null)
 	assert(lbl_culture_list != null)
 
-	_actors = Factory.generate_starting_people()
+	_actors = GameFactory.generate_starting_people()
 	_cultures = Library.get_all_cultures_data()
 	_update_ui()
 

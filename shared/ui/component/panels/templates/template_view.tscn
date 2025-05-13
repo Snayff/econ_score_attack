@@ -28,7 +28,6 @@ color = Color(0.7, 1, 0.7, 0.5)
 
 [node name="MainContent" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="LeftSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true
