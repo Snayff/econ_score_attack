@@ -2,7 +2,6 @@
 ## Last Updated: 2025-05-05
 extends Node
 
-const DataGood = preload("../../data_class/data_good.gd")
 
 var _test_good: DataGood
 

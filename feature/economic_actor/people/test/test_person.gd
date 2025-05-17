@@ -2,8 +2,6 @@
 class_name TestPerson
 extends ABCTest
 
-const Person = preload("res://feature/economic_actor/people/person.gd")
-
 var _person: Person
 
 func before_each() -> void:
@@ -123,11 +121,9 @@ func test_utility_selection_respects_disposable_income() -> void:
 		"3", "Test3", "northern", "ancestral_1", {"hunger": 1.0}, 0.2, 10.0, "greedy"
 	)
 	# Setup goods and prices
-	var DataGood = preload("res://feature/economy/market/data_class/data_good.gd")
 	var cheap_good = DataGood.new("cheap_food", "Cheap Food", 1.0, "food", "🍞")
 	var expensive_good = DataGood.new("luxury", "Luxury", 50.0, "luxury", "💎")
 	var goods = [cheap_good, expensive_good]
-	var DataCulture = preload("res://feature/economic_actor/data_class/data_culture.gd")
 	var cultures = {"northern": DataCulture.new("northern", [], [0.1, 0.3], [], "hoard", [])}
 	var ancestries = {"ancestral_1": {"base_preferences": {}}}
 	var prices = {"cheap_food": 5.0, "luxury": 50.0}

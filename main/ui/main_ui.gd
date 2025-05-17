@@ -55,37 +55,14 @@ func _ready() -> void:
 	# Show a test notification to demonstrate the notification system is working
 	EventBusUI.show_notification.emit("Welcome to your demesne!", "info")
 
-	# Connect to World grid initialisation
-	World.world_grid_updated.connect(_on_world_grid_ready)
-
-func _on_world_grid_ready() -> void:
-	var sim_node = get_node("/root/Main/Sim")
-	if sim_node and sim_node.demesne:
-		var demesne = sim_node.demesne
-		var grid_dims = World.get_grid_dimensions()
-		_view_land.set_grid_and_demesne(grid_dims.x, grid_dims.y, demesne)
-		EventBusGame.land_grid_updated.connect(_on_land_grid_updated)
-
-func _on_land_grid_updated() -> void:
-	# Refresh the land view when the grid is updated
-	if _view_land:
-		var sim_node = get_node("/root/Main/Sim")
-		if sim_node and sim_node.demesne:
-			var demesne = sim_node.demesne
-			var grid_dims = World.get_grid_dimensions()
-			_view_land.set_grid_and_demesne(grid_dims.x, grid_dims.y, demesne)
-
 #endregion
 
 
 #region PUBLIC FUNCTIONS
-
-
 #endregion
 
 
 #region PRIVATE FUNCTIONS
-
 func _switch_view(view: View) -> void:
 	# Hide all views
 	_view_people.visible = false

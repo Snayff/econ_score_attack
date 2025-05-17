@@ -94,7 +94,8 @@ alwaysApply: true
   - A class should begin with the Docstring, then be followed by the classname (if the class needs to be referred to elsewhere), then finally the extends keyword, defining any base class. 
   - Documenation should always be kept up to date. 
   - All functions require comprehensive, but succinct docstrings. Arguments and return types should be documented. 
-  - Functions that can return null should include "@null" at the start of their docstring.
+  - Functions that can return null should include "@null" at the start of their docstring's function description.
+  - Functions that must be overriden in a subclass should include "@virtual" at the start of their docstring's function description. 
   - Documentation within a class, whether for a function or variable, should explain why an action is being taken. 
   - When adding a new system, make sure to ask if we should create a new documentation file in "dev/docs/docs/systems". This documentation should explain how the system works, the system's intent, how a developer can make use of it, and a definition of any associated data schemas. 
   - When updating a system, if there is system documentation in "dev/docs/docs/systems" ensure it is updated. 

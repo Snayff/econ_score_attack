@@ -1,8 +1,6 @@
 ## Component for managing log filtering options.
 extends PanelContainer
 
-const DataLogEntry := preload("res://dev_tool/logger/ui/components/data_log_entry.gd")
-
 
 #region SIGNALS
 

@@ -10,8 +10,6 @@ extends Node
 
 
 #region SIGNALS
-signal config_loaded
-signal err_config_load_failed(error: String)
 #endregion
 
 

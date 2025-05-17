@@ -59,6 +59,7 @@ DEBUGGING
 - notification system use toasts. 
 - split land_config.json into component parts (world def, improvmeents, terrain)
 - need to build some sort of validation to ensure that references in one data file are appropriate in another. e.g. if referring to a good, then that good should be in goods.json
+- if a ui number changes, should be able to count up or down to the new value. 
  
 
 ## DEV
@@ -73,3 +74,39 @@ DEBUGGING
 - on land view, when progressing time, grid keeps resetting to centre most. 
 
 ################
+
+# Creating a new View
+New Scene. Control Node as Root. Name "View*.tscn"
+For View*.tscn set 
+	size_flags_horizontal = Fill, expand
+	size_flags_vertical = Fill, expand
+Instance TemplateView.tscn as child. 
+For TemplateView set:
+	layout/layout_mode = anchor
+	layout/anchors_preset = Full Rect
+Ensure nothing else in TemplateView has been changed (size might be and might not be able to reset, this is fine)
+Create view_*.gd. 
+Assign view_*.gd to TemplateView.
+
+
+
+In ABCView:
+Update content-setting methods to accept arrays or single controls.
+Add _show_empty_message(region: String) and call it for any empty region after update_view().
+Refactor refresh() to clear, update, and check for empty regions.
+Ensure signals are documented and used for all sidebar/top bar actions.
+In Subclasses:
+Implement update_view() using the new content-setting methods.
+Do not manually clear or show error messages—let ABCView handle this.
+Emit standard signals for user actions.
+In Documentation:
+Update the system doc to reflect these changes.
+Provide code examples for the new workflow.
+
+
+
+
+
+
+
+

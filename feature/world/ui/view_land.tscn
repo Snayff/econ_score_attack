@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvu83cqyrf2ld"]
+
+[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_262ed"]
+[ext_resource type="Script" uid="uid://c58nhr3w5ye3t" path="res://feature/world/ui/view_land.gd" id="2_iwbry"]
+
+[node name="ViewLand" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1280.0
+offset_bottom = -720.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TemplateView" parent="." instance=ExtResource("1_262ed")]
+layout_mode = 1
+script = ExtResource("2_iwbry")

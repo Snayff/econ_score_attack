@@ -6,6 +6,8 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1032.0
+offset_bottom = -696.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -28,6 +30,7 @@ color = Color(0.7, 1, 0.7, 0.5)
 
 [node name="MainContent" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="LeftSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true

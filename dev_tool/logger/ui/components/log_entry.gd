@@ -1,8 +1,6 @@
 ## A UI component for displaying a single log entry.
 extends PanelContainer
 
-const DataLogEntry := preload("res://dev_tool/logger/ui/components/data_log_entry.gd")
-
 
 #region SIGNALS
 

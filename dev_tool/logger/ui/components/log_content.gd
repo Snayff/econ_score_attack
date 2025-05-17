@@ -1,7 +1,6 @@
 ## Component for displaying log file content with virtual scrolling.
 extends ScrollContainer
 
-const DataLogEntry := preload("res://dev_tool/logger/ui/components/data_log_entry.gd")
 const LogEntryScene := preload("res://dev_tool/logger/ui/scenes/log_entry.tscn")
 
 
