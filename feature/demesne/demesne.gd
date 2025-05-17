@@ -10,8 +10,8 @@ extends Node
 signal stockpile_changed(good_id: String, new_amount: int)
 signal person_added(person: Person)
 signal person_removed(person: Person)
-signal law_enacted(law: Law)
-signal law_repealed(law_id: String)
+signal law_enacted()
+signal law_repealed()
 signal parcel_updated(x: int, y: int, parcel: DataLandParcel)
 signal path_found(start: Vector2i, end: Vector2i, path: Array[Vector2i])
 signal path_failed(start: Vector2i, end: Vector2i, reason: String)
@@ -377,7 +377,7 @@ func enact_law(law_id: String) -> Law:
 	# Activate and store the law
 	law.activate()
 	laws[law_id] = law
-	emit_signal("law_enacted", law)
+	emit_signal("law_enacted")
 	Logger.log_event("new_law_enacted", {
 		"demesne": demesne_name,
 		"law_id": law_id,
@@ -402,7 +402,7 @@ func repeal_law(law_id: String) -> bool:
 	var law: Law = laws[law_id]
 	law.deactivate()
 	laws.erase(law_id)
-	emit_signal("law_repealed", law_id)
+	emit_signal("law_repealed")
 	Logger.log_event("law_repealed", {
 		"demesne": demesne_name,
 		"law_id": law_id,

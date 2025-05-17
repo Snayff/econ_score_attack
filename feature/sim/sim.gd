@@ -40,7 +40,6 @@ var _economic_metrics: EconomicMetrics
 ## Transactions in the current turn
 var _turn_transactions: Array[Dictionary] = []
 
-const GameFactory = preload("res://global/game_factory.gd")
 #endregion
 
 

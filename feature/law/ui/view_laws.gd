@@ -207,15 +207,13 @@ func _set_sim(sim_ref: Sim) -> void:
 	update_info()
 
 ## Handles the law_enacted signal to refresh the view.
-## @param law (Law): The enacted law.
 ## @return void
-func _on_law_enacted(law: Law) -> void:
+func _on_law_enacted() -> void:
 	update_info()
 
 ## Handles the law_repealed signal to refresh the view.
-## @param law_id (String): The repealed law's ID.
 ## @return void
-func _on_law_repealed(law_id: String) -> void:
+func _on_law_repealed() -> void:
 	update_info()
 
 ## Creates a law panel button for a given law.

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8exi112aahh0"]
 
 [ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_template"]
-[ext_resource type="Script" uid="uid://ck7pvbsxww0d5" path="res://feature/law/ui/view_laws2.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://ck7pvbsxww0d5" path="res://feature/law/ui/view_laws.gd" id="2_script"]
 
 [node name="ViewLaws" type="Control"]
 layout_mode = 3
@@ -10,10 +10,5 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TemplateView" parent="." instance=ExtResource("1_template")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 1
 script = ExtResource("2_script")

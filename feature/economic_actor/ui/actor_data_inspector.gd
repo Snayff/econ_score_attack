@@ -6,7 +6,6 @@
 extends Control
 
 #region CONSTANTS
-const GameFactory = preload("res://global/game_factory.gd")
 #endregion
 
 

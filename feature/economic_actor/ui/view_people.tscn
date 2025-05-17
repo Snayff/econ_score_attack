@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddcy3mhwj4kj6"]
+
+[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_11uxu"]
+[ext_resource type="Script" uid="uid://cfjsotkyyk4yc" path="res://feature/economic_actor/ui/view_people.gd" id="2_gv6h5"]
+
+[node name="ViewPeople" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TemplateView" parent="." instance=ExtResource("1_11uxu")]
+layout_mode = 1
+script = ExtResource("2_gv6h5")
