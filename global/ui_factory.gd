@@ -53,4 +53,30 @@ static func create_button(text: String, pressed_func: Variant = null) -> Button:
 	if typeof(pressed_func) == TYPE_CALLABLE:
 		btn.pressed.connect(pressed_func)
 	return btn
-#endregion 
+
+## Creates a standard progress bar for sidebar use.
+## @param min_value (int): Minimum value of the bar.
+## @param max_value (int): Maximum value of the bar.
+## @param value (int): Current value of the bar.
+## @param tooltip_text (String): Tooltip for the bar.
+## @param width (int): Optional width (default 200).
+## @param height (int): Optional height (default 24).
+## @return ProgressBar: The configured progress bar.
+static func create_sidebar_progress_bar(
+	min_value: int,
+	max_value: int,
+	value: int,
+	tooltip_text: String = "",
+	width: int = 100,
+	height: int = 24
+	) -> ProgressBar:
+	var bar = ProgressBar.new()
+	bar.min_value = min_value
+	bar.max_value = max_value
+	bar.value = value
+	bar.step = 1
+	bar.size_flags_horizontal = Control.SIZE_FILL
+	bar.custom_minimum_size = Vector2(width, height)
+	bar.tooltip_text = tooltip_text
+	return bar
+#endregion

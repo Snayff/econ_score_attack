@@ -34,7 +34,7 @@ size_flags_vertical = 3
 
 [node name="LeftSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 
 [node name="BGLeftSidebarDebug" type="ColorRect" parent="MainContent/LeftSidebar"]
@@ -45,8 +45,8 @@ color = Color(0.6, 0.7, 1, 0.5)
 
 [node name="CentrePanel" type="PanelContainer" parent="MainContent"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 200)
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="BGCentrePanelDebug" type="ColorRect" parent="MainContent/CentrePanel"]
 unique_name_in_owner = true
@@ -55,9 +55,8 @@ color = Color(1, 1, 1, 0.5)
 
 [node name="RightSidebar" type="VBoxContainer" parent="MainContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
-alignment = 2
 
 [node name="BGRightSidebarDebug" type="ColorRect" parent="MainContent/RightSidebar"]
 unique_name_in_owner = true

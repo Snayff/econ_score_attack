@@ -14,6 +14,7 @@ class_name ABCView
 extends Control
 
 #region CONSTANTS
+var _DEFAULT_SIDEBAR_WIDTH: int = 180
 #endregion
 
 #region SIGNALS
@@ -37,7 +38,7 @@ signal right_info_requested(info_id: int)
 #endregion
 
 #region EXPORTS
-@export var sidebar_width: int = 120:
+@export var sidebar_width: int = _DEFAULT_SIDEBAR_WIDTH:
 	set(value):
 		sidebar_width = value
 		if not is_node_ready():
@@ -121,6 +122,7 @@ func refresh() -> void:
 	_check_and_show_empty_states()
 
 ## Abstract method to be implemented by subclasses. Should populate all regions.
+## @virtual
 ## @return void
 func update_view() -> void:
 	pass
