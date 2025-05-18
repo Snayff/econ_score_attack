@@ -308,37 +308,39 @@ func get_consumption_rule(good_id: String) -> Dictionary:
 func get_all_consumption_rules() -> Array:
 	return _get_data("consumption_rules").get("consumption_rules", [])
 
-func get_land_aspects() -> Array:
-	var data: Variant = _books.get("land_aspects", [])
-	if typeof(data) == TYPE_DICTIONARY and data.has("land_aspects"):
-		return data["land_aspects"]
-	elif typeof(data) == TYPE_ARRAY:
-		return data
-	else:
-		return []
+## Gets all land aspects
+## @return Array of all land aspects as DataLandAspect instances
+func get_land_aspects() -> Array[DataLandAspect]:
+	return get_all_land_aspects_data()
 
-func get_land_aspect_by_id(aspect_id: String) -> Dictionary:
-	for aspect in get_land_aspects():
-		if aspect.get("aspect_id") == aspect_id:
+## Gets a land aspect by its ID
+## @param aspect_id: The ID of the aspect to get
+## @return DataLandAspect instance or null if not found
+func get_land_aspect_by_id(aspect_id: String) -> DataLandAspect:
+	for aspect in get_all_land_aspects_data():
+		if aspect.aspect_id == aspect_id:
 			return aspect
-	return {}
+	return null
 
-func get_land_aspect_by_good(good: String) -> Dictionary:
-	for aspect in get_land_aspects():
-		for method in aspect.get("extraction_methods", []):
+## Gets a land aspect by the good it produces
+## @param good: The good to search for
+## @return DataLandAspect instance or null if not found
+func get_land_aspect_by_good(good: String) -> DataLandAspect:
+	for aspect in get_all_land_aspects_data():
+		for method in aspect.get_extraction_methods():
 			if method.get("extracted_good") == good:
 				return aspect
-	return {}
+	return null
 
 ## Gets all aspect data
-## @return Array containing all aspect data
-func get_aspect_data() -> Array:
-	return get_land_aspects()
+## @return Array of all land aspects as DataLandAspect instances
+func get_aspect_data() -> Array[DataLandAspect]:
+	return get_all_land_aspects_data()
 
 ## Gets data for a specific aspect by ID
 ## @param aspect_id: The ID of the aspect to get
-## @return Dictionary containing the aspect data, or empty if not found
-func get_aspect_by_id(aspect_id: String) -> Dictionary:
+## @return DataLandAspect instance or null if not found
+func get_aspect_by_id(aspect_id: String) -> DataLandAspect:
 	return get_land_aspect_by_id(aspect_id)
 
 ## Gets demesne data

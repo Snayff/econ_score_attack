@@ -262,10 +262,18 @@ func _update_right_sidebar(coords: Vector2i) -> void:
 	var aspects = tile_data.get_discovered_aspects()
 	if aspects.size() > 0:
 		for aspect_id in aspects.keys():
-			var amount = aspects[aspect_id]
 			var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
-			var aspect_name = aspect_meta.get("f_name", aspect_id)
-			var is_finite = aspect_meta.get("is_finite", false)
+			var aspect_name = aspect_id
+			var is_finite = false
+			if aspect_meta != null:
+				aspect_name = aspect_meta.f_name
+				# Determine if any extraction method is finite
+				is_finite = false
+				for method in aspect_meta.get_extraction_methods():
+					if method.get("is_finite", false):
+						is_finite = true
+						break
+			var amount = aspects[aspect_id]
 			var aspect_label = Label.new()
 			var amount_str = str(amount)
 			if not is_finite:

@@ -73,7 +73,7 @@ func initialise_from_config(config: Dictionary) -> void:
 			"source": "custom_loader"
 		}, "AspectManager")
 	else:
-		_aspect_definitions = Library.get_land_aspects()
+		_aspect_definitions = Library.get_all_land_aspects_data()
 		_aspect_source = Source.LIBRARY
 		Logger.log_event("aspect_definitions_loaded", {
 			"count": _aspect_definitions.size(),
@@ -89,8 +89,7 @@ func initialise_from_config(config: Dictionary) -> void:
 ## @return void
 func generate_aspects_for_parcel(parcel: DataLandParcel) -> void:
 	var generated_aspects: Array = []
-	for aspect_def in get_all_aspect_definitions():
-		var aspect: DataLandAspect = DataLandAspect.new(aspect_def)
+	for aspect in get_all_aspect_definitions():
 		if randf() < aspect.generation_chance:
 			var instances: int = 1 if aspect.max_instances <= 1 else randi_range(1, aspect.max_instances)
 			for i in range(instances):
@@ -108,16 +107,16 @@ func generate_aspects_for_parcel(parcel: DataLandParcel) -> void:
 ## Gets an aspect definition by ID.
 ## @param aspect_id (String): The ID of the aspect to get.
 ## @return Dictionary: The aspect definition, or empty dictionary if not found.
-func get_aspect_definition(aspect_id: String) -> Dictionary:
+func get_aspect_definition(aspect_id: String) -> DataLandAspect:
 	for aspect in _aspect_definitions:
-		if aspect.get("aspect_id") == aspect_id:
+		if aspect.aspect_id == aspect_id:
 			return aspect
-	return {}
+	return null
 
 
 ## Gets all aspect definitions.
 ## @return Array: All aspect definitions currently loaded.
-func get_all_aspect_definitions() -> Array:
+func get_all_aspect_definitions() -> Array[DataLandAspect]:
 	return _aspect_definitions.duplicate()
 
 
@@ -137,7 +136,7 @@ func _load_aspect_definitions() -> void:
 	if not _aspect_loader.is_null():
 		_aspect_definitions = _aspect_loader.call()
 	else:
-		_aspect_definitions = Library.get_land_aspects()
+		_aspect_definitions = Library.get_all_land_aspects_data()
 
 	if _aspect_definitions.is_empty():
 		push_warning("No land aspects found in Library or via loader")

@@ -44,22 +44,6 @@ signal survey_started(x: int, y: int)
 @warning_ignore("unused_signal")
 signal survey_progress_updated(x: int, y: int, progress: float)
 
-## Emitted when a season changes
-@warning_ignore("unused_signal")
-signal season_changed(new_season: EnvironmentalSystem.Season)
-
-## Emitted when a natural disaster occurs
-@warning_ignore("unused_signal")
-signal disaster_occurred(disaster_type: EnvironmentalSystem.DisasterType, origin: Vector2i, affected_coords: Array[Vector2i])
-
-## Emitted when pollution levels are updated
-@warning_ignore("unused_signal")
-signal pollution_updated(coords: Vector2i, new_level: float)
-
-## Emitted when an environmental effect is applied
-@warning_ignore("unused_signal")
-signal effect_applied(effect_id: String, coords: Vector2i, duration: float)
-
 ## Emitted when a path is found between two points
 @warning_ignore("unused_signal")
 signal path_found(demesne_id: String, start: Vector2i, end: Vector2i, path: Array[Vector2i])

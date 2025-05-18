@@ -15,7 +15,7 @@ The Land System manages the demesne's 2D land grid, ensuring all parcels are dat
 - **Dynamic Market:** Resource availability and land improvements affect economic activity and prices.
 - **Physical Grid:** The world is a 2D array of parcels, each with unique coordinates and state.
 - **Buildings and Jobs:** Buildings are placed on parcels, creating jobs and enabling production.
-- **Laws and Environment:** Laws and environmental factors (fertility, pollution) influence parcel productivity.
+- **Laws and Parcel Properties:** Laws and static parcel properties (e.g., fertility) influence parcel productivity.
 
 ---
 
@@ -98,7 +98,7 @@ All signals are connected/disconnected as per Godot best practice, and are never
 ```gdscript
 ## Data class for a single land parcel.
 ## Example:
-##   var parcel = DataLandParcel.new(x, y, "plains", {}, null, {}, 1.0, 0.0, false, 0.0)
+##   var parcel = DataLandParcel.new(x, y, "plains", {}, null, {}, 1.0, false, 0.0)
 class_name DataLandParcel
 extends RefCounted
 
@@ -109,7 +109,6 @@ var resources: Dictionary
 var building_id: int
 var improvements: Dictionary
 var fertility: float
-var pollution_level: float
 var is_surveyed: bool
 var resource_generation_rate: float
 

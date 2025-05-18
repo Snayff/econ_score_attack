@@ -146,12 +146,18 @@ func to_tile_info() -> Variant:
 	for aspect_id in discovered.keys():
 		var amount = discovered[aspect_id]
 		var aspect_meta = Library.get_land_aspect_by_id(aspect_id)
-		if aspect_meta:
+		if aspect_meta != null:
+			# Determine if any extraction method is finite
+			var is_finite = false
+			for method in aspect_meta.get_extraction_methods():
+				if method.get("is_finite", false):
+					is_finite = true
+					break
 			aspects.append({
-				"f_name": aspect_meta.get("f_name", aspect_id),
-				"description": aspect_meta.get("description", ""),
+				"f_name": aspect_meta.f_name,
+				"description": aspect_meta.description,
 				"amount": amount,
-				"is_finite": aspect_meta.get("is_finite", false)
+				"is_finite": is_finite
 			})
 		else:
 			aspects.append({
