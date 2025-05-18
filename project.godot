@@ -26,8 +26,7 @@ EventBusGame="*res://global/event_bus_game.gd"
 UIFactory="*res://global/ui_factory.gd"
 GameFactory="*res://global/game_factory.gd"
 Library="*res://global/library.gd"
-World="*res://global/world.gd"
-AspectManager="*res://global/aspect_manager.gd"
+World="*res://feature/world/global/world.gd"
 
 [display]
 

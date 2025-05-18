@@ -1,5 +1,5 @@
+
 ## AspectManager
-## Global autoload for managing land aspects.
 ##
 ## Purpose and Intent:
 ## - Centralised Aspect Management: Acts as the single source of truth for all land aspect definitions in the game. Land aspects are properties or features (such as resources, terrain features, or special characteristics) that can be assigned to parcels of land within the simulation.
@@ -20,10 +20,15 @@
 ## var aspect_def = AspectManager.get_aspect_definition("fertile_soil")
 ## ```
 ##
-## AspectManager is a global, data-driven manager for all land aspect logic, ensuring that the simulation's parcels are populated with appropriate, consistent, and dynamically generated features, in line with the game's closed-loop, data-driven design principles. It decouples the data (aspect definitions) from the logic (how aspects are assigned and queried), following best practices for modular, scalable Godot development.
-
+## AspectManager: Handles aspect generation and management for parcels in a World.
+## Usage:
+##   var am = AspectManager.new()
+##   am.initialise_from_config(config)
+##   am.generate_aspects_for_parcel(parcel)
+##
+## Last Updated: 2025-05-18
+class_name AspectManager
 extends Node
-
 
 #region CONSTANTS
 #endregion
