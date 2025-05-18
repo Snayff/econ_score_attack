@@ -24,7 +24,7 @@ extends ABCView
 
 #region VARS
 var _sim: Sim = null
-var _demesne: Node = null
+var _demesne: Demesne = null
 var _grid_dims: Vector2i = Vector2i.ZERO
 var _selected_tile_coords: Vector2i = Vector2i.ZERO
 var _tile_panels: Dictionary = {}
@@ -237,7 +237,7 @@ func _update_right_sidebar(coords: Vector2i) -> void:
 	buildings_header.custom_minimum_size.x = sidebar_width
 	right_content.append(buildings_header)
 	# Placeholder for buildings (simulate with a list)
-	var building_counts = {"Farm": 2, "Mine": 1} # Placeholder, replace with real data when available
+	var building_counts = {"Place": 2, "Holder": 1} # Placeholder, replace with real data when available
 	if building_counts.size() > 0:
 		for building in building_counts.keys():
 			var count = building_counts[building]

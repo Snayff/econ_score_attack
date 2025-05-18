@@ -1,6 +1,27 @@
 ## Global singleton for managing all external data loading and access
-## Handles JSON configuration files and provides centralised data access
-## @icon("")
+##
+## Purpose:
+##   This class acts as the centralised data loader and cache for all static, referenced data in the game. It loads JSON configuration files, parses them into internal data classes, and provides access to this data for other classes. It ensures that all static data (such as goods, laws, land, people, etc.) is loaded once and made available globally, supporting the closed-loop, data-driven architecture of the game.
+##
+## Intent:
+##   - To provide a single source of truth for all static, referenced data.
+##   - To handle loading, parsing, and caching of external JSON data files.
+##   - To expose factory methods for instantiating data classes from loaded data.
+##   - To emit signals for data load events and errors, supporting decoupled communication.
+##   - To support cache clearing and reloading for development and debugging.
+##
+## Example Usage:
+##   # Accessing goods data from anywhere in the project:
+##   var all_goods: Array[DataGood] = Library.get_all_goods_data()
+##   var grain_icon: String = Library.get_good_icon("grain")
+##
+##   # Listening for data load events:
+##   Library.connect("data_loaded", self, "_on_data_loaded")
+##
+##   # Clearing the cache (e.g., for hot-reloading during development):
+##   Library.clear_cache()
+##
+## Last Updated: 2024-06-09
 extends Node
 
 
@@ -39,7 +60,8 @@ const _DATA_FILES: Dictionary = {
 	"consumption_rules": "res://feature/economic_actor/data/consumption_rules.json",
 	"laws": "res://feature/law/data/laws.json",
 	"land": "res://feature/world/data/land_config.json",
-	"land_aspects": "res://feature/world/data/land_aspects.json"
+	"land_aspects": "res://feature/world/data/land_aspects.json",
+	"terrain": "res://feature/world/data/terrain.json"
 }
 
 ## Default values by data type
@@ -275,7 +297,7 @@ func get_good_category(good_id: String) -> String:
 ## @param good_id: ID of the good to get rules for
 ## @return: Dictionary containing the consumption rules or empty dict if not found
 func get_consumption_rule(good_id: String) -> Dictionary:
-	var rules = _get_data("consumption_rules").get("consumption_rules", [])
+	var rules: Array = _get_data("consumption_rules").get("consumption_rules", [])
 	for rule in rules:
 		if rule.get("good_id") == good_id:
 			return rule
@@ -287,7 +309,7 @@ func get_all_consumption_rules() -> Array:
 	return _get_data("consumption_rules").get("consumption_rules", [])
 
 func get_land_aspects() -> Array:
-	var data = _books.get("land_aspects", [])
+	var data: Variant = _books.get("land_aspects", [])
 	if typeof(data) == TYPE_DICTIONARY and data.has("land_aspects"):
 		return data["land_aspects"]
 	elif typeof(data) == TYPE_ARRAY:
@@ -336,8 +358,8 @@ func get_laws_data() -> Dictionary:
 
 ## Gets all ancestries data
 ## @return Array of all ancestries
-func get_all_ancestries_data() -> Array:
-	var ancestries: Array = []
+func get_all_ancestries_data() -> Array[DataAncestry]:
+	var ancestries: Array[DataAncestry] = []
 	var config: Dictionary = _get_data("ancestries")
 	if not config.has("ancestries"):
 		push_error("Ancestries config missing 'ancestries' key.")
@@ -356,21 +378,58 @@ func get_all_ancestries_data() -> Array:
 		))
 	return ancestries
 
+
+## Gets all laws data
+## @return Array of all laws as DataLaw instances
+func get_all_laws_data() -> Array[DataLaw]:
+	var laws: Array[DataLaw] = []
+	var config: Dictionary = _get_data("laws")
+	for entry in config.get("laws", []):
+		laws.append(DataLaw.new(
+			entry.get("id", ""),
+			entry.get("name", ""),
+			entry.get("description", ""),
+			entry.get("category", "")
+		))
+	return laws
+
+## Gets all land aspects data
+## @return Array of all land aspects as DataLandAspect instances
+func get_all_land_aspects_data() -> Array[DataLandAspect]:
+	var aspects: Array[DataLandAspect] = []
+	var config: Variant = _books.get("land_aspects", [])
+	var aspect_list: Array = []
+	if typeof(config) == TYPE_DICTIONARY and config.has("land_aspects"):
+		aspect_list = config["land_aspects"]
+	elif typeof(config) == TYPE_ARRAY:
+		aspect_list = config
+	for entry in aspect_list:
+		aspects.append(DataLandAspect.new(entry))
+	return aspects
+
 ## Gets the land config data
 ## @return Dictionary containing the land config
 func get_land_data() -> Dictionary:
 	return _get_data("land")
+
+## Loads terrain types from terrain.json
+## @return Dictionary: terrain_types dictionary or empty if not found
+func get_terrain_types() -> Dictionary:
+	var data: Dictionary = _get_data("terrain")
+	if data and data.has("terrain_types"):
+		return data["terrain_types"]
+	return {}
 #endregion
 
 #region FACTORY METHODS
-var _goods_data_cache: Array = []
+var _goods_data_cache: Array[DataGood] = []
 
 ## Returns an array of DataGood instances from loaded goods config
 ## @return Array[DataGood]
-func get_all_goods_data() -> Array:
+func get_all_goods_data() -> Array[DataGood]:
 	if _goods_data_cache.size() > 0:
 		return _goods_data_cache
-	var goods: Array = []
+	var goods: Array[DataGood] = []
 	var config: Dictionary = _get_data("goods")
 	if not config.has("goods"):
 		push_error("Goods config missing 'goods' key.")
@@ -391,8 +450,8 @@ func get_all_goods_data() -> Array:
 
 ## Returns an array of DataCulture instances from loaded cultures config
 ## @return Array[DataCulture]
-func get_all_cultures_data() -> Array:
-	var cultures: Array = []
+func get_all_cultures_data() -> Array[DataCulture]:
+	var cultures: Array[DataCulture] = []
 	var config: Dictionary = _get_data("cultures")
 	if not config.has("cultures"):
 		push_error("Culture config missing 'cultures' key.")
@@ -410,4 +469,7 @@ func get_all_cultures_data() -> Array:
 			entry["consumption_rule_ids"]
 		))
 	return cultures
+#endregion
+
+#region PRIVATE FUNCTIONS
 #endregion

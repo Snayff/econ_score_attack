@@ -44,14 +44,14 @@ func update_info() -> void:
 	if not _sim or not _sim.demesne:
 		_add_error_message("No simulation data available")
 		return
-	var law_data: Dictionary = Library.get_laws_data()
-	if not law_data:
+	var all_laws: Array[DataLaw] = Library.get_all_laws_data()
+	if all_laws.is_empty():
 		_add_error_message("No laws data available")
 		return
 	# Group laws by category
 	var laws_by_category: Dictionary = {}
-	for law in law_data.get("laws", []):
-		var category: String = law.get("category", "Uncategorised")
+	for law in all_laws:
+		var category: String = law.category if law.category != "" else "Uncategorised"
 		if not laws_by_category.has(category):
 			laws_by_category[category] = []
 		laws_by_category[category].append(law)
@@ -67,7 +67,7 @@ func update_info() -> void:
 		vbox.add_child(category_label)
 		# Add laws in this category
 		for law in laws_by_category[category]:
-			var law_id: String = law.get("id")
+			var law_id: String = law.id
 			if first_law_id == "":
 				first_law_id = law_id
 			var is_active: bool = _sim.demesne.is_law_active(law_id)
@@ -89,32 +89,37 @@ func _update_left_sidebar(law_id: String) -> void:
 	if not _sim or not _sim.demesne:
 		set_left_sidebar_content([])
 		return
-	var law = null
-	var law_data = null
-	var law_data_dict: Dictionary = Library.get_laws_data()
-	for l in law_data_dict.get("laws", []):
-		if l.get("id") == law_id:
-			law_data = l
+	var law: DataLaw = null
+	for l in Library.get_all_laws_data():
+		if l.id == law_id:
+			law = l
 			break
-	if not law_data:
+	if law == null:
 		set_left_sidebar_content([])
 		return
-	if _sim.demesne.is_law_active(law_id):
-		law = _sim.demesne.get_law(law_id)
+	var is_active: bool = _sim.demesne.is_law_active(law_id)
+	var law_instance = null
+	if is_active:
+		law_instance = _sim.demesne.get_law(law_id)
 	# Law name and description
-	var name_label: Label = UIFactory.create_viewport_sidebar_header_label(law_data.get("name"))
+	var name_label: Label = UIFactory.create_viewport_sidebar_header_label(law.f_name)
 	sidebar_content.append(name_label)
 	# Enact/Repeal buttons
 	var actions_hbox: HBoxContainer = HBoxContainer.new()
 	var enact_button: Button = UIFactory.create_button("Enact", _on_law_button_pressed.bind(law_id, false))
-	enact_button.disabled = _sim.demesne.is_law_active(law_id)
+	enact_button.disabled = is_active
 	actions_hbox.add_child(enact_button)
 	var repeal_button: Button = UIFactory.create_button("Repeal", _on_law_button_pressed.bind(law_id, true))
-	repeal_button.disabled = not _sim.demesne.is_law_active(law_id)
+	repeal_button.disabled = not is_active
 	actions_hbox.add_child(repeal_button)
 	sidebar_content.append(actions_hbox)
 	# Parameters (if any)
-	var parameters: Dictionary = law_data.get("parameters", {})
+	var law_json: Dictionary = {}
+	for entry in Library._get_data("laws").get("laws", []):
+		if entry.get("id") == law_id:
+			law_json = entry
+			break
+	var parameters: Dictionary = law_json.get("parameters", {})
 	if not parameters.is_empty():
 		var param_vbox: VBoxContainer = VBoxContainer.new()
 		for param_name in parameters:
@@ -122,8 +127,8 @@ func _update_left_sidebar(law_id: String) -> void:
 			var options = _sim.demesne.law_registry.get_parameter_options(law_id, param_name)
 			if not options.is_empty():
 				var current_value = param_info.default
-				if law:
-					current_value = law.get_parameter(param_name)
+				if law_instance:
+					current_value = law_instance.get_parameter(param_name)
 				var param_label: Label = Label.new()
 				param_label.text = param_info.name + ": "
 				param_vbox.add_child(param_label)
@@ -133,8 +138,8 @@ func _update_left_sidebar(law_id: String) -> void:
 				for value in options:
 					var value_button: Button = UIFactory.create_button(str(value) + "%", _on_param_value_selected.bind(law_id, param_name, value))
 					value_button.toggle_mode = true
-					value_button.button_pressed = (law and is_equal_approx(value, current_value))
-					value_button.disabled = not law
+					value_button.button_pressed = (law_instance and is_equal_approx(value, current_value))
+					value_button.disabled = not law_instance
 					options_flow.add_child(value_button)
 				param_vbox.add_child(options_flow)
 			sidebar_content.append(param_vbox)
@@ -217,17 +222,17 @@ func _on_law_repealed() -> void:
 	update_info()
 
 ## Creates a law panel button for a given law.
-## @param law_data (Dictionary): The law's data.
+## @param law (DataLaw): The law's data.
 ## @param is_active (bool): Whether the law is currently active.
 ## @param law_id (String): The law's ID.
 ## @return Button: The constructed law panel button.
-func _create_law_panel(law_data: Dictionary, is_active: bool, law_id: String) -> Button:
+func _create_law_panel(law: DataLaw, is_active: bool, law_id: String) -> Button:
 	var panel := Button.new()
 	panel.name = law_id
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.toggle_mode = true
 	panel.focus_mode = Control.FOCUS_ALL
-	panel.text = law_data.get("name") + "\n" + law_data.get("description")
+	panel.text = law.f_name + "\n" + law.description
 	panel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	panel.pressed.connect(_on_law_panel_selected.bind(law_id))
 	panel.mouse_entered.connect(panel.grab_focus)

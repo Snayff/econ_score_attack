@@ -24,6 +24,7 @@ var land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var grid_width: int = 0
 var grid_height: int = 0
 var aspect_manager: AspectManager = null
+var terrain_manager: TerrainManager = null
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -50,10 +51,11 @@ func initialise_from_config(config: Dictionary) -> void:
 	land_grid.clear()
 	Logger.log_event("world_grid_initialised", {"width": grid_width, "height": grid_height}, "World")
 	aspect_manager.initialise_from_config(config)
+	terrain_manager.initialise_from_config(config)
 	for x in range(grid_width):
 		var column: Array = []
 		for y in range(grid_height):
-			var terrain_type = "plains" # TODO: randomise or load from config
+			var terrain_type = terrain_manager.get_random_terrain_type()
 			var parcel = DataLandParcel.new(x, y, terrain_type)
 			aspect_manager.generate_aspects_for_parcel(parcel)
 			# Get all aspects (including undiscovered) for logging
@@ -79,4 +81,5 @@ func initialise_from_config(config: Dictionary) -> void:
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
 	aspect_manager = AspectManager.new()
+	terrain_manager = TerrainManager.new()
 #endregion
