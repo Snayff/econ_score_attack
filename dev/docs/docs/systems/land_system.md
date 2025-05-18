@@ -1,7 +1,7 @@
 # Land System
 
 ## Overview
-The Land System manages the demesne's 2D land grid, ensuring all parcels (tiles) are data-driven, modular, and updated in real time. It is foundational to the closed-loop economy, as all production and consumption are tied to parcels.
+The Land System manages the demesne's 2D land grid, ensuring all parcels are data-driven, modular, and updated in real time. It is foundational to the closed-loop economy, as all production and consumption are tied to parcels.
 
 - The grid is initialised from external JSON config (`land_config.json`) via the `Library` autoload.
 - The centre-most parcel is always surveyed on initialisation.
@@ -16,6 +16,16 @@ The Land System manages the demesne's 2D land grid, ensuring all parcels (tiles)
 - **Physical Grid:** The world is a 2D array of parcels, each with unique coordinates and state.
 - **Buildings and Jobs:** Buildings are placed on parcels, creating jobs and enabling production.
 - **Laws and Environment:** Laws and environmental factors (fertility, pollution) influence parcel productivity.
+
+---
+
+## Separation of World State and Demesne Knowledge
+
+- The world state, including all parcels and their properties, is universal and shared by all demesnes.
+- Any change to a parcel (e.g., adding a building, expending an aspect) is a world-level change and is reflected for all demesnes.
+- Each demesne (player, AI, etc.) maintains its own record of which parcels have been surveyed. This knowledge is tracked per demesne and is not global.
+- The true properties of a parcel are only revealed to a demesne once it has completed a survey on that parcel.
+- The UI only displays information for parcels that have been surveyed by the player's demesne. Parcels that have not been surveyed remain hidden or display limited information.
 
 ---
 
@@ -73,7 +83,7 @@ The Land System manages the demesne's 2D land grid, ensuring all parcels (tiles)
 ## Signals
 
 - `EventBusGame.land_grid_updated(parcel_data: DataLandParcel)`: Emitted on any parcel update.
-- `WorldViewPanel.tile_selected(tile_id: int, tile_data: DataLandParcel)`: Emitted on tile selection in the UI.
+- `WorldViewPanel.parcel_selected(parcel_id: int, parcel_data: DataLandParcel)`: Emitted on parcel selection in the UI.
 - `parcel_selected(x: int, y: int)`: Emitted when a parcel is selected.
 - `request_parcel_data(x: int, y: int)`: Requests data for a specific parcel.
 
@@ -190,226 +200,94 @@ LandManager.set_event_buses(get_event_bus_game, get_event_bus_ui)
 
 ---
 
-## Survey System
+## Survey System (Updated)
 
-The Survey System is a core component of the Land System, responsible for managing the process of surveying land parcels to discover their resources and aspects. Surveying is handled by the `SurveyManager` autoload, which tracks survey progress, handles survey completion, and emits signals for UI and game logic updates. The Survey System is designed to be modular, decoupled, and easily extensible.
+The Survey System is a core component of the Land System, responsible for managing the process of surveying land parcels to discover their resources and aspects. **Surveying is now handled by a SurveyManager component attached to each demesne, not by a global autoload.**
 
 ### Purpose and Integration
 
-- **Survey Tracking:** SurveyManager maintains a dictionary of active surveys, tracking progress and turns remaining for each parcel being surveyed.
+- **Survey Tracking:** Each demesne's SurveyManager maintains a dictionary of active surveys, tracking progress and turns remaining for each parcel being surveyed, per demesne.
 - **Turn-Based Progression:** Survey progress advances each turn, and surveys are completed after a set number of turns (configurable in `survey_manager.gd`).
-- **Signal-Based Communication:** SurveyManager emits signals (via EventBusGame) for survey started, progress, and completion, enabling other systems and UI to react to survey events.
-- **Decoupled Parcel Access:** SurveyManager does not reference the World global directly. Instead, it uses an injected callable to access parcels, supporting flexible integration and easier testing.
+- **Signal-Based Communication:** SurveyManager emits signals (`survey_started`, `survey_progress_updated`, `survey_completed`) for survey events. These are **instance signals** and must be connected to per-demesne.
+- **Decoupled Parcel Access:** SurveyManager does not reference the world or demesne grid directly. Instead, it uses a dependency-injected callable (the "parcel accessor") to access parcels, supporting flexible integration and easier testing.
 - **Error Handling:** Invalid or failed survey attempts are handled gracefully, ensuring robust operation.
+- **No Parcel Data Duplication:** SurveyManager does not store or duplicate parcel data; it only tracks which parcels have been surveyed by the demesne.
 
-### Architecture
+### Architecture (Updated)
 
-SurveyManager is fully decoupled from the World global. Instead of referencing the world grid directly, it uses a dependency-injected callable for parcel access. This is set up at runtime, typically in `main.gd`, after all autoloads are initialised. SurveyManager coordinates with EventBusGame for signalling and uses the injected callable for parcel access. It does not depend directly on World or other systems.
+SurveyManager is now a component of each demesne. Instead of referencing the world grid directly, it uses a dependency-injected callable for parcel access, typically set to the demesne's `get_parcel` method. SurveyManager emits instance signals for survey events. There is no global survey state or global signals.
 
 ```
 +-------------------+
-|   SurveyManager   |
-|   (autoload)      |
+|   Demesne         |
 +-------------------+
         |
-        | (injects parcel accessor)
+        | (owns grid)
         v
 +-------------------+
-|   Parcel Access   |
+|   SurveyManager   |  (per demesne)
++-------------------+
+        |
+        | (parcel accessor)
+        v
++-------------------+
+|   DataLandParcel  |
 +-------------------+
         |
         | (signals)
         v
 +-------------------+
-|  EventBusGame     |
-+-------------------+
-        |
-        v
-+-------------------+
-|   UI / Systems    |
+|   UI Components   |
 +-------------------+
 ```
 
-The diagram above shows SurveyManager's decoupled access to parcels and its use of EventBusGame for signalling survey events to the rest of the game.
+**Explanation:**
+- Each demesne owns its own SurveyManager component.
+- The SurveyManager uses a parcel accessor to get parcels from the demesne.
+- Survey events are signalled per demesne, not globally.
+- UI components must connect to the current demesne's SurveyManager signals.
 
-### Setup Example
+### Setup Example (Updated)
 
 ```gdscript
-# In main.gd, after World is initialised:
-SurveyManager.set_parcel_accessor(World.get_parcel)
+# In Demesne.gd, after initialisation:
+survey_manager.set_parcel_accessor(self.get_parcel)
 ```
 
-### Usage
-
-- Set the parcel accessor:
-  - `SurveyManager.set_parcel_accessor(World.get_parcel)`
+### Usage (Updated)
 - Start a survey:
-  - `SurveyManager.start_survey(x, y)`
+  - `survey_manager.start_survey(x, y)`
 - Get survey progress:
-  - `SurveyManager.get_survey_progress(x, y)`
+  - `survey_manager.get_survey_progress(x, y)`
 - Process a turn:
-  - `SurveyManager.process_turn()`
-- Signals are emitted via EventBusGame for survey events.
-
-Example:
-```gdscript
-# Inject parcel accessor after World is initialised
-SurveyManager.set_parcel_accessor(World.get_parcel)
-
-# Start a survey
-SurveyManager.start_survey(2, 3)
-
-# Process a turn (typically called on turn completion)
-SurveyManager.process_turn()
-```
+  - `survey_manager.advance_turn()`
+- Connect to signals:
+  - `survey_manager.survey_started.connect(...)`
+  - `survey_manager.survey_progress_updated.connect(...)`
+  - `survey_manager.survey_completed.connect(...)`
 
 ### Benefits
-- No tight coupling between SurveyManager and World.
+- No tight coupling between SurveyManager and demesne internals.
 - SurveyManager can be reused or tested in isolation.
-- Follows best practices for Godot autoloads and modular system design.
+- Follows best practices for Godot component-based design.
 - Survey duration and logic are easily configurable.
-
-### Extending the Survey System
-- Adjust survey duration or progress logic by modifying constants in `survey_manager.gd`.
-- Add new signals or survey-related features as needed.
-- Update documentation if new survey types or mechanics are introduced.
+- Survey state is tracked per demesne, not globally.
+- SurveyManager does not store or duplicate parcel data.
 
 ### Developer Notes
 - Always inject the parcel accessor at runtime to maintain decoupling.
-- SurveyManager should not reference World or other systems directly.
-- Use EventBusGame for all survey-related signalling.
+- SurveyManager should not reference the demesne's grid directly.
+- Use instance signals for all survey-related signalling.
 - Keep survey logic focused and modular for maintainability.
 - SurveyManager is a key part of the Land System, and its documentation is maintained here for clarity and cohesion.
 
 ### Associated File
-- `global/survey_manager.gd` (autoload singleton)
-
----
-
-## Aspect System
-
-The Aspect System is responsible for defining, managing, and procedurally generating land aspects—properties or features such as resources, terrain features, or special characteristics that can be assigned to parcels within the simulation. This system is handled by the `AspectManager` autoload, which ensures all aspect data is consistent, up-to-date, and available for use throughout the land system.
-
-### Purpose and Responsibilities
-- **Centralised Aspect Management:** AspectManager acts as the single source of truth for all land aspect definitions in the game.
-- **Data Loading and Validation:** Loads aspect definitions from an external data source (via the Library autoload or an injected loader), ensuring all aspect data is consistent and up-to-date.
-- **Procedural Generation:** Provides logic to procedurally generate aspects for a given land parcel, based on definitions and randomised rules (such as generation chance, number of instances, and resource amounts). This supports dynamic and data-driven world-building.
-- **Aspect Querying:** Offers static methods to retrieve all aspect definitions or a specific aspect definition by its unique ID, making it easy for other systems to access this data without duplicating logic.
-- **Error Handling and Logging:** Includes error handling (e.g., warnings if no aspects are found) and logs events for debugging and monitoring.
-
-### Decoupled Architecture
-
-To ensure modularity and maintainability, `AspectManager` is fully decoupled from the `Library` global. Instead of referencing the data loader directly, it uses a dependency-injected callable for loading aspect definitions. This is set up at runtime, typically in `main.gd`, after all autoloads are initialised.
-
-**Rationale:**
-- Each global/autoload should be stand-alone and not directly depend on other global.
-- This approach improves testability, modularity, and future extensibility (e.g., supporting multiple data sources or test harnesses).
-
-### Setup Example
-
-```gdscript
-# In main.gd, after World and SurveyManager are initialised:
-AspectManager.set_aspect_loader(Library.get_land_aspects)
-```
-
-### Usage
-- Generate aspects for a parcel:
-  - `AspectManager.generate_aspects_for_parcel(parcel)`
-- Retrieve all aspect definitions:
-  - `var all_aspects = AspectManager.get_all_aspect_definitions()`
-- Get a specific aspect definition by ID:
-  - `var aspect_def = AspectManager.get_aspect_definition("fertile_soil")`
-
-Example:
-```gdscript
-# Generate aspects for a parcel
-AspectManager.generate_aspects_for_parcel(parcel)
-
-# Retrieve all aspect definitions
-var all_aspects = AspectManager.get_all_aspect_definitions()
-
-# Get a specific aspect definition by ID
-var aspect_def = AspectManager.get_aspect_definition("fertile_soil")
-```
-
-### Benefits
-- No tight coupling between AspectManager and Library.
-- AspectManager can be reused or tested in isolation.
-- Follows best practices for Godot autoloads and modular system design.
-- Supports dynamic, data-driven world-building.
-
-### Developer Notes
-- AspectManager is a key part of the Land System, and its documentation is maintained here for clarity and cohesion.
-- All static aspect data should be defined externally and loaded via the injected loader.
-- Use error handling and logging to monitor aspect loading and generation.
-- The procedural generation logic can be extended to support new types of aspects or more complex rules as the game evolves.
-
-### Associated File
-- `global/aspect_manager.gd` (autoload singleton)
-
----
-
-## UI Integration
-
-- The main UI injects the land grid into the `LandViewPanel` and updates it on signal.
-- All UI updates are data-driven and respond to signals, not direct node calls.
-- The UI supports keyboard and controller navigation, with all information selectable and no horizontal scrolling.
-
----
-
-## Logging and Error Handling
-
-- All key actions (initialisation, surveying, resource updates) are logged using `Logger.log_event()`.
-- Errors are never silent; all failures are logged and surfaced for debugging.
-
----
-
-## Best Practices
-
-- Use signals for all cross-system communication.
-- Never hardcode land data in the UI.
-- Use unique IDs or coordinates for referencing tiles.
-- Disconnect all signals on node removal.
-- Keep all static data in external JSON files, loaded via the `Library` autoload.
-
----
-
-## Usage Example
-
-```gdscript
-# In MainUI.gd
-var sim_node: Node = get_node("/root/Main/Sim")
-if sim_node and sim_node.demesne:
-    var demesne = sim_node.demesne
-    var land_grid = demesne.land_grid
-    var grid_dims = demesne.get_grid_dimensions()
-    _view_land.set_land_grid(land_grid, grid_dims.x, grid_dims.y)
-# The centre-most parcel (grid_dims.x // 2, grid_dims.y // 2) is always surveyed on initialisation.
-```
-
----
-
-## Extensibility and Future Work
-
-- Add new terrain types, resources, and improvements via config files.
-- Support for dynamic grid resizing, mini-map, advanced overlays, and tooltips.
-- Integration with weather, disasters, and trade systems.
-
----
-
-## References
-
-- `scripts/data/data_land_parcel.gd`
-- `scripts/core/land_manager.gd`
-- `scripts/ui/land_grid/land_grid_view.gd`
-- `data/land_config.json`
-- `global/library.gd`
-- `global/event_bus_game.gd`
+- `feature/demesne/component/survey_manager.gd` (per-demesne component)
 
 ---
 
 ## Last Updated
-2024-06-10
+2025-05-18
 
 ## Core Concepts
 - **Grid-Based World:** The world is a 2D grid of parcels. Each parcel represents a discrete unit of land with its own state.

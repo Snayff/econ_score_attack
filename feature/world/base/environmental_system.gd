@@ -100,7 +100,7 @@ var _active_disasters: Array[Dictionary] = []
 #region ON READY
 
 func _ready() -> void:
-	# Initialize with default season
+	# Initialise with default season
 	current_season = Season.SPRING
 
 #endregion
@@ -109,7 +109,7 @@ func _ready() -> void:
 #region PUBLIC FUNCTIONS
 
 ## Initializes the environmental system with a reference to the land grid
-func initialize(land_grid: Array[Array]) -> void:
+func initialise(land_grid: Array[Array]) -> void:
 	_land_grid = land_grid
 
 ## Updates the current season and applies seasonal effects

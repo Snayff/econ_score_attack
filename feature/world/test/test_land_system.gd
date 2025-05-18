@@ -5,11 +5,11 @@ extends ABCTest
 
 
 var _demesne: Demesne
-var _resource_generator: ComponentResourceGenerator
+var _resource_generator: ResourceGenerator
 
 func before_each() -> void:
 	_demesne = Demesne.new("Test Demesne")
-	_resource_generator = ComponentResourceGenerator.new()
+	_resource_generator = ResourceGenerator.new()
 
 func after_each() -> void:
 	_demesne = null

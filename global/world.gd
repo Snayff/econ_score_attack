@@ -23,7 +23,6 @@ signal world_grid_updated()
 var land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var grid_width: int = 0
 var grid_height: int = 0
-var _surveys_in_progress: Dictionary = {} # Dictionary[Vector2i, bool]
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -48,7 +47,6 @@ func initialise_from_config(config: Dictionary) -> void:
 	grid_width = size.width
 	grid_height = size.height
 	land_grid.clear()
-	_surveys_in_progress.clear()
 	Logger.log_event("world_grid_initialised", {"width": grid_width, "height": grid_height}, "World")
 	for x in range(grid_width):
 		var column: Array = []
@@ -76,62 +74,6 @@ func initialise_from_config(config: Dictionary) -> void:
 			column.append(parcel)
 		land_grid.append(column)
 	emit_signal("world_grid_updated")
-
-## Starts a survey on a parcel at (x, y)
-## @param x: int
-## @param y: int
-## @return: bool - Whether the survey was started successfully
-func start_survey(x: int, y: int) -> bool:
-	var parcel = get_parcel(x, y)
-	if parcel == null:
-		return false
-
-	if parcel.is_surveyed:
-		return false
-
-	var coords = Vector2i(x, y)
-	if _surveys_in_progress.has(coords):
-		return false
-
-	_surveys_in_progress[coords] = true
-	return SurveyManager.start_survey(x, y)
-
-## Completes a survey on a parcel at (x, y)
-## @param x: int
-## @param y: int
-## @return: bool - Whether the survey was completed successfully
-func complete_survey(x: int, y: int) -> bool:
-	var parcel = get_parcel(x, y)
-	if parcel == null:
-		return false
-
-	var coords = Vector2i(x, y)
-
-	# If already surveyed, just ensure state is consistent
-	if parcel.is_surveyed:
-		_surveys_in_progress.erase(coords)
-		EventBusGame.emit_signal("land_grid_updated")
-		return true
-
-	# If survey wasn't started, start it now
-	if not _surveys_in_progress.has(coords):
-		if not start_survey(x, y):
-			return false
-
-	# Mark parcel as surveyed and update its aspects
-	_surveys_in_progress.erase(coords)
-
-	# Emit signals in correct order
-	EventBusGame.emit_signal("survey_completed", x, y, parcel.get_aspect_storage().get_discovered_aspect_ids())
-	EventBusGame.emit_signal("land_grid_updated")
-	return true
-
-## Checks if a survey is in progress for the given coordinates
-## @param x: int
-## @param y: int
-## @return: bool - Whether a survey is in progress
-func is_survey_in_progress(x: int, y: int) -> bool:
-	return _surveys_in_progress.has(Vector2i(x, y))
 #endregion
 
 #region PRIVATE FUNCTIONS

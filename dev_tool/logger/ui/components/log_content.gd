@@ -14,11 +14,14 @@ signal copy_requested(entry: DataLogEntry)
 
 
 #region CONSTANTS
-
-const BUFFER_SIZE := 5  # Number of extra entries to keep above and below visible area
-const MIN_ENTRY_HEIGHT := 40  # Minimum height of each entry in pixels
-const POOL_SIZE := 50  # Maximum number of entry nodes to keep in memory
-const UPDATE_INTERVAL := 0.1  # Seconds between scroll position checks
+## Number of extra entries to keep above and below visible area
+const BUFFER_SIZE := 5  
+## Minimum height of each entry in pixels
+const MIN_ENTRY_HEIGHT := 40  
+## Maximum number of entry nodes to keep in memory
+const POOL_SIZE := 50  
+## Seconds between scroll position checks
+const UPDATE_INTERVAL := 0.1  
 
 #endregion
 
@@ -48,7 +51,7 @@ func _ready() -> void:
 	add_child(_temp_entry)
 	_temp_entry.hide()
 
-	# Initialize virtual scrolling
+	# Initialise virtual scrolling
 	_init_virtual_scroll()
 
 	# Connect scroll signals

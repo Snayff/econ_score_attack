@@ -14,7 +14,7 @@ var _demesne: Demesne
 #endregion
 
 #region FUNCS
-## Initialize registry for a specific demesne
+## Initialise registry for a specific demesne
 ## @param demesne: The demesne this registry belongs to
 func _init(demesne: Demesne) -> void:
 	_demesne = demesne

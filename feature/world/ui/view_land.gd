@@ -79,6 +79,7 @@ func _ready() -> void:
 		World.world_grid_updated.connect(_on_world_grid_updated)
 	_grid_dims = World.get_grid_dimensions() if World.has_method("get_grid_dimensions") else Vector2i.ZERO
 	_update_sim_and_demesne()
+	_connect_demesne_survey_signals()
 	update_view()
 
 ## @null
@@ -102,9 +103,13 @@ func _create_tile_panel(tile_data: Variant, coords: Vector2i) -> Button:
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.toggle_mode = true
 	btn.focus_mode = Control.FOCUS_ALL
-	var surveyed = tile_data and tile_data.is_surveyed
+	# Determine if the tile is being surveyed (demesne-level)
+	var progress = _demesne.get_survey_progress(coords.x, coords.y) if _demesne else -1.0
+	var surveyed = _demesne.is_parcel_surveyed(coords.x, coords.y) if _demesne else false
 	var label_text = "Tile (" + str(coords.x) + ", " + str(coords.y) + ")"
-	if surveyed:
+	if progress >= 0.0 and progress < 1.0:
+		label_text += "\nSurveying"
+	elif surveyed:
 		label_text += "\nSurveyed"
 	else:
 		label_text += "\nUnsurveyed"
@@ -137,22 +142,41 @@ func _on_tile_panel_selected(coords: Vector2i) -> void:
 ## @return void
 func _update_left_sidebar(coords: Vector2i) -> void:
 	var sidebar_content: Array[Control] = []
-	if not _sim or not _sim.demesne:
+	if not _demesne:
 		set_left_sidebar_content([])
 		return
-	var tile_data = _sim.demesne.get_parcel(coords.x, coords.y)
+	var tile_data = _demesne.get_parcel(coords.x, coords.y)
 	if not tile_data:
 		set_left_sidebar_content([])
 		return
-	# Tile header
 	var name_label: Label = UIFactory.create_viewport_sidebar_header_label("Tile (" + str(coords.x) + ", " + str(coords.y) + ")")
 	sidebar_content.append(name_label)
-	# Surveyed status
+	# Check if this tile is currently being surveyed (demesne-level)
+	var progress = _demesne.get_survey_progress(coords.x, coords.y)
+	if progress >= 0.0 and progress < 1.0:
+		# Show a progress bar for survey progress
+		var turns_total = SurveyManager.SURVEY_TURNS
+		var turns_completed = int(progress * turns_total)
+		var turns_remaining = turns_total - turns_completed
+		var progress_bar = ProgressBar.new()
+		progress_bar.min_value = 0
+		progress_bar.max_value = turns_total
+		progress_bar.value = turns_completed
+		progress_bar.step = 1
+		progress_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		progress_bar.custom_minimum_size = Vector2(0, 24)
+		progress_bar.tooltip_text = "Survey progress: %d/%d turns" % [turns_completed, turns_total]
+		# Add a label above the bar
+		var progress_label = Label.new()
+		progress_label.text = "Surveying... (%d/%d turns)" % [turns_completed, turns_total]
+		sidebar_content.append(progress_label)
+		sidebar_content.append(progress_bar)
+		set_left_sidebar_content(sidebar_content)
+		return
 	var surveyed_label = Label.new()
-	surveyed_label.text = "Surveyed" if tile_data.is_surveyed else "Unsurveyed"
+	surveyed_label.text = "Surveyed" if _demesne.is_parcel_surveyed(coords.x, coords.y) else "Unsurveyed"
 	sidebar_content.append(surveyed_label)
-	# Aspects/resources
-	if tile_data.is_surveyed:
+	if _demesne.is_parcel_surveyed(coords.x, coords.y):
 		var aspects = tile_data.get_discovered_aspects()
 		if aspects.size() > 0:
 			for aspect_id in aspects.keys():
@@ -166,7 +190,6 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 			no_aspects_label.text = "No discovered aspects."
 			sidebar_content.append(no_aspects_label)
 	else:
-		# Survey button
 		var survey_btn = UIFactory.create_button("Survey", _on_survey_button_pressed.bind(coords))
 		sidebar_content.append(survey_btn)
 	set_left_sidebar_content(sidebar_content)
@@ -177,6 +200,10 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 func _on_survey_button_pressed(coords: Vector2i) -> void:
 	if _sim and _sim.demesne:
 		_sim.demesne.request_survey(coords.x, coords.y)
+		# Immediately update UI to reflect 'surveying' state
+		_update_left_sidebar(coords)
+		# Update the centre panel to reflect the new state
+		update_view()
 
 ## Handles updates from the ReferenceRegistry.
 ## @param key (int): The reference key.
@@ -196,6 +223,7 @@ func _on_world_grid_updated() -> void:
 	update_view()
 
 func _update_sim_and_demesne() -> void:
+	_disconnect_demesne_survey_signals()
 	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
 	if sim_ref:
 		_sim = sim_ref
@@ -203,12 +231,26 @@ func _update_sim_and_demesne() -> void:
 	else:
 		_sim = null
 		_demesne = null
+	_connect_demesne_survey_signals()
 
-## Handles parcel surveyed signal to refresh the view.
-## @param x (int): The x coordinate.
-## @param y (int): The y coordinate.
-## @param _discovered_resources (Array): The discovered resources.
-## @return void
-func _on_parcel_surveyed(x: int, y: int, _discovered_resources: Array) -> void:
+# Connect to the current demesne's survey manager signals
+func _connect_demesne_survey_signals() -> void:
+	if _demesne and _demesne.survey_manager:
+		_demesne.survey_manager.survey_started.connect(_on_survey_event)
+		_demesne.survey_manager.survey_progress_updated.connect(_on_survey_event)
+		_demesne.survey_manager.survey_completed.connect(_on_survey_event)
+
+# Disconnect from the current demesne's survey manager signals
+func _disconnect_demesne_survey_signals() -> void:
+	if _demesne and _demesne.survey_manager:
+		if _demesne.survey_manager.survey_started.is_connected(_on_survey_event):
+			_demesne.survey_manager.survey_started.disconnect(_on_survey_event)
+		if _demesne.survey_manager.survey_progress_updated.is_connected(_on_survey_event):
+			_demesne.survey_manager.survey_progress_updated.disconnect(_on_survey_event)
+		if _demesne.survey_manager.survey_completed.is_connected(_on_survey_event):
+			_demesne.survey_manager.survey_completed.disconnect(_on_survey_event)
+
+## Handles any survey-related event to refresh the view.
+func _on_survey_event(x: int, y: int, _extra = null) -> void:
 	update_view()
 #endregion

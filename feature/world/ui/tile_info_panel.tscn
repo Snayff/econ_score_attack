@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://cqkshiytv5kx3"]
-
-[node name="TileInfoPanelNew" type="PanelContainer"]
-custom_minimum_size = Vector2(600, 0)
-
-[node name="rtl_info" type="RichTextLabel" parent="."]
-layout_mode = 2
-bbcode_enabled = true

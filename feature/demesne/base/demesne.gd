@@ -44,16 +44,13 @@ var grid_width: int = 0
 var grid_height: int = 0
 
 ## Resource generator component
-var _resource_generator: ComponentResourceGenerator
+var _resource_generator: ResourceGenerator
 
 ## Pathfinding system component
 var _pathfinding: PathfindingSystem
 
-## Set of surveyed parcels (Dictionary used as a set: keys are Vector2i, values are true)
-var surveyed_parcels: Dictionary = {}
-
-## Surveys in progress dictionary
-var surveys_in_progress: Dictionary = {} # keys: Vector2i(x, y), values: turns remaining
+## Add survey manager component
+var survey_manager: SurveyManager
 #endregion
 
 
@@ -65,6 +62,10 @@ func _init(demesne_name_: String) -> void:
 	_initialise_land_grid()
 	_setup_resource_generator()
 	_setup_pathfinding()
+
+	survey_manager = SurveyManager.new()
+	add_child(survey_manager)
+	survey_manager.set_parcel_accessor(self.get_parcel)
 
 ## Initialises the stockpile with starting values
 func _initialise_stockpile() -> void:
@@ -106,14 +107,14 @@ func _initialise_land_grid() -> void:
 
 ## Sets up the resource generator component
 func _setup_resource_generator() -> void:
-	_resource_generator = ComponentResourceGenerator.new()
+	_resource_generator = ResourceGenerator.new()
 	add_child(_resource_generator)
 
 	# Connect signals
 	_resource_generator.aspect_discovered.connect(_on_aspect_discovered)
 	_resource_generator.aspects_updated.connect(_on_aspects_updated)
 
-	# Initialize resources for all parcels
+	# Initialise resources for all parcels
 	for x in range(grid_width):
 		for y in range(grid_height):
 			_resource_generator.initialise_resources(land_grid[x][y])
@@ -122,7 +123,7 @@ func _setup_resource_generator() -> void:
 func _setup_pathfinding() -> void:
 	_pathfinding = PathfindingSystem.new()
 	add_child(_pathfinding)
-	_pathfinding.initialize(land_grid)
+	_pathfinding.initialise(land_grid)
 
 	# Connect signals
 	_pathfinding.path_found.connect(_on_path_found)
@@ -463,15 +464,7 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 
 	}, "Demesne")
 
-	surveyed_parcels[Vector2i(x, y)] = true
-	Logger.log_event("diagnostic_survey_parcel_set", {"key": str(Vector2i(x, y)), }, "Demesne")
-
-	# Complete the survey on the parcel itself
-	var discovered_aspects: Array[String] = []
-	discovered_aspects.append_array(parcel.complete_survey())
-
-	# Ensure World is updated about the survey completion
-	World.complete_survey(x, y)
+	survey_manager.survey_parcel(x, y)
 
 	# Log the parcel state after survey
 	var aspect_storage_after = parcel.get_aspect_storage()
@@ -483,14 +476,13 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 		"is_surveyed": parcel.is_surveyed,
 		"all_aspects": all_aspects_after,
 		"discovered_aspects": discovered_after,
-		"newly_discovered": discovered_aspects,
 
 	}, "Demesne")
 
 	# Also run the resource generator's survey for any additional logic
 	_resource_generator.survey_parcel(parcel)
 
-	return discovered_aspects
+	return discovered_after
 
 ## Handles resource discovery events
 ## @param x: X coordinate of the parcel
@@ -521,50 +513,27 @@ func _on_aspects_updated(x: int, y: int, aspects: Dictionary) -> void:
 	}, "Demesne")
 	emit_signal("parcel_updated", x, y, land_grid[x][y])
 
+## Requests a survey for a parcel. Returns true if started, false if already surveyed or in progress.
+func request_survey(x: int, y: int) -> bool:
+	return survey_manager.start_survey(x, y)
+
+## Gets the survey progress for a parcel
+## @param x: X coordinate of the parcel
+## @param y: Y coordinate of the parcel
+## @return: Survey progress as a float (0.0 to 1.0)
+func get_survey_progress(x: int, y: int) -> float:
+	return survey_manager.get_survey_progress(x, y)
+
 ## Checks if a parcel is surveyed for this demesne
 ## @param x: int
 ## @param y: int
 ## @return: bool
 func is_parcel_surveyed(x: int, y: int) -> bool:
-	var key = Vector2i(x, y)
-	var result = surveyed_parcels.has(key)
-	return result
-
-## Requests a survey for a parcel. Returns true if started, false if already surveyed or in progress.
-func request_survey(x: int, y: int) -> bool:
-	var key = Vector2i(x, y)
-	if is_parcel_surveyed(x, y) or surveys_in_progress.has(key):
-		return false
-	surveys_in_progress[key] = SurveyManager.SURVEY_TURNS
-	Logger.log_event("survey_started", {"x": x, "y": y, "demesne": demesne_name, }, "Demesne")
-	return true
+	return survey_manager.is_parcel_surveyed(x, y)
 
 ## Advances all surveys by 1 turn. Call this at the end of each turn.
 func advance_turn() -> void:
-	var completed: Array = []
-	for key in surveys_in_progress.keys():
-		surveys_in_progress[key] -= 1
-		if surveys_in_progress[key] <= 0:
-			completed.append(key)
-	for key in completed:
-		surveys_in_progress.erase(key)
-
-		# Complete the survey and get discovered resources
-		var discovered_aspects = survey_parcel(key.x, key.y)
-
-		# Log the completion
-		Logger.log_event("survey_completed", {
-			"x": key.x,
-			"y": key.y,
-			"demesne": demesne_name,
-			"discovered_aspects": discovered_aspects,
-
-		}, "Demesne")
-
-		# Emit signal with the properly typed array
-		var typed_aspects: Array[String] = []
-		typed_aspects.append_array(discovered_aspects)
-		EventBusGame.parcel_surveyed.emit(key.x, key.y, typed_aspects)
+	survey_manager.advance_turn()
 
 func connect_to_turns() -> void:
 	EventBusGame.turn_complete.connect(_on_turn_complete)

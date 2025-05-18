@@ -29,7 +29,8 @@ You always ensure new files and functionality is added in keeping with a logical
   - If a signal is required by a class that is not a direct parent, define it in event_bus_game.gd (for game logic) or event_bus_ui.gd (for UI).
 
   Documentation
-  - Interlinked or combined systems are detailed and explained as a core system in dev/docs/docs/systems/.
+  - Designs and design intent are explained in dev/docs/game_bible. This is our guidance on what we're aiming for. 
+  - Interlinked or combined systems are detailed and explained as a core system in dev/docs/docs/systems/. This should cover the implementation and architectural details.
   - How to use a class is explained in dev/docs/docs/api. 
   - The intended future state, i.e. what we're working towards, for aspects of gameplay is defined in dev/docs/game_bible.
   - Research and reference information is held in dev/docs/research. It is not authoritative. 

@@ -41,7 +41,7 @@ func before_each() -> void:
 			row.append(parcel)
 		_test_grid.append(row)
 
-	_env_system.initialize(_test_grid)
+	_env_system.initialise(_test_grid)
 
 func after_each() -> void:
 	if _env_system != null:

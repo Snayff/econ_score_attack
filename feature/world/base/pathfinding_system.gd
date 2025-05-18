@@ -5,7 +5,7 @@
 ## Example usage:
 ## ```gdscript
 ## var pathfinder = PathfindingSystem.new()
-## pathfinder.initialize(demesne.land_grid)
+## pathfinder.initialise(demesne.land_grid)
 ## var path = pathfinder.find_path(Vector2i(0, 0), Vector2i(5, 5))
 ## ```
 class_name PathfindingSystem
@@ -89,7 +89,7 @@ func _ready() -> void:
 
 ## Initializes the pathfinding system with a reference to the land grid
 ## @param grid: The land grid to use for pathfinding
-func initialize(grid: Array[Array]) -> void:
+func initialise(grid: Array[Array]) -> void:
 	land_grid = grid
 	_clear_caches()
 
@@ -109,7 +109,7 @@ func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 		path_failed.emit(start, end, "Invalid coordinates")
 		return []
 	
-	# Initialize A* data structures
+	# Initialise A* data structures
 	var open_set: Dictionary = {}
 	var closed_set: Dictionary = {}
 	var came_from: Dictionary = {}

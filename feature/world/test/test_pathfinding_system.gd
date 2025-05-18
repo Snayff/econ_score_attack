@@ -39,7 +39,7 @@ var _test_grid: Array[Array]
 func before_each() -> void:
 	_setup_test_grid()
 	_pathfinding = PathfindingSystem.new()
-	_pathfinding.initialize(_test_grid)
+	_pathfinding.initialise(_test_grid)
 
 
 func after_each() -> void:

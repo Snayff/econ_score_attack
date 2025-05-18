@@ -1,12 +1,12 @@
-## ComponentResourceGenerator
+## ResourceGenerator
 ## Component that handles resource generation and discovery for land parcels
 ## Example:
 ## ```gdscript
-## var generator = ComponentResourceGenerator.new()
+## var generator = ResourceGenerator.new()
 ## generator.initialise_resources(parcel)
 ## generator.update(delta)
 ## ```
-class_name ComponentResourceGenerator
+class_name ResourceGenerator
 extends Node
 
 

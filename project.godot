@@ -27,7 +27,6 @@ UIFactory="*res://global/ui_factory.gd"
 GameFactory="*res://global/game_factory.gd"
 Library="*res://global/library.gd"
 World="*res://global/world.gd"
-SurveyManager="*res://global/survey_manager.gd"
 AspectManager="*res://global/aspect_manager.gd"
 LandManager="*res://global/land_manager.gd"
 

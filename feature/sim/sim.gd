@@ -72,12 +72,12 @@ func _ready() -> void:
 	if not inheritance:
 		Logger.error("Failed to create inheritance law", "Sim")
 
-	# Initialize demesne stockpile with starting resources
+	# Initialise demesne stockpile with starting resources
 	var starting_resources = demesne_data.get_starting_resources()
 	for resource in starting_resources:
 		demesne.add_resource(resource, starting_resources[resource])
 
-	# Initialize good prices from Library
+	# Initialise good prices from Library
 	good_prices.clear()
 	for good in Library.get_all_goods_data():
 		good_prices[good.id] = good.base_price
