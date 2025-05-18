@@ -61,7 +61,6 @@ func _ready() -> void:
 	var demesne_data = DataDemesne.new()
 	demesne = Demesne.new(demesne_data.get_default_demesne_name())
 	demesne.connect_to_turns()
-	LandManager.register_demesne(demesne.demesne_name, demesne.land_grid)
 
 	# Enact initial laws
 	var sales_tax = demesne.enact_law("sales_tax")

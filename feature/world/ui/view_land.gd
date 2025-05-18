@@ -163,8 +163,9 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 		progress_bar.max_value = turns_total
 		progress_bar.value = turns_completed
 		progress_bar.step = 1
-		progress_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		progress_bar.custom_minimum_size = Vector2(0, 24)
+		progress_bar.size_flags_horizontal = Control.SIZE_FILL
+		progress_bar.custom_minimum_size = Vector2(200, 24)
+		progress_bar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		progress_bar.tooltip_text = "Survey progress: %d/%d turns" % [turns_completed, turns_total]
 		# Add a label above the bar
 		var progress_label = Label.new()
