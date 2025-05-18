@@ -23,7 +23,7 @@ signal world_grid_updated()
 var land_grid: Array = [] # 2D array [x][y] of DataLandParcel
 var grid_width: int = 0
 var grid_height: int = 0
-var aspect_manager: AspectManager = null
+var aspect_manager: Node = null
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -78,5 +78,5 @@ func initialise_from_config(config: Dictionary) -> void:
 
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
-	aspect_manager = AspectManager.new()
+	aspect_manager = load("res://feature/world/base/aspect_manager.gd").new()
 #endregion

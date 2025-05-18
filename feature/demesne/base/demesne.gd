@@ -43,9 +43,6 @@ var grid_width: int = 0
 ## Height of the land grid
 var grid_height: int = 0
 
-## Resource generator component
-var _resource_generator: ResourceGenerator
-
 ## Pathfinding system component
 var _pathfinding: PathfindingSystem
 
@@ -60,7 +57,6 @@ func _init(demesne_name_: String) -> void:
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
 	_initialise_land_grid()
-	_setup_resource_generator()
 	_setup_pathfinding()
 
 	survey_manager = SurveyManager.new()
@@ -96,6 +92,8 @@ func _initialise_land_grid() -> void:
 			var terrain_type = "plains"  # Default terrain type
 			var parcel = DataLandParcel.new(x, y, terrain_type)
 			parcel.is_surveyed = false
+			# Initialise aspects for the parcel using AspectManager
+			AspectManager.new().generate_aspects_for_parcel(parcel)
 			column.append(parcel)
 		land_grid.append(column)
 
@@ -104,20 +102,6 @@ func _initialise_land_grid() -> void:
 	var centre_y: int = int(grid_height / 2)
 	if _is_valid_coordinates(centre_x, centre_y):
 		survey_parcel(centre_x, centre_y)
-
-## Sets up the resource generator component
-func _setup_resource_generator() -> void:
-	_resource_generator = ResourceGenerator.new()
-	add_child(_resource_generator)
-
-	# Connect signals
-	_resource_generator.aspect_discovered.connect(_on_aspect_discovered)
-	_resource_generator.aspects_updated.connect(_on_aspects_updated)
-
-	# Initialise resources for all parcels
-	for x in range(grid_width):
-		for y in range(grid_height):
-			_resource_generator.initialise_resources(land_grid[x][y])
 
 ## Sets up the pathfinding system component
 func _setup_pathfinding() -> void:
@@ -210,11 +194,6 @@ func process_production() -> void:
 		"alive_count": people.filter(func(p): return p.is_alive).size(),
 
 	}, "Demesne")
-
-	# Update resources in all parcels
-	for x in range(grid_width):
-		for y in range(grid_height):
-			_resource_generator.update(land_grid[x][y], 1.0)  # Update with 1 second delta
 
 	for person in people:
 		if not person.is_alive:
@@ -478,9 +457,6 @@ func survey_parcel(x: int, y: int) -> Array[String]:
 		"discovered_aspects": discovered_after,
 
 	}, "Demesne")
-
-	# Also run the resource generator's survey for any additional logic
-	_resource_generator.survey_parcel(parcel)
 
 	return discovered_after
 

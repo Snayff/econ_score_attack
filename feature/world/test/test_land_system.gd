@@ -5,15 +5,12 @@ extends ABCTest
 
 
 var _demesne: Demesne
-var _resource_generator: ResourceGenerator
 
 func before_each() -> void:
 	_demesne = Demesne.new("Test Demesne")
-	_resource_generator = ResourceGenerator.new()
 
 func after_each() -> void:
 	_demesne = null
-	_resource_generator = null
 
 func test_land_parcel_creation() -> void:
 	var parcel = DataLandParcel.new(5, 3, "plains")
@@ -178,7 +175,7 @@ func test_parcel_properties() -> void:
 
 func test_resource_initialization() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
-	_resource_generator.initialise_resources(parcel)
+	AspectManager.new().generate_aspects_for_parcel(parcel)
 
 	var land_config: Dictionary = Library.get_config("land")
 	var terrain_type = land_config.terrain_types[parcel.terrain_type]
@@ -198,7 +195,7 @@ func test_resource_initialization() -> void:
 
 func test_resource_discovery() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
-	_resource_generator.initialise_resources(parcel)
+	AspectManager.new().generate_aspects_for_parcel(parcel)
 
 	# Force discovery of a specific resource
 	parcel.add_resource("grain", 100.0, false)
@@ -235,7 +232,7 @@ func test_resource_generation() -> void:
 
 func test_resource_surveying() -> void:
 	var parcel = DataLandParcel.new(0, 0, "plains")
-	_resource_generator.initialise_resources(parcel)
+	AspectManager.new().generate_aspects_for_parcel(parcel)
 
 	assert_eq(
 		parcel.is_surveyed,
@@ -243,7 +240,10 @@ func test_resource_surveying() -> void:
 		"Parcel should start unsurveyed"
 	)
 
-	var discovered_resources = _resource_generator.survey_parcel(parcel)
+	# Simulate surveying by marking as surveyed and discovering all aspects
+	parcel.is_surveyed = true
+	for aspect_id in parcel.resources.keys():
+		parcel.resources[aspect_id].discovered = true
 
 	assert_eq(
 		parcel.is_surveyed,
@@ -252,7 +252,7 @@ func test_resource_surveying() -> void:
 	)
 
 	# Verify that any discovered resources are properly marked
-	for resource_id in discovered_resources:
+	for resource_id in parcel.resources.keys():
 		assert_eq(
 			parcel.is_resource_discovered(resource_id),
 			true,

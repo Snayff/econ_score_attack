@@ -16,8 +16,6 @@ const GOOD_UTILITY_DEBUG_PANEL_NODE_NAME: String = "GoodUtilityDebugPanel"
 func _ready() -> void:
 	# Initialise the world grid before anything else
 	World.initialise_from_config(Library.get_land_data())
-	# Set up AspectManager's aspect loader to decouple it from the Library global
-	AspectManager.set_aspect_loader(Library.get_land_aspects)
 
 #endregion
 
