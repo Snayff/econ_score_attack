@@ -13,8 +13,6 @@ signal person_removed(person: Person)
 signal law_enacted()
 signal law_repealed()
 signal parcel_updated(x: int, y: int, parcel: DataLandParcel)
-signal path_found(start: Vector2i, end: Vector2i, path: Array[Vector2i])
-signal path_failed(start: Vector2i, end: Vector2i, reason: String)
 #endregion
 
 
@@ -34,9 +32,6 @@ var laws: Dictionary = {}
 ## Registry of available law types
 var law_registry: LawRegistry
 
-## Pathfinding system component
-var _pathfinding: PathfindingSystem
-
 ## Add survey manager component
 var survey_manager: SurveyManager
 #endregion
@@ -47,7 +42,6 @@ func _init(demesne_name_: String) -> void:
 	demesne_name = demesne_name_
 	law_registry = LawRegistry.new(self)
 	_initialise_stockpile()
-	_setup_pathfinding()
 
 	survey_manager = SurveyManager.new()
 	add_child(survey_manager)
@@ -62,44 +56,6 @@ func _initialise_stockpile() -> void:
 		"wood": 0,
 		"bureaucracy": 0
 	}
-
-## Sets up the pathfinding system component
-func _setup_pathfinding() -> void:
-	_pathfinding = PathfindingSystem.new()
-	add_child(_pathfinding)
-	_pathfinding.initialise(World.get_grid())
-
-	# Connect signals
-	_pathfinding.path_found.connect(_on_path_found)
-	_pathfinding.path_failed.connect(_on_path_failed)
-
-## Finds a path between two points in the demesne
-## @param start: Starting coordinates
-## @param end: Target coordinates
-## @return: Array of coordinates representing the path, or empty array if no path found
-func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	return _pathfinding.find_path(start, end)
-
-## Gets the movement cost between two adjacent tiles
-## @param from: Starting coordinates
-## @param to: Target coordinates
-## @return: Movement cost between the tiles
-func get_movement_cost(from: Vector2i, to: Vector2i) -> float:
-	return _pathfinding.get_movement_cost(from, to)
-
-## Handles path found signal from pathfinding system
-## @param start: Starting coordinates
-## @param end: Target coordinates
-## @param path: Found path
-func _on_path_found(start: Vector2i, end: Vector2i, path: Array[Vector2i]) -> void:
-	path_found.emit(start, end, path)
-
-## Handles path failed signal from pathfinding system
-## @param start: Starting coordinates
-## @param end: Target coordinates
-## @param reason: Reason for failure
-func _on_path_failed(start: Vector2i, end: Vector2i, reason: String) -> void:
-	path_failed.emit(start, end, reason)
 
 ## Gets a land parcel at the specified coordinates
 ## @param x: X coordinate in the grid
