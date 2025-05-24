@@ -1,7 +1,7 @@
 ## Global singleton for managing all external data loading and access
 ##
 ## Purpose:
-##   This class acts as the centralised data loader and cache for all static, referenced data in the game. It loads JSON configuration files, parses them into internal data classes, and provides access to this data for other classes. It ensures that all static data (such as goods, laws, land, people, etc.) is loaded once and made available globally, supporting the closed-loop, data-driven architecture of the game.
+##   This class acts as the centralised data loader and cache for all static, referenced data in the game. It loads JSON configuration files, parses them into internal data class arrays, and provides access to this data for other classes. It ensures that all static data (such as goods, laws, land, people, etc.) is loaded once and made available globally, supporting the closed-loop, data-driven architecture of the game.
 ##
 ## Data Handling:
 ##   - All structured data is loaded from JSON files, parsed into strongly-typed data class arrays, and cached in the `_books` dictionary.
@@ -217,6 +217,11 @@ var _books: Dictionary = {}
 
 #region PUBLIC FUNCTIONS
 # --- Cache Management ---
+### Clears the cached data for all data types and emits the cache_cleared signal.
+###
+### Removes all loaded and parsed data from the _books dictionary. Emits the 'cache_cleared' signal to notify listeners.
+### Useful for hot-reloading during development or when a full data refresh is required.
+### @return void
 func clear_cache() -> void:
 	_books.clear()
 	Logger.info("Data cache cleared.", "Library")
@@ -245,24 +250,41 @@ func get_all_goods_data() -> Array[DataGood]:
 	_books["goods_data"] = goods
 	return goods
 
+### Returns the icon string for a given good by its ID.
+###
+### @param good_id String: The unique identifier of the good.
+### @return String: The icon associated with the good, or '❓' if not found.
 func get_good_icon(good_id: String) -> String:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.icon
 	return "❓"
 
+### Returns the base price for a given good by its ID.
+###
+### @param good_id String: The unique identifier of the good.
+### @return float: The base price of the good, or 0.0 if not found.
 func get_good_base_price(good_id: String) -> float:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.base_price
 	return 0.0
 
+### Returns the category for a given good by its ID.
+###
+### @param good_id String: The unique identifier of the good.
+### @return String: The category of the good, or an empty string if not found.
 func get_good_category(good_id: String) -> String:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.category
 	return ""
 
+### Returns the DataGood instance for a given good ID.
+###
+### @param good_id String: The unique identifier of the good.
+### @return DataGood: The data class instance for the good, or null if not found.
+### @null
 func get_good_by_id(good_id: String) -> DataGood:
 	for good in get_all_goods_data():
 		if good.id == good_id:
@@ -318,6 +340,11 @@ func get_all_ancestries_data() -> Array[DataAncestry]:
 	_books["ancestries_data"] = ancestries
 	return ancestries
 
+### Returns the DataAncestry instance for a given ancestry ID.
+###
+### @param ancestry_id String: The unique identifier of the ancestry.
+### @return DataAncestry: The data class instance for the ancestry, or null if not found.
+### @null
 func get_ancestry_by_id(ancestry_id: String) -> DataAncestry:
 	for ancestry in get_all_ancestries_data():
 		if ancestry.id == ancestry_id:
@@ -348,6 +375,11 @@ func get_all_cultures_data() -> Array[DataCulture]:
 	_books["cultures_data"] = cultures
 	return cultures
 
+### Returns the DataCulture instance for a given culture ID.
+###
+### @param culture_id String: The unique identifier of the culture.
+### @return DataCulture: The data class instance for the culture, or null if not found.
+### @null
 func get_culture_by_id(culture_id: String) -> DataCulture:
 	for culture in get_all_cultures_data():
 		if culture.id == culture_id:
@@ -370,12 +402,12 @@ func get_all_land_aspects_data() -> Array[DataLandAspect]:
 	_books["land_aspects_data"] = aspects
 	return aspects
 
-func get_land_aspects() -> Array[DataLandAspect]:
-	return get_all_land_aspects_data()
 
-func get_aspect_data() -> Array[DataLandAspect]:
-	return get_all_land_aspects_data()
-
+### Returns the DataLandAspect instance for a given aspect ID.
+###
+### @param aspect_id String: The unique identifier of the land aspect.
+### @return DataLandAspect: The data class instance for the land aspect, or null if not found.
+### @null
 func get_land_aspect_by_id(aspect_id: String) -> DataLandAspect:
 	for aspect in get_all_land_aspects_data():
 		if aspect.aspect_id == aspect_id:
@@ -388,6 +420,11 @@ func get_land_aspect_by_id_strict(aspect_id: String) -> DataLandAspect:
 			return aspect
 	return null
 
+### Returns the DataLandAspect instance associated with a given good, if any extraction method matches.
+###
+### @param good String: The unique identifier of the good to search for.
+### @return DataLandAspect: The data class instance for the land aspect that can extract the good, or null if not found.
+### @null
 func get_land_aspect_by_good(good: String) -> DataLandAspect:
 	for aspect in get_all_land_aspects_data():
 		for method in aspect.get_extraction_methods():
@@ -428,6 +465,11 @@ func get_terrain_types() -> Dictionary:
 
 
 #region PRIVATE FUNCTIONS
+### Returns the loaded data dictionary for a given data type, loading it if necessary.
+###
+### @param data_type String: The type of data to retrieve (e.g., 'goods', 'laws').
+### @return Dictionary: The loaded data for the requested type, or an empty dictionary if not found or on error.
+### @null
 func _get_data(data_type: String) -> Dictionary:
 	if not _DATA_FILES.has(data_type):
 		var error_msg: String = "Unknown data type: " + data_type
@@ -441,6 +483,12 @@ func _get_data(data_type: String) -> Dictionary:
 
 	return _books[data_type]
 
+
+### Loads and parses the external JSON data file for the specified data type, caching the result.
+###
+### @param data_type String: The type of data to load (e.g., 'goods', 'laws').
+### If the file cannot be opened or parsed, sets default data and emits an error signal. On success, caches the loaded data and emits the 'data_loaded' signal.
+### @return void
 func _load_data_file(data_type: String) -> void:
 	if data_type == "goods":
 		_books.erase("goods_data")
@@ -480,6 +528,11 @@ func _load_data_file(data_type: String) -> void:
 	Logger.info("Successfully loaded data for '%s' from '%s'" % [data_type, full_path], "Library")
 	emit_signal("data_loaded", data_type)
 
+### Sets the default data for a given data type in the cache, using _DATA_DEFAULT_VALUES if available.
+###
+### @param data_type String: The type of data to set default values for.
+### If no default is found, sets an empty dictionary and logs a warning.
+### @return void
 func _set_default_data(data_type: String) -> void:
 	if _DATA_DEFAULT_VALUES.has(data_type):
 		_books[data_type] = _DATA_DEFAULT_VALUES[data_type].duplicate(true)
