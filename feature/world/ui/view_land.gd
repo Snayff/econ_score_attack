@@ -35,15 +35,14 @@ var _tile_panels: Dictionary = {}
 ## Populates the centre panel with a grid of land tiles. Selecting a tile updates the left sidebar.
 ## @return void
 func update_view() -> void:
-	_clear_all_children(centre_panel)
 	_tile_panels.clear()
 	if not _demesne or _grid_dims == Vector2i.ZERO:
-		_add_error_message("No demesne or grid data available")
+		set_centre_content([])
 		return
 	var grid_width: int = _grid_dims.x
 	var grid_height: int = _grid_dims.y
 	if grid_width == 0 or grid_height == 0:
-		_add_error_message("No land grid available.")
+		set_centre_content([])
 		return
 	# Create a grid container for tiles
 	var grid = GridContainer.new()
@@ -81,17 +80,6 @@ func _ready() -> void:
 	_update_sim_and_demesne()
 	_connect_demesne_survey_signals()
 	update_view()
-
-## @null
-## Adds an error message label to the centre panel.
-## @param message (String): The error message to display.
-## @return void
-func _add_error_message(message: String) -> void:
-	_clear_all_children(centre_panel)
-	var label = Label.new()
-	label.text = message
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	centre_panel.add_child(label)
 
 ## Creates a tile panel button for a given tile.
 ## @param tile_data (DataLandParcel): The tile's data.

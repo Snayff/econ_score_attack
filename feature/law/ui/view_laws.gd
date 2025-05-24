@@ -13,9 +13,6 @@ extends ABCView
 
 
 #region CONSTANTS
-const PARAMETER_VALUES := {
-	"tax_rate": [5.0, 10.0, 15.0, 20.0, 25.0]
-}
 #endregion
 
 #region SIGNALS
@@ -37,16 +34,16 @@ var _law_panels: Dictionary = {}
 ## Updates the displayed information in the centre panel.
 ## Populates the centre panel with a list of laws grouped by category, and highlights the selected law.
 ## @return void
-func update_info() -> void:
+func update_view() -> void:
 	_clear_all_children(centre_panel)
 	_law_panels.clear()
 	var first_law_id := ""
 	if not _sim or not _sim.demesne:
-		_add_error_message("No simulation data available")
+		set_centre_content([])
 		return
 	var all_laws: Array[DataLaw] = Library.get_all_laws_data()
 	if all_laws.is_empty():
-		_add_error_message("No laws data available")
+		set_centre_content([])
 		return
 	# Group laws by category
 	var laws_by_category: Dictionary = {}
@@ -154,7 +151,7 @@ func _on_law_button_pressed(law_id: String, is_active: bool) -> void:
 		_sim.demesne.repeal_law(law_id)
 	else:
 		_sim.demesne.enact_law(law_id)
-	update_info()
+	update_view()
 
 ## Handles parameter value selection for a law.
 ## @param law_id (String): The law's ID.
@@ -165,7 +162,7 @@ func _on_param_value_selected(law_id: String, param_name: String, value: float) 
 	var law = _sim.demesne.get_law(law_id)
 	if law:
 		law.set_parameter(param_name, value)
-		update_info()
+		update_view()
 #endregion
 
 #region PRIVATE FUNCTIONS
@@ -175,23 +172,12 @@ func _ready() -> void:
 	show_right_sidebar = true
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
-		EventBusGame.turn_complete.connect(update_info)
+		EventBusGame.turn_complete.connect(update_view)
 	# Attempt to get sim if already registered
 	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
-	update_info()
-
-## @null
-## Adds an error message label to the centre panel.
-## @param message (String): The error message to display.
-## @return void
-func _add_error_message(message: String) -> void:
-	_clear_all_children(centre_panel)
-	var label := Label.new()
-	label.text = message
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	centre_panel.add_child(label)
+	update_view()
 
 ## Handles updates from the ReferenceRegistry.
 ## @param key (int): The reference key.
@@ -209,17 +195,17 @@ func _set_sim(sim_ref: Sim) -> void:
 	if _sim.demesne:
 		_sim.demesne.law_enacted.connect(_on_law_enacted)
 		_sim.demesne.law_repealed.connect(_on_law_repealed)
-	update_info()
+	update_view()
 
 ## Handles the law_enacted signal to refresh the view.
 ## @return void
 func _on_law_enacted() -> void:
-	update_info()
+	update_view()
 
 ## Handles the law_repealed signal to refresh the view.
 ## @return void
 func _on_law_repealed() -> void:
-	update_info()
+	update_view()
 
 ## Creates a law panel button for a given law.
 ## @param law (DataLaw): The law's data.

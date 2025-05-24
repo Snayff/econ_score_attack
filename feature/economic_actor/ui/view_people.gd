@@ -33,42 +33,19 @@ var _sim: Sim
 ## Updates the displayed information in the centre panel.
 ## Populates the centre panel with a list of living people and their details.
 ## @return void
-func update_info() -> void:
-	_clear_all_children(centre_panel)
-	if not _sim:
-		_add_error_message("No simulation data available (_sim is null)")
-		return
-	if not _sim.demesne:
-		_add_error_message("No simulation data available (demesne is null)")
-		return
-	var living_people = []
-	for person in _sim.demesne.get_people():
-		if person.is_alive:
-			living_people.append(person)
-	if living_people.is_empty():
-		_add_error_message("No living people in the demesne.")
-		return
-	var vbox = VBoxContainer.new()
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Header row
-	var header = _create_person_row(["Name", "Job", "Health", "Happiness", "Stockpile"], true)
-	vbox.add_child(header)
-	# Person rows
-	for person in living_people:
-		var row = _create_person_panel(person)
-		vbox.add_child(row)
-	set_centre_content([vbox])
-
 func update_view() -> void:
 	if not _sim:
+		set_centre_content([])
 		return
 	if not _sim.demesne:
+		set_centre_content([])
 		return
 	var living_people = []
 	for person in _sim.demesne.get_people():
 		if person.is_alive:
 			living_people.append(person)
 	if living_people.is_empty():
+		set_centre_content([])
 		return
 	var vbox = VBoxContainer.new()
 	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -98,25 +75,44 @@ func _ready() -> void:
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
-		EventBusGame.turn_complete.connect(update_info)
+		EventBusGame.turn_complete.connect(update_view)
 
 	# Attempt to get sim if already registered
 	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
 
-	# Do not call update_info immediately; wait for sim_initialised or turn_complete
+	# Do not call update_view immediately; wait for sim_initialised or turn_complete
 
-## @null
-## Adds an error message label to the centre panel.
-## @param message (String): The error message to display.
+## Handles the Decision Inspector button press, toggling the debug panel.
 ## @return void
-func _add_error_message(message: String) -> void:
-	_clear_all_children(centre_panel)
-	var label = Label.new()
-	label.text = message
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	centre_panel.add_child(label)
+func _on_debug_actor_data_pressed() -> void:
+	if _debug_panel == null:
+		_debug_panel = preload("res://feature/economic_actor/ui/actor_data_inspector.tscn").instantiate()
+		add_child(_debug_panel)
+		_debug_panel.set_position(Vector2(100, 100))
+	else:
+		_debug_panel.visible = not _debug_panel.visible
+
+## Handles updates from the ReferenceRegistry.
+## @param key (int): The reference key.
+## @param value (Object): The reference value.
+## @return void
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
+
+## Sets the sim reference and updates info.
+## @param sim_ref (Sim): The simulation reference.
+## @return void
+func _set_sim(sim_ref: Sim) -> void:
+	_sim = sim_ref
+	update_view()
+
+## Handles Population button press to refresh the people list.
+## @return void
+func _on_population_pressed() -> void:
+	update_view()
 
 ## Creates a row of labels for person data.
 ## @param values (Array): The values to display in the row.
@@ -183,34 +179,4 @@ func _create_person_panel(person: Person) -> PanelContainer:
 			good_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			stockpile_container.add_child(good_label)
 	return panel
-
-## Handles the Decision Inspector button press, toggling the debug panel.
-## @return void
-func _on_debug_actor_data_pressed() -> void:
-	if _debug_panel == null:
-		_debug_panel = preload("res://feature/economic_actor/ui/actor_data_inspector.tscn").instantiate()
-		add_child(_debug_panel)
-		_debug_panel.set_position(Vector2(100, 100))
-	else:
-		_debug_panel.visible = not _debug_panel.visible
-
-## Handles updates from the ReferenceRegistry.
-## @param key (int): The reference key.
-## @param value (Object): The reference value.
-## @return void
-func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
-		_set_sim(value)
-
-## Sets the sim reference and updates info.
-## @param sim_ref (Sim): The simulation reference.
-## @return void
-func _set_sim(sim_ref: Sim) -> void:
-	_sim = sim_ref
-	update_info()
-
-## Handles Population button press to refresh the people list.
-## @return void
-func _on_population_pressed() -> void:
-	update_info()
 #endregion
