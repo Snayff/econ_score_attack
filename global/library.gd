@@ -27,6 +27,7 @@
 ##   Library.clear_cache()
 ##
 ## Last Updated: 2025-05-24
+
 extends Node
 
 
@@ -452,6 +453,32 @@ func get_all_terrain_type_data() -> Dictionary:
 	if data and data.has("terrain_types"):
 		return data["terrain_types"]
 	return {}
+
+## Loads and returns all sub view definitions for a given feature.
+## @param view_name (String): The main view's name (e.g., "people").
+## @return Array[DataSubView]: Array of DataSubView instances for the feature, or empty array on error.
+func get_all_sub_views_data(view_name: String) -> Array[DataSubView]:
+	var cache_key = "sub_views_data_%s" % view_name
+	if _books.has(cache_key):
+		return _books[cache_key]
+	var sub_views: Array[DataSubView] = []
+	var config: Dictionary = _get_data("%s_sub_views" % view_name)
+	if not config.has(view_name):
+		push_error("Sub views config missing '%s' key." % view_name)
+		return sub_views
+	for entry in config[view_name]:
+		if not entry.has("id") or not entry.has("label") or not entry.has("icon") or not entry.has("tooltip") or not entry.has("scene_path"):
+			push_error("Invalid sub view entry: %s" % str(entry))
+			continue
+		sub_views.append(DataSubView.new(
+			entry["id"],
+			entry["label"],
+			entry["icon"],
+			entry["tooltip"],
+			entry["scene_path"]
+		))
+	_books[cache_key] = sub_views
+	return sub_views
 #endregion
 
 
