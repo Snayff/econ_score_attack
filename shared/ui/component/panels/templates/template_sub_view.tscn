@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3]
+
+[node name="TemplateSubView" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LeftSidebar" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+size_flags_vertical = 3
+
+[node name="BGLeftSidebarDebug" type="ColorRect" parent="LeftSidebar"]
+unique_name_in_owner = true
+size_flags_vertical = 3
+color = Color(0.6, 0.7, 1, 0.5)
+
+[node name="CentrePanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 200)
+
+[node name="BGCentrePanelDebug" type="ColorRect" parent="CentrePanel"]
+unique_name_in_owner = true
+color = Color(1, 1, 1, 0.5)
+
+[node name="RightSidebar" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+
+[node name="BGRightSidebarDebug" type="ColorRect" parent="RightSidebar"]
+unique_name_in_owner = true
+size_flags_vertical = 3
+color = Color(0.8, 0.8, 0.8, 0.5) 

@@ -1,16 +1,15 @@
-## Abstract base class for standardised layout of all main views.
+## Abstract base class for standardised layout of all sub views.
 ## Usage:
-##  Inherit from this script in a new view scene (e.g. EconomyView, LawView).
-##  Use the provided region setters (set_left_sidebar_content, set_top_bar_content, set_right_sidebar_content, set_centre_content) to populate UI regions with a Control or an array of Controls.
+##  Inherit from this script in a new sub view scene (e.g. SubViewPopulation, SubViewDecisions).
+##  Use the provided region setters (set_left_sidebar_content, set_right_sidebar_content, set_centre_content) to populate UI regions with a Control or an array of Controls.
 ##  Implement update_view() in your subclass to populate all regions. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
-##  All user actions in sidebars and top bar should emit the standard signals (left_action_selected, top_tab_selected, right_info_requested) where appropriate.
+##  All user actions in sidebars should emit the standard signals (left_action_selected, right_info_requested) where appropriate.
 ##  Error and empty state handling is managed by the base class.
 ##  For all standard UI elements (headers, buttons, sidebar containers), use UIFactory (see global/ui_factory.gd).
 ##
-## See: dev/docs/docs/systems/ui.md
-## Last Updated: 2025-05-13
-##
-class_name ABCView
+## See: dev/docs/designs/sub_view_system_design.md
+## Last Updated: 2025-05-24
+class_name ABCSubView
 extends Control
 
 #region CONSTANTS
@@ -20,8 +19,6 @@ var _DEFAULT_SIDEBAR_WIDTH: int = 180
 #region SIGNALS
 ## Emitted when a left sidebar action is selected.
 signal left_action_selected(action: String)
-## Emitted when a top bar tab is selected.
-signal top_tab_selected(tab: String)
 ## Emitted when right sidebar info is requested.
 signal right_info_requested(info_id: int)
 #endregion
@@ -29,8 +26,6 @@ signal right_info_requested(info_id: int)
 #region ON READY
 @onready var left_sidebar: VBoxContainer = %LeftSidebar
 @onready var left_sidebar_bg: ColorRect = %BGLeftSidebarDebug
-@onready var top_bar: HBoxContainer = %TopBar
-@onready var top_bar_bg: ColorRect = %BGTopBarDebug
 @onready var right_sidebar: VBoxContainer = %RightSidebar
 @onready var right_sidebar_bg: ColorRect = %BGRightSidebarDebug
 @onready var centre_panel: PanelContainer = %CentrePanel
@@ -79,14 +74,6 @@ func set_left_sidebar_content(content: Array[Control]) -> void:
 	for c in content:
 		left_sidebar.add_child(c)
 
-## Sets the content of the top bar.
-## @param content (Array[Control]): The array of Controls to display in the top bar.
-## @return void
-func set_top_bar_content(content: Array[Control]) -> void:
-	_clear_all_children(top_bar)
-	for c in content:
-		top_bar.add_child(c)
-
 ## Sets the content of the right sidebar.
 ## @param content (Array[Control]): The array of Controls to display in the right sidebar.
 ## @return void
@@ -106,7 +93,6 @@ func set_right_sidebar_visible(visible_: bool) -> void:
 func refresh() -> void:
 	_clear_all_children(left_sidebar, false)
 	_clear_all_children(right_sidebar_bg, false)
-	_clear_all_children(top_bar, false)
 	_clear_all_children(centre_panel, false)
 	update_view()
 	_check_and_show_empty_states()
@@ -129,11 +115,9 @@ func update_view() -> void:
 ## @return void
 func _ready() -> void:
 	assert(left_sidebar != null)
-	assert(top_bar != null)
 	assert(right_sidebar != null)
 	assert(centre_panel != null)
 	assert(left_sidebar_bg != null)
-	assert(top_bar_bg != null)
 	assert(centre_panel_bg != null)
 	assert(right_sidebar_bg != null)
 	right_sidebar.visible = show_right_sidebar
@@ -152,8 +136,6 @@ func _update_sidebar_widths() -> void:
 func _update_bg_visibility() -> void:
 	if left_sidebar_bg:
 		left_sidebar_bg.visible = show_debug_backgrounds
-	if top_bar_bg:
-		top_bar_bg.visible = show_debug_backgrounds
 	if centre_panel_bg:
 		centre_panel_bg.visible = show_debug_backgrounds
 	if right_sidebar_bg:
@@ -170,14 +152,6 @@ func _create_debug_backgrounds() -> void:
 		bg.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		left_sidebar_bg = bg
 		left_sidebar.add_child(bg, true)
-	# Top Bar
-	if top_bar and not top_bar.has_node("BGTopBarDebug"):
-		var bg = ColorRect.new()
-		bg.name = "BGTopBarDebug"
-		bg.color = Color(0.7, 1, 0.7, 0.5)
-		bg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		top_bar_bg = bg
-		top_bar.add_child(bg, true)
 	# Centre Panel
 	if centre_panel and not centre_panel.has_node("BGCentrePanelDebug"):
 		var bg = ColorRect.new()
@@ -194,9 +168,8 @@ func _create_debug_backgrounds() -> void:
 		right_sidebar_bg = bg
 		right_sidebar.add_child(bg, true)
 
-
 ## Shows a standard empty message in the specified region if it is empty.
-## @param region (String): "left", "right", "top", or "centre".
+## @param region (String): "left", "right", or "centre".
 ## @return void
 func _show_empty_message(region: String) -> void:
 	var label := Label.new()
@@ -207,8 +180,6 @@ func _show_empty_message(region: String) -> void:
 			left_sidebar.add_child(label)
 		"right":
 			right_sidebar.add_child(label)
-		"top":
-			top_bar.add_child(label)
 		"centre":
 			centre_panel.add_child(label)
 
@@ -219,8 +190,6 @@ func _check_and_show_empty_states() -> void:
 		_show_empty_message("left")
 	if right_sidebar.visible and right_sidebar.get_child_count() == 0:
 		_show_empty_message("right")
-	if top_bar.get_child_count() == 0:
-		_show_empty_message("top")
 	if centre_panel.get_child_count() == 0:
 		_show_empty_message("centre")
 
@@ -232,7 +201,6 @@ func _clear_all_children(container: Node, ignore_debug_backgrounds: bool = true)
 	var ignore_list = [
 		left_sidebar_bg,
 		right_sidebar_bg,
-		top_bar_bg,
 		centre_panel_bg
 	]
 
