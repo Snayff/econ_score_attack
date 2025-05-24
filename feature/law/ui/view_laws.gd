@@ -1,4 +1,4 @@
-## ViewLaws2: Laws view using the standardised ABCView layout system.
+## ViewLaws: Laws view using the standardised ABCView layout system.
 ## Displays information about laws in the simulation using the modular UI layout.
 ## Usage:
 ##  Inherit from ABCView. Implement update_view() to populate the centre panel and any other regions as needed, using set_centre_content, set_left_sidebar_content, etc. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.

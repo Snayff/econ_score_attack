@@ -95,17 +95,6 @@ func set_right_sidebar_content(content: Array[Control]) -> void:
 	for c in content:
 		right_sidebar.add_child(c)
 
-## Clears all sidebars (left and right).
-## @return void
-func clear_sidebars() -> void:
-	_clear_all_children(left_sidebar)
-	_clear_all_children(right_sidebar)
-
-## Clears the top bar.
-## @return void
-func clear_top_bar() -> void:
-	_clear_all_children(top_bar)
-
 ## Shows or hides the right sidebar.
 ## @param visible (bool): Whether the right sidebar should be visible.
 ## @return void
@@ -115,8 +104,8 @@ func set_right_sidebar_visible(visible_: bool) -> void:
 ## Standard refresh pattern: clears all regions, calls update_view, then fills empty regions with a default message.
 ## @return void
 func refresh() -> void:
-	clear_sidebars()
-	clear_top_bar()
+	_clear_sidebars()
+	_clear_top_bar()
 	_clear_all_children(centre_panel)
 	update_view()
 	_check_and_show_empty_states()
@@ -199,4 +188,15 @@ func _clear_all_children(container: Node) -> void:
 	for child in container.get_children():
 		container.remove_child(child)
 		child.queue_free()
+
+## Clears all sidebars (left and right).
+## @return void
+func _clear_sidebars() -> void:
+	_clear_all_children(left_sidebar)
+	_clear_all_children(right_sidebar)
+
+## Clears the top bar.
+## @return void
+func _clear_top_bar() -> void:
+	_clear_all_children(top_bar)
 #endregion

@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://d1b7k76yoctuq" path="res://feature/sim/ui/btn_progress_turn.gd" id="4_t0li6"]
 [ext_resource type="Script" uid="uid://84g8vlc7ve8x" path="res://feature/sim/ui/lbl_turn_info.gd" id="5_oxwcw"]
 [ext_resource type="PackedScene" uid="uid://cvu83cqyrf2ld" path="res://feature/world/ui/view_land.tscn" id="8_0liqk"]
+[ext_resource type="PackedScene" uid="uid://cvyo4evlpohkw" path="res://feature/economy/ui/view_economy2.tscn" id="8_a3vx2"]
 [ext_resource type="PackedScene" uid="uid://ddcy3mhwj4kj6" path="res://feature/economic_actor/ui/view_people.tscn" id="8_aklal"]
 [ext_resource type="PackedScene" uid="uid://c8exi112aahh0" path="res://feature/law/ui/view_laws.tscn" id="8_l61sg"]
-[ext_resource type="PackedScene" uid="uid://dxxx" path="res://feature/economy/ui/view_economy.tscn" id="9_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://bxqxe2yvmqxxx" path="res://main/ui/panel_header.tscn" id="10_xxxxx"]
 [ext_resource type="PackedScene" uid="uid://brt22vvn80qvj" path="res://shared/ui/notifications/notification_system.tscn" id="11_notify"]
 [ext_resource type="PackedScene" uid="uid://bdmsj6dhvu586" path="res://main/ui/main_sidebar.tscn" id="12_sidebar"]
@@ -108,12 +108,12 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="ViewEconomy" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("9_xxxxx")]
+[node name="ViewLaws" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_l61sg")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="ViewLaws" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_l61sg")]
+[node name="ViewEconomy" parent="ViewportPanel/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("8_a3vx2")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
