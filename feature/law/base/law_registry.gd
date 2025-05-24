@@ -59,7 +59,9 @@ func create_law(law_id: String) -> Law:
 		default_parameters[param_name] = law_json.parameters[param_name].default
 
 	# Convert tags to Array[String]
-	var tags: Array[String] = law_json.get("tags", [])
+	var tags_untyped = law_json.get("tags", [])
+	var tags: Array[String] = []
+	tags.assign(tags_untyped)
 
 	return law_class.new(
 		law_data.f_name,

@@ -21,7 +21,7 @@
 ##   # Clearing the cache (e.g., for hot-reloading during development):
 ##   Library.clear_cache()
 ##
-## Last Updated: 2024-06-09
+## Last Updated: 2002-05-18
 extends Node
 
 
@@ -205,17 +205,18 @@ const _DATA_DEFAULT_VALUES: Dictionary = {
 	}
 }
 
-
+var _goods_data_cache: Array[DataGood] = []
 #endregion
 
 
 #region PUBLIC FUNCS
 ## Gets data for a specific type
-## @param data_type: The type of data to load (e.g., "people")
-## @return: Dictionary containing the data
+## @param data_type: String - The type of data to load (e.g., "people")
+## @return Dictionary - Dictionary containing the data. Returns an empty dictionary if not found or on error.
 func _get_data(data_type: String) -> Dictionary:
 	if not _DATA_FILES.has(data_type):
 		var error_msg: String = "Unknown data type: " + data_type
+		Logger.error("Unknown data type requested: %s" % data_type, "Library")
 		emit_signal("err_data_load_failed", data_type, error_msg)
 		push_error(error_msg)
 		return {}
@@ -225,8 +226,9 @@ func _get_data(data_type: String) -> Dictionary:
 
 	return _books[data_type]
 
-## Loads data from file
-## @param data_type: The type of data to load
+## Loads data from file for a given data type.
+## @param data_type: String - The type of data to load
+## @return void
 func _load_data_file(data_type: String) -> void:
 	var file_path: String = _DATA_FILES[data_type]
 	var full_path: String = file_path
@@ -234,9 +236,10 @@ func _load_data_file(data_type: String) -> void:
 	var file: FileAccess = FileAccess.open(full_path, FileAccess.READ)
 	if not file:
 		var error_msg: String = "Failed to open file: " + full_path
+		Logger.error("Failed to open file for data_type '%s': %s" % [data_type, full_path], "Library")
 		emit_signal("err_data_load_failed", data_type, error_msg)
-		push_error(error_msg)
 		_set_default_data(data_type)
+		Logger.warning("Set default data for '%s' due to file open error." % data_type, "Library")
 		return
 
 	var json: JSON = JSON.new()
@@ -244,58 +247,65 @@ func _load_data_file(data_type: String) -> void:
 	file.close()
 
 	if parse_result != OK:
-		var error_msg: String = "Failed to parse JSON file: " + full_path
+		var error_msg: String = "Failed to parse JSON file: " + full_path + ". Error: " + json.get_error_message()
+		Logger.error("Failed to parse JSON for data_type '%s': %s | Error: %s" % [data_type, full_path, json.get_error_message()], "Library")
 		emit_signal("err_data_load_failed", data_type, error_msg)
-		push_error(error_msg)
 		_set_default_data(data_type)
+		Logger.warning("Set default data for '%s' due to JSON parse error." % data_type, "Library")
 		return
 
 	_books[data_type] = json.get_data()
+	Logger.info("Successfully loaded data for '%s' from '%s'" % [data_type, full_path], "Library")
 	emit_signal("data_loaded", data_type)
 
-## Sets default data values for a type
-## @param data_type: The type of data to set defaults for
+## Sets default data values for a type if loading fails or file is missing.
+## @param data_type: String - The type of data to set defaults for
+## @return void
 func _set_default_data(data_type: String) -> void:
 	if _DATA_DEFAULT_VALUES.has(data_type):
 		_books[data_type] = _DATA_DEFAULT_VALUES[data_type].duplicate(true)
+		Logger.info("Default data set for '%s' from _DATA_DEFAULT_VALUES." % data_type, "Library")
 	else:
 		_books[data_type] = {}
+		Logger.warning("No default data found for '%s'. Set to empty dictionary." % data_type, "Library")
 
-## Clears the data cache
+## Clears the data cache, removing all loaded data from memory.
+## @return void
 func clear_cache() -> void:
 	_books.clear()
+	Logger.info("Data cache cleared.", "Library")
 	emit_signal("cache_cleared")
 
-## Get a good's icon
-## @param good_id: ID of the good
-## @return: The good's icon or a fallback icon if not found
+## Gets the icon for a good by its ID.
+## @param good_id: String - ID of the good
+## @return String - The good's icon or a fallback icon if not found
 func get_good_icon(good_id: String) -> String:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.icon
 	return "❓"
 
-## Get a good's base price
-## @param good_id: ID of the good
-## @return: The good's base price or 0 if not found
+## Gets the base price for a good by its ID.
+## @param good_id: String - ID of the good
+## @return float - The good's base price or 0.0 if not found
 func get_good_base_price(good_id: String) -> float:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.base_price
 	return 0.0
 
-## Get a good's category
-## @param good_id: ID of the good
-## @return: The good's category or empty string if not found
+## Gets the category for a good by its ID.
+## @param good_id: String - ID of the good
+## @return String - The good's category or empty string if not found
 func get_good_category(good_id: String) -> String:
 	for good in get_all_goods_data():
 		if good.id == good_id:
 			return good.category
 	return ""
 
-## Get consumption rules for a specific good
-## @param good_id: ID of the good to get rules for
-## @return: Dictionary containing the consumption rules or empty dict if not found
+## Gets the consumption rule for a specific good.
+## @param good_id: String - ID of the good to get rules for
+## @return Dictionary - Dictionary containing the consumption rules or empty dict if not found
 func get_consumption_rule(good_id: String) -> Dictionary:
 	var rules: Array = _get_data("consumption_rules").get("consumption_rules", [])
 	for rule in rules:
@@ -303,28 +313,30 @@ func get_consumption_rule(good_id: String) -> Dictionary:
 			return rule
 	return {}
 
-## Get all consumption rules
-## @return: Array of all consumption rules
+## Gets all consumption rules.
+## @return Array - Array of all consumption rules
 func get_all_consumption_rules() -> Array:
 	return _get_data("consumption_rules").get("consumption_rules", [])
 
-## Gets all land aspects
-## @return Array of all land aspects as DataLandAspect instances
+## Gets all land aspects as DataLandAspect instances.
+## @return Array[DataLandAspect] - Array of all land aspects
 func get_land_aspects() -> Array[DataLandAspect]:
 	return get_all_land_aspects_data()
 
-## Gets a land aspect by its ID
-## @param aspect_id: The ID of the aspect to get
-## @return DataLandAspect instance or null if not found
+## Gets a land aspect by its ID.
+## @param aspect_id: String - The ID of the aspect to get
+## @return DataLandAspect - DataLandAspect instance or null if not found
+## @null
 func get_land_aspect_by_id(aspect_id: String) -> DataLandAspect:
 	for aspect in get_all_land_aspects_data():
 		if aspect.aspect_id == aspect_id:
 			return aspect
 	return null
 
-## Gets a land aspect by the good it produces
-## @param good: The good to search for
-## @return DataLandAspect instance or null if not found
+## Gets a land aspect by the good it produces.
+## @param good: String - The good to search for
+## @return DataLandAspect - DataLandAspect instance or null if not found
+## @null
 func get_land_aspect_by_good(good: String) -> DataLandAspect:
 	for aspect in get_all_land_aspects_data():
 		for method in aspect.get_extraction_methods():
@@ -332,34 +344,35 @@ func get_land_aspect_by_good(good: String) -> DataLandAspect:
 				return aspect
 	return null
 
-## Gets all aspect data
-## @return Array of all land aspects as DataLandAspect instances
+## Gets all aspect data as DataLandAspect instances.
+## @return Array[DataLandAspect] - Array of all land aspects
 func get_aspect_data() -> Array[DataLandAspect]:
 	return get_all_land_aspects_data()
 
-## Gets data for a specific aspect by ID
-## @param aspect_id: The ID of the aspect to get
-## @return DataLandAspect instance or null if not found
+## Gets data for a specific aspect by ID.
+## @param aspect_id: String - The ID of the aspect to get
+## @return DataLandAspect - DataLandAspect instance or null if not found
+## @null
 func get_aspect_by_id(aspect_id: String) -> DataLandAspect:
 	return get_land_aspect_by_id(aspect_id)
 
-## Gets demesne data
-## @return Dictionary containing the demesne data
+## Gets demesne data from cache or file.
+## @return Dictionary - Dictionary containing the demesne data
 func get_demesne_data() -> Dictionary:
 	return _get_data("demesne")
 
-## Gets people data
-## @return Dictionary containing the people data
+## Gets people data from cache or file.
+## @return Dictionary - Dictionary containing the people data
 func get_people_data() -> Dictionary:
 	return _get_data("people")
 
-## Gets laws data
-## @return Dictionary containing the laws data
+## Gets laws data from cache or file.
+## @return Dictionary - Dictionary containing the laws data
 func get_laws_data() -> Dictionary:
 	return _get_data("laws")
 
-## Gets all ancestries data
-## @return Array of all ancestries
+## Gets all ancestries data as DataAncestry instances.
+## @return Array[DataAncestry] - Array of all ancestries
 func get_all_ancestries_data() -> Array[DataAncestry]:
 	var ancestries: Array[DataAncestry] = []
 	var config: Dictionary = _get_data("ancestries")
@@ -381,8 +394,8 @@ func get_all_ancestries_data() -> Array[DataAncestry]:
 	return ancestries
 
 
-## Gets all laws data
-## @return Array of all laws as DataLaw instances
+## Gets all laws data as DataLaw instances.
+## @return Array[DataLaw] - Array of all laws
 func get_all_laws_data() -> Array[DataLaw]:
 	var laws: Array[DataLaw] = []
 	var config: Dictionary = _get_data("laws")
@@ -395,8 +408,8 @@ func get_all_laws_data() -> Array[DataLaw]:
 		))
 	return laws
 
-## Gets all land aspects data
-## @return Array of all land aspects as DataLandAspect instances
+## Gets all land aspects data as DataLandAspect instances.
+## @return Array[DataLandAspect] - Array of all land aspects
 func get_all_land_aspects_data() -> Array[DataLandAspect]:
 	var aspects: Array[DataLandAspect] = []
 	var config: Variant = _books.get("land_aspects", [])
@@ -409,13 +422,13 @@ func get_all_land_aspects_data() -> Array[DataLandAspect]:
 		aspects.append(DataLandAspect.new(entry))
 	return aspects
 
-## Gets the land config data
-## @return Dictionary containing the land config
+## Gets the land config data from cache or file.
+## @return Dictionary - Dictionary containing the land config
 func get_land_data() -> Dictionary:
 	return _get_data("land")
 
-## Loads terrain types from terrain.json
-## @return Dictionary: terrain_types dictionary or empty if not found
+## Loads terrain types from terrain.json.
+## @return Dictionary - terrain_types dictionary or empty if not found
 func get_terrain_types() -> Dictionary:
 	var data: Dictionary = _get_data("terrain")
 	if data and data.has("terrain_types"):
@@ -424,10 +437,8 @@ func get_terrain_types() -> Dictionary:
 #endregion
 
 #region FACTORY METHODS
-var _goods_data_cache: Array[DataGood] = []
-
-## Returns an array of DataGood instances from loaded goods config
-## @return Array[DataGood]
+## Returns an array of DataGood instances from loaded goods config.
+## @return Array[DataGood] - Array of all goods as DataGood instances
 func get_all_goods_data() -> Array[DataGood]:
 	if _goods_data_cache.size() > 0:
 		return _goods_data_cache
@@ -450,8 +461,8 @@ func get_all_goods_data() -> Array[DataGood]:
 	_goods_data_cache = goods
 	return goods
 
-## Returns an array of DataCulture instances from loaded cultures config
-## @return Array[DataCulture]
+## Returns an array of DataCulture instances from loaded cultures config.
+## @return Array[DataCulture] - Array of all cultures as DataCulture instances
 func get_all_cultures_data() -> Array[DataCulture]:
 	var cultures: Array[DataCulture] = []
 	var config: Dictionary = _get_data("cultures")
