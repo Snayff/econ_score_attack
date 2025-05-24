@@ -1,33 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxxx"]
+[gd_scene load_steps=3 format=3 uid="uid://cvyo4evlpohkw"]
 
-[ext_resource type="Script" uid="uid://ccjaw4o82hfxf" path="res://feature/economy/ui/rtl_economy_info.gd" id="1_xxxxx"]
+[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_ndhkk"]
+[ext_resource type="Script" uid="uid://cqiojgfqxcn7y" path="res://feature/economy/ui/view_economy.gd" id="2_iphpo"]
 
 [node name="ViewEconomy" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1_xxxxx")
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1280.0
+offset_bottom = -720.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="MetricsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 10
+
+[node name="TemplateView" parent="." instance=ExtResource("1_ndhkk")]
+layout_mode = 1
+offset_right = 968.0
+offset_bottom = 224.0
+script = ExtResource("2_iphpo")
