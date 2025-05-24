@@ -35,6 +35,8 @@ var _tile_panels: Dictionary = {}
 ## Populates the centre panel with a grid of land tiles. Selecting a tile updates the left sidebar.
 ## @return void
 func update_view() -> void:
+	super.update_view()
+
 	_tile_panels.clear()
 	if not _demesne or _grid_dims == Vector2i.ZERO:
 		set_centre_content([])

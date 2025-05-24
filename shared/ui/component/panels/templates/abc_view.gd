@@ -104,9 +104,10 @@ func set_right_sidebar_visible(visible_: bool) -> void:
 ## Standard refresh pattern: clears all regions, calls update_view, then fills empty regions with a default message.
 ## @return void
 func refresh() -> void:
-	_clear_sidebars()
-	_clear_top_bar()
-	_clear_all_children(centre_panel)
+	_clear_all_children(left_sidebar, false)
+	_clear_all_children(right_sidebar_bg, false)
+	_clear_all_children(top_bar, false)
+	_clear_all_children(centre_panel, false)
 	update_view()
 	_check_and_show_empty_states()
 
@@ -114,7 +115,13 @@ func refresh() -> void:
 ## @virtual
 ## @return void
 func update_view() -> void:
-	pass
+	# ensure correct sizing
+	offset_top = 0
+	offset_bottom = 0
+	offset_left = 0
+	offset_right = 0
+
+	_create_debug_backgrounds()
 #endregion
 
 #region PRIVATE FUNCTIONS
@@ -152,6 +159,42 @@ func _update_bg_visibility() -> void:
 	if right_sidebar_bg:
 		right_sidebar_bg.visible = show_debug_backgrounds
 
+## Ensures debug background ColorRects exist in each region. If missing, recreates them with correct name, colour, and sizing.
+## @return void
+func _create_debug_backgrounds() -> void:
+	# Left Sidebar
+	if left_sidebar and not left_sidebar.has_node("BGLeftSidebarDebug"):
+		var bg = ColorRect.new()
+		bg.name = "BGLeftSidebarDebug"
+		bg.color = Color(0.6, 0.7, 1, 0.5)
+		bg.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		left_sidebar_bg = bg
+		left_sidebar.add_child(bg, true)
+	# Top Bar
+	if top_bar and not top_bar.has_node("BGTopBarDebug"):
+		var bg = ColorRect.new()
+		bg.name = "BGTopBarDebug"
+		bg.color = Color(0.7, 1, 0.7, 0.5)
+		bg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top_bar_bg = bg
+		top_bar.add_child(bg, true)
+	# Centre Panel
+	if centre_panel and not centre_panel.has_node("BGCentrePanelDebug"):
+		var bg = ColorRect.new()
+		bg.name = "BGCentrePanelDebug"
+		bg.color = Color(1, 1, 1, 0.5)
+		centre_panel_bg = bg
+		centre_panel.add_child(bg, true)
+	# Right Sidebar
+	if right_sidebar and not right_sidebar.has_node("BGRightSidebarDebug"):
+		var bg = ColorRect.new()
+		bg.name = "BGRightSidebarDebug"
+		bg.color = Color(0.8, 0.8, 0.8, 0.5)
+		bg.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		right_sidebar_bg = bg
+		right_sidebar.add_child(bg, true)
+
+
 ## Shows a standard empty message in the specified region if it is empty.
 ## @param region (String): "left", "right", "top", or "centre".
 ## @return void
@@ -181,22 +224,22 @@ func _check_and_show_empty_states() -> void:
 	if centre_panel.get_child_count() == 0:
 		_show_empty_message("centre")
 
-## Removes and frees all children from the given container.
+## Removes and frees all children from the given container, optionally ignoring debug backgrounds.
 ## @param container (Node): The container whose children will be removed and freed.
+## @param ignore_debug_backgrounds (bool): If true, debug backgrounds will not be freed. Defaults to true.
 ## @return void
-func _clear_all_children(container: Node) -> void:
+func _clear_all_children(container: Node, ignore_debug_backgrounds: bool = true) -> void:
+	var ignore_list = [
+		left_sidebar_bg,
+		right_sidebar_bg,
+		top_bar_bg,
+		centre_panel_bg
+	]
+
 	for child in container.get_children():
+		if ignore_debug_backgrounds and child in ignore_list:
+			continue
 		container.remove_child(child)
 		child.queue_free()
 
-## Clears all sidebars (left and right).
-## @return void
-func _clear_sidebars() -> void:
-	_clear_all_children(left_sidebar)
-	_clear_all_children(right_sidebar)
-
-## Clears the top bar.
-## @return void
-func _clear_top_bar() -> void:
-	_clear_all_children(top_bar)
 #endregion

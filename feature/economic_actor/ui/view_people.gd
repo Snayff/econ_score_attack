@@ -24,7 +24,6 @@ extends ABCView
 #endregion
 
 #region VARS
-var _debug_panel: Control = null
 var _sim: Sim
 #endregion
 
@@ -33,6 +32,8 @@ var _sim: Sim
 ## Populates the centre panel with a list of living people and their details.
 ## @return void
 func update_view() -> void:
+	super.update_view()
+
 	if not _sim:
 		set_centre_content([])
 		return
@@ -56,6 +57,8 @@ func update_view() -> void:
 		var row = _create_person_panel(person)
 		vbox.add_child(row)
 	set_centre_content([vbox])
+
+
 #endregion
 
 #region PRIVATE FUNCTIONS
@@ -69,7 +72,6 @@ func _ready() -> void:
 	# Add Decision Inspector button to top bar
 	var btn_decision_inspector = Button.new()
 	btn_decision_inspector.text = "Decision Inspector"
-	btn_decision_inspector.pressed.connect(_on_debug_actor_data_pressed)
 	set_top_bar_content([btn_population, btn_decision_inspector])
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
@@ -83,15 +85,6 @@ func _ready() -> void:
 
 	# Do not call update_view immediately; wait for sim_initialised or turn_complete
 
-## Handles the Decision Inspector button press, toggling the debug panel.
-## @return void
-func _on_debug_actor_data_pressed() -> void:
-	if _debug_panel == null:
-		_debug_panel = preload("res://feature/economic_actor/ui/actor_data_inspector.tscn").instantiate()
-		add_child(_debug_panel)
-		_debug_panel.set_position(Vector2(100, 100))
-	else:
-		_debug_panel.visible = not _debug_panel.visible
 
 ## Handles updates from the ReferenceRegistry.
 ## @param key (int): The reference key.

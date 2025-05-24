@@ -35,6 +35,8 @@ var _law_panels: Dictionary = {}
 ## Populates the centre panel with a list of laws grouped by category, and highlights the selected law.
 ## @return void
 func update_view() -> void:
+	super.update_view()
+
 	_clear_all_children(centre_panel)
 	_law_panels.clear()
 	var first_law_id := ""

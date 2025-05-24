@@ -16,6 +16,8 @@ var _sim: Sim = null
 
 #region PUBLIC FUNCTIONS
 func update_view() -> void:
+	super.update_view()
+
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
