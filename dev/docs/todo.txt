@@ -18,7 +18,7 @@ IMPLEMENT FEATURE PROPOSAL
 	Please implement the feature exactly as you have described. 
 	
 RECORD FEATURE PROPOSAL AS DESIGN
-	Please write this approach to "dev\docs\designs" in a .md file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking. Complement each phase with a detailed checklist of all of the items that must be completed for that phase to be successful. 
+	Please write this approach to "dev\docs\designs" in a "*_design.md" file. Then create another file, in the same location, explaining the phased approach you would take - as you would explain it to an LLM/AI Agent - to implement this feature. Consider how early we can introduce a UI, so that initial phases are accessible to the player. We also want to introduce testing at each phase and ensure there are no regressions between stages. Ensure you list all of the existing files that relate to this proposal.  Remember, we're not worried about the specific code just yet, unless it helps explain your thinking. Complement each phase with a detailed checklist of all of the items that must be completed for that phase to be successful. 
 
 IMPLEMENT DESIGN
 	Please review the @_design.md  and then implement phase x, as listed in @_implementation_phases.md.
@@ -47,6 +47,8 @@ DEBUGGING
 - guilds. Can create guilds. Demesne sponsored or independent. Bonus to effectiveness of related jobs for members, e.g. foresters guild increase strength for all members. Count as building, so must be manned and operated to get bonuses. 
 	- can lead to unlocks, such as ability to do  dungeon missions, attempt to steal from enemy demesne, etc.should be specific to guild and also unique enough to feel meaningful, not just a simple variation of stuff generally available to the player
 - law builder. as per res://dev/docs/designs/law_builder_system_design.md.
+- Generate corruption per action. Trend towards 0 over time. 
+- Ancestry starts will illness, like krogans. Can research cure, eventually. Hard to do, but big bonuses.
 
 ## ENHANCEMENTS
 - production via component. 
@@ -71,7 +73,7 @@ DEBUGGING
 
 
 ## BUGS
-- on land view, when progressing time, grid keeps resetting to centre most. 
+
 
 ################
 
@@ -80,33 +82,12 @@ New Scene. Control Node as Root. Name "View*.tscn"
 For View*.tscn set 
 	size_flags_horizontal = Fill, expand
 	size_flags_vertical = Fill, expand
-Instance TemplateView.tscn as child. 
+Instance TemplateView.tscn as child of View*.tscn. 
 For TemplateView set:
 	layout/layout_mode = anchor
 	layout/anchors_preset = Full Rect
 Ensure nothing else in TemplateView has been changed (size might be and might not be able to reset, this is fine)
 Create view_*.gd. 
 Assign view_*.gd to TemplateView.
-
-
-
-In ABCView:
-Update content-setting methods to accept arrays or single controls.
-Add _show_empty_message(region: String) and call it for any empty region after update_view().
-Refactor refresh() to clear, update, and check for empty regions.
-Ensure signals are documented and used for all sidebar/top bar actions.
-In Subclasses:
-Implement update_view() using the new content-setting methods.
-Do not manually clear or show error messages—let ABCView handle this.
-Emit standard signals for user actions.
-In Documentation:
-Update the system doc to reflect these changes.
-Provide code examples for the new workflow.
-
-
-
-
-
-
 
 
