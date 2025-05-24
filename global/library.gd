@@ -313,9 +313,6 @@ func get_law_by_id(law_id: String) -> DataLaw:
 			return law
 	return null
 
-func get_laws_data() -> Dictionary:
-	return _get_data("laws")
-
 # --- Data Access: Ancestries ---
 func get_all_ancestries_data() -> Array[DataAncestry]:
 	if _books.has("ancestries_data"):
@@ -414,12 +411,6 @@ func get_land_aspect_by_id(aspect_id: String) -> DataLandAspect:
 			return aspect
 	return null
 
-func get_land_aspect_by_id_strict(aspect_id: String) -> DataLandAspect:
-	for aspect in get_all_land_aspects_data():
-		if aspect.aspect_id == aspect_id:
-			return aspect
-	return null
-
 ### Returns the DataLandAspect instance associated with a given good, if any extraction method matches.
 ###
 ### @param good String: The unique identifier of the good to search for.
@@ -433,11 +424,11 @@ func get_land_aspect_by_good(good: String) -> DataLandAspect:
 	return null
 
 # --- Data Access: Demesne ---
-func get_demesne_data() -> Dictionary:
+func get_all_demesne_data() -> Dictionary:
 	return _get_data("demesne")
 
 # --- Data Access: People ---
-func get_people_data() -> Dictionary:
+func get_all_people_data() -> Dictionary:
 	return _get_data("people")
 
 # --- Data Access: Consumption Rules ---
@@ -452,11 +443,11 @@ func get_all_consumption_rules() -> Array:
 	return _get_data("consumption_rules").get("consumption_rules", [])
 
 # --- Data Access: Land ---
-func get_land_data() -> Dictionary:
+func get_all_land_data() -> Dictionary:
 	return _get_data("land")
 
 # --- Data Access: Terrain ---
-func get_terrain_types() -> Dictionary:
+func get_all_terrain_type_data() -> Dictionary:
 	var data: Dictionary = _get_data("terrain")
 	if data and data.has("terrain_types"):
 		return data["terrain_types"]

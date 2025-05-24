@@ -31,7 +31,7 @@ extends Node
 ## Jobs are assigned according to the weighted random allocation in people.json's job_allocation.
 ## @return Array of Person instances
 static func generate_starting_people() -> Array:
-	var people_data: Dictionary = Library.get_people_data()
+	var people_data: Dictionary = Library.get_all_people_data()
 	var cultures: Array = Library.get_all_cultures_data()
 	var ancestries: Array = Library.get_all_ancestries_data()
 	var num_people: int = people_data.get("starting_num_people", 0)

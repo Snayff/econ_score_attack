@@ -15,7 +15,7 @@ const GOOD_UTILITY_DEBUG_PANEL_NODE_NAME: String = "GoodUtilityDebugPanel"
 #region ON READY
 func _ready() -> void:
 	# Initialise the world grid before anything else
-	World.initialise_from_config(Library.get_land_data())
+	World.initialise_from_config(Library.get_all_land_data())
 
 #endregion
 

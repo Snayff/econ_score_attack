@@ -65,7 +65,7 @@ func test_gold_miner_production() -> void:
 
 func test_people_culture_allocation_matches_cultures() -> void:
 	## Ensures all culture ids in people.json's culture_allocation exist in cultures.json
-	var people_data: Dictionary = Library.get_people_data()
+	var people_data: Dictionary = Library.get_all_people_data()
 	var culture_allocation: Dictionary = people_data.get("culture_allocation", {})
 	var allocated_cultures: Array = culture_allocation.keys()
 
@@ -82,7 +82,7 @@ func test_people_culture_allocation_matches_cultures() -> void:
 
 func test_people_ancestry_allocation_matches_ancestries() -> void:
 	## Ensures all ancestry ids in people.json's ancestry_allocation exist in ancestries.json
-	var people_data: Dictionary = Library.get_people_data()
+	var people_data: Dictionary = Library.get_all_people_data()
 	var ancestry_allocation: Dictionary = people_data.get("ancestry_allocation", {})
 	var allocated_ancestries: Array = ancestry_allocation.keys()
 

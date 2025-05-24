@@ -38,7 +38,7 @@ func _init() -> void:
 
 ## Loads the people data from the Library
 func _load_data_file() -> void:
-	_data = Library.get_people_data()
+	_data = Library.get_all_people_data()
 	if _data.is_empty():
 		emit_signal("err_data_load_failed", "Failed to load people data")
 		return

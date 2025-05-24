@@ -35,7 +35,7 @@ func initialise_from_config(config: Dictionary) -> void:
 		_terrain_types = _terrain_loader.call()
 		Logger.log_event("terrain_types_loaded", {"count": _terrain_types.size(), "source": "custom_loader"}, "TerrainManager")
 	else:
-		_terrain_types = Library.get_terrain_types()
+		_terrain_types = Library.get_all_terrain_type_data()
 		Logger.log_event("terrain_types_loaded", {"count": _terrain_types.size(), "source": "library"}, "TerrainManager")
 	if _terrain_types.is_empty():
 		push_warning("No terrain types found in config, Library, or via loader")

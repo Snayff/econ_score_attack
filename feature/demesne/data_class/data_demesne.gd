@@ -27,7 +27,7 @@ func _init() -> void:
 
 ## Loads the demesne data from the Library
 func _load_data_file() -> void:
-	_data = Library.get_demesne_data()
+	_data = Library.get_all_demesne_data()
 	if _data.is_empty():
 		emit_signal("err_data_load_failed", "Failed to load demesne data")
 		return
