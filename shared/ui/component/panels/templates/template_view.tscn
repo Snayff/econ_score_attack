@@ -1,19 +1,23 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://dfies1uk7ujnf"]
 
-[node name="SubViewSelector" type="VBoxContainer"]
+[ext_resource type="Script" uid="uid://cp4qggdnshfxn" path="res://shared/ui/component/panels/templates/sub_view_selector.gd" id="1_l74j8"]
+
+[node name="View_SubViewSelector" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-show_debug_backgrounds = true
+script = ExtResource("1_l74j8")
 
-[node name="TopBar" type="HBoxContainer" parent="."]
+[node name="View_TopBar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SubViewContainer" type="Control" parent="."]
+[node name="View_SubViewContainer" type="Control" parent="."]
 unique_name_in_owner = true
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

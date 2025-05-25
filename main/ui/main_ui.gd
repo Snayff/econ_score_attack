@@ -39,9 +39,9 @@ enum View {
 func _ready() -> void:
 	assert(_sidebar != null, "Sidebar not found")
 	assert(_view_people != null, "People view not found")
-	assert(_view_laws != null, "Laws view not found")
-	assert(_view_land != null, "Land view not found")
-	assert(_view_economy != null, "Economy view not found")
+#	assert(_view_laws != null, "Laws view not found")
+#	assert(_view_land != null, "Land view not found")
+#	assert(_view_economy != null, "Economy view not found")
 	assert(_panel_header != null, "Panel header not found")
 
 	EventBusUI.sidebar_people_pressed.connect(func(): _switch_view(View.PEOPLE))
@@ -66,9 +66,9 @@ func _ready() -> void:
 func _switch_view(view: View) -> void:
 	# Hide all views
 	_view_people.visible = false
-	_view_laws.visible = false
-	_view_land.visible = false
-	_view_economy.visible = false
+#	_view_laws.visible = false
+	#_view_land.visible = false
+	#_view_economy.visible = false
 
 	# Show selected view
 	match view:

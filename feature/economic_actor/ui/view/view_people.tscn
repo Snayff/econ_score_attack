@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddcy3mhwj4kj6"]
 
-[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_11uxu"]
-[ext_resource type="Script" uid="uid://cfjsotkyyk4yc" path="res://feature/economic_actor/ui/view_people.gd" id="2_gv6h5"]
+[ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_11uxu"]
+[ext_resource type="Script" uid="uid://cfjsotkyyk4yc" path="res://feature/economic_actor/ui/view/view_people.gd" id="2_gv6h5"]
 
 [node name="ViewPeople" type="Control"]
 layout_mode = 3
@@ -20,3 +20,8 @@ layout_mode = 1
 offset_right = 248.0
 offset_bottom = 24.0
 script = ExtResource("2_gv6h5")
+sidebar_width = null
+show_right_sidebar = true
+show_debug_backgrounds = false
+
+[editable path="TemplateView"]

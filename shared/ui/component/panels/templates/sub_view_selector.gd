@@ -72,4 +72,4 @@ func _set_active_sub_view(sub_view_id: String) -> void:
 		_sub_view_nodes[id].visible = (id == sub_view_id)
 	_active_sub_view_id = sub_view_id
 	emit_signal("sub_view_changed", sub_view_id)
-#endregion 
+#endregion

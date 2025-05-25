@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cvu83cqyrf2ld"]
 
-[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_262ed"]
+[ext_resource type="PackedScene" uid="uid://c56des0virdvp" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_262ed"]
 [ext_resource type="Script" uid="uid://c58nhr3w5ye3t" path="res://feature/world/ui/view_land.gd" id="2_iwbry"]
 
 [node name="ViewLand" type="Control"]

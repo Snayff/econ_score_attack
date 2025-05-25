@@ -8,7 +8,7 @@
 ## See: dev/docs/docs/systems/ui.md
 ## Last Updated: 2025-05-13
 ##
-extends ABCView
+extends ABCSubView
 
 #region CONSTANTS
 #endregion
@@ -62,17 +62,9 @@ func update_view() -> void:
 #endregion
 
 #region PRIVATE FUNCTIONS
-## Called when the node is added to the scene tree. Sets up top bar buttons and connects signals.
+## Called when the node is added to the scene tree.  connects signals.
 ## @return void
 func _ready() -> void:
-	# Add Population button to top bar
-	var btn_population = Button.new()
-	btn_population.text = "Population"
-	btn_population.pressed.connect(_on_population_pressed)
-	# Add Decision Inspector button to top bar
-	var btn_decision_inspector = Button.new()
-	btn_decision_inspector.text = "Decision Inspector"
-	set_top_bar_content([btn_population, btn_decision_inspector])
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
@@ -83,7 +75,7 @@ func _ready() -> void:
 	if sim_ref:
 		_set_sim(sim_ref)
 
-	# Do not call update_view immediately; wait for sim_initialised or turn_complete
+	# N.B. Do not call update_view immediately; wait for sim_initialised or turn_complete
 
 
 ## Handles updates from the ReferenceRegistry.

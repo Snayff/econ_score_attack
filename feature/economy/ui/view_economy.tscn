@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cvyo4evlpohkw"]
 
-[ext_resource type="PackedScene" uid="uid://dh7eil46mmi2a" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_ndhkk"]
+[ext_resource type="PackedScene" uid="uid://c56des0virdvp" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_ndhkk"]
 [ext_resource type="Script" uid="uid://cqiojgfqxcn7y" path="res://feature/economy/ui/view_economy.gd" id="2_iphpo"]
 
 [node name="ViewEconomy" type="Control"]
