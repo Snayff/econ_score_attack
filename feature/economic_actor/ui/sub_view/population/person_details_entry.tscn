@@ -3,57 +3,57 @@
 [node name="PersonDetailsEntry" type="PanelContainer"]
 size_flags_horizontal = 3
 
-[node name="VBoxContainer_14" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="HBoxContainer_15" type="HBoxContainer" parent="VBoxContainer_14"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Name" type="Label" parent="VBoxContainer_14/HBoxContainer_15"]
+[node name="LblName" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "carlos"
 horizontal_alignment = 1
 
-[node name="Job" type="Label" parent="VBoxContainer_14/HBoxContainer_15"]
+[node name="LblJob" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "water collector"
 horizontal_alignment = 1
 
-[node name="Health" type="Label" parent="VBoxContainer_14/HBoxContainer_15"]
+[node name="LblHealth" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "3❤️"
 horizontal_alignment = 1
 
-[node name="Happiness" type="Label" parent="VBoxContainer_14/HBoxContainer_15"]
+[node name="LblHappiness" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "5🙂"
 horizontal_alignment = 1
 
-[node name="Stockpile" type="VBoxContainer" parent="VBoxContainer_14/HBoxContainer_15"]
+[node name="Stockpile" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="_Label_21" type="Label" parent="VBoxContainer_14/HBoxContainer_15/Stockpile"]
+[node name="LblGrain" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
 text = "🌾 grain: 3.0"
 horizontal_alignment = 1
 
-[node name="_Label_22" type="Label" parent="VBoxContainer_14/HBoxContainer_15/Stockpile"]
+[node name="LblWater" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
 text = "💧 water: 3.0"
 horizontal_alignment = 1
 
-[node name="_Label_23" type="Label" parent="VBoxContainer_14/HBoxContainer_15/Stockpile"]
+[node name="LblWood" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
 text = "🪵 wood: 0.0"
 horizontal_alignment = 1
 
-[node name="_Label_25" type="Label" parent="VBoxContainer_14/HBoxContainer_15/Stockpile"]
+[node name="LblMoney" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
 text = "🪙 money: 100.0"
 horizontal_alignment = 1

@@ -57,6 +57,17 @@ signal right_info_requested(info_id: int)
 		_update_bg_visibility()
 #endregion
 
+#region VARS
+## simulation node, where most data will reside
+var _sim: Sim
+## nodes to be ignored when clearing all children in `_clear_all_children`
+var clear_children_ignore_list: Array = [
+	left_sidebar_bg,
+	right_sidebar_bg,
+	centre_panel_bg
+]
+#endregion
+
 #region PUBLIC FUNCTIONS
 ## Sets the main content of the centre panel.
 ## @param content (Array[Control]): The array of Controls to display in the centre panel.
@@ -111,7 +122,7 @@ func update_view() -> void:
 #endregion
 
 #region PRIVATE FUNCTIONS
-## Called when the node is added to the scene tree. Asserts all required nodes exist and sets up initial state.
+## Asserts all required nodes exist and sets up initial state.
 ## @return void
 func _ready() -> void:
 	assert(left_sidebar != null)
@@ -122,6 +133,32 @@ func _ready() -> void:
 	assert(right_sidebar_bg != null)
 	right_sidebar.visible = show_right_sidebar
 	_update_sidebar_widths()
+
+	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
+	if EventBusGame.has_signal("turn_complete"):
+		EventBusGame.turn_complete.connect(update_view)
+
+	# Attempt to get sim if already registered
+	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	if sim_ref:
+		_set_sim(sim_ref)
+
+	# N.B. Do not call update_view immediately; wait for sim_initialised or turn_complete
+
+## Handles updates from the ReferenceRegistry.
+## @param key (int): The reference key.
+## @param value (Object): The reference value.
+## @return void
+func _on_reference_registered(key: int, value: Object) -> void:
+	if key == Constants.ReferenceKey.SIM:
+		_set_sim(value)
+
+## Sets the sim reference and updates info.
+## @param sim_ref (Sim): The simulation reference.
+## @return void
+func _set_sim(sim_ref: Sim) -> void:
+	_sim = sim_ref
+	update_view()
 
 ## Updates the minimum width of the sidebars to match the sidebar_width property.
 ## @return void
@@ -193,21 +230,19 @@ func _check_and_show_empty_states() -> void:
 	if centre_panel.get_child_count() == 0:
 		_show_empty_message("centre")
 
-## Removes and frees all children from the given container, optionally ignoring debug backgrounds.
+## Removes and frees all children from the given container, optionally skipping ignored items.
 ## @param container (Node): The container whose children will be removed and freed.
-## @param ignore_debug_backgrounds (bool): If true, debug backgrounds will not be freed. Defaults to true.
+## @param include_ignore_list (bool): If true, items in ignore list will be freed. Defaults to false.
 ## @return void
-func _clear_all_children(container: Node, ignore_debug_backgrounds: bool = true) -> void:
-	var ignore_list = [
-		left_sidebar_bg,
-		right_sidebar_bg,
-		centre_panel_bg
-	]
-
+func _clear_all_children(container: Node, include_ignore_list: bool = false) -> void:
 	for child in container.get_children():
-		if ignore_debug_backgrounds and child in ignore_list:
+		if include_ignore_list and child in clear_children_ignore_list:
 			continue
 		container.remove_child(child)
 		child.queue_free()
+
+## add nodes to the `clear_children_ignore_list`
+func _add_to_ignore_list(node: Node) -> void:
+	clear_children_ignore_list.append(node)
 
 #endregion

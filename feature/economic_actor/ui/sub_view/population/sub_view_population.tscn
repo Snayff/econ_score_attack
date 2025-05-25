@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://sjxilocw52iy"]
+[gd_scene load_steps=4 format=3 uid="uid://sjxilocw52iy"]
 
+[ext_resource type="Script" uid="uid://cfjsotkyyk4yc" path="res://feature/economic_actor/ui/sub_view/population/sub_view_population.gd" id="1_affgr"]
 [ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="1_v33b5"]
 [ext_resource type="PackedScene" uid="uid://c0003s8kwjuvt" path="res://feature/economic_actor/ui/sub_view/population/person_details_entry.tscn" id="2_s7u7w"]
 
@@ -12,15 +13,17 @@ layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
+script = ExtResource("1_affgr")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TemplateSubView/CentrePanel" index="1"]
+[node name="VBxPeopleDetails" type="VBoxContainer" parent="TemplateSubView/CentrePanel" index="1"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PopulationTableHeader" type="HBoxContainer" parent="TemplateSubView/CentrePanel/VBoxContainer"]
+[node name="PopulationTableHeader" type="HBoxContainer" parent="TemplateSubView/CentrePanel/VBxPeopleDetails"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="_Label_8" type="Label" parent="TemplateSubView/CentrePanel/VBoxContainer/PopulationTableHeader"]
+[node name="_Label_8" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
@@ -28,7 +31,7 @@ theme_override_font_sizes/font_size = 16
 text = "Name"
 horizontal_alignment = 1
 
-[node name="_Label_9" type="Label" parent="TemplateSubView/CentrePanel/VBoxContainer/PopulationTableHeader"]
+[node name="_Label_9" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
@@ -36,7 +39,7 @@ theme_override_font_sizes/font_size = 16
 text = "Job"
 horizontal_alignment = 1
 
-[node name="_Label_10" type="Label" parent="TemplateSubView/CentrePanel/VBoxContainer/PopulationTableHeader"]
+[node name="_Label_10" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
@@ -44,7 +47,7 @@ theme_override_font_sizes/font_size = 16
 text = "Health"
 horizontal_alignment = 1
 
-[node name="_Label_11" type="Label" parent="TemplateSubView/CentrePanel/VBoxContainer/PopulationTableHeader"]
+[node name="_Label_11" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
@@ -52,7 +55,7 @@ theme_override_font_sizes/font_size = 16
 text = "Happiness"
 horizontal_alignment = 1
 
-[node name="_Label_12" type="Label" parent="TemplateSubView/CentrePanel/VBoxContainer/PopulationTableHeader"]
+[node name="_Label_12" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
@@ -60,7 +63,8 @@ theme_override_font_sizes/font_size = 16
 text = "Stockpile"
 horizontal_alignment = 1
 
-[node name="PersonDetailsEntry" parent="TemplateSubView/CentrePanel/VBoxContainer" instance=ExtResource("2_s7u7w")]
+[node name="PersonDetailsEntry" parent="TemplateSubView/CentrePanel/VBxPeopleDetails" instance=ExtResource("2_s7u7w")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [editable path="TemplateSubView"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddcy3mhwj4kj6"]
 
-[ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/template_view.tscn" id="1_11uxu"]
-[ext_resource type="Script" uid="uid://cfjsotkyyk4yc" path="res://feature/economic_actor/ui/view/view_people.gd" id="2_gv6h5"]
+[ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/view_sub_view_selector.tscn" id="1_11uxu"]
+[ext_resource type="PackedScene" uid="uid://sjxilocw52iy" path="res://feature/economic_actor/ui/sub_view/population/sub_view_population.tscn" id="2_ye5nf"]
 
 [node name="ViewPeople" type="Control"]
 layout_mode = 3
@@ -15,13 +15,11 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TemplateView" parent="." instance=ExtResource("1_11uxu")]
-layout_mode = 1
-offset_right = 248.0
-offset_bottom = 24.0
-script = ExtResource("2_gv6h5")
-sidebar_width = null
-show_right_sidebar = true
-show_debug_backgrounds = false
+[node name="View_SubViewSelector" parent="." instance=ExtResource("1_11uxu")]
+layout_mode = 0
+anchors_preset = 0
 
-[editable path="TemplateView"]
+[node name="SubViewPopulation" parent="View_SubViewSelector/View_SubViewContainer" index="0" instance=ExtResource("2_ye5nf")]
+unique_name_in_owner = true
+
+[editable path="View_SubViewSelector"]

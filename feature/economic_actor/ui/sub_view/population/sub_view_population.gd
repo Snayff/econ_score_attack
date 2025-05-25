@@ -1,4 +1,4 @@
-## ViewPeople: People view using the standardised ABCView layout system.
+## SubViewPopulation: People view using the standardised ABCView layout system.
 ## Displays information about people in the simulation using the modular UI layout.
 ## Usage:
 ##  Inherit from ABCView. Implement update_view() to populate the centre panel and any other regions as needed, using set_centre_content, set_top_bar_content, etc. Call refresh() to update the view; this will clear all regions, call update_view(), and automatically show a standard message in any empty region.
@@ -8,9 +8,11 @@
 ## See: dev/docs/docs/systems/ui.md
 ## Last Updated: 2025-05-13
 ##
+class_name  SubViewPopulation
 extends ABCSubView
 
 #region CONSTANTS
+const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/ui/sub_view/population/person_details_entry.tscn")
 #endregion
 
 #region SIGNALS
@@ -20,11 +22,15 @@ extends ABCSubView
 #endregion
 
 #region ON READY
+@onready var v_bx_people_details: VBoxContainer = %VBxPeopleDetails
 
 #endregion
 
 #region VARS
-var _sim: Sim
+## the person details entry used when creating the scene in the editor.
+## to be deleted on game start.
+@onready var demo_person_details_entry: PanelContainer = %PersonDetailsEntry
+
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -34,87 +40,61 @@ var _sim: Sim
 func update_view() -> void:
 	super.update_view()
 
+	# check we have sim ref
 	if not _sim:
 		set_centre_content([])
 		return
 	if not _sim.demesne:
 		set_centre_content([])
 		return
-	var living_people = []
+
+	# get living people to show
+	var living_people: Array[Person] = []
 	for person in _sim.demesne.get_people():
 		if person.is_alive:
 			living_people.append(person)
 	if living_people.is_empty():
 		set_centre_content([])
 		return
-	var vbox = VBoxContainer.new()
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Header row
-	var header = _create_person_row(["Name", "Job", "Health", "Happiness", "Stockpile"], true)
-	vbox.add_child(header)
+
+
 	# Person rows
 	for person in living_people:
-		var row = _create_person_panel(person)
-		vbox.add_child(row)
-	set_centre_content([vbox])
+		var entry = _create_person_details_entry(person)
+	set_centre_content([])
 
 
 #endregion
 
 #region PRIVATE FUNCTIONS
-## Called when the node is added to the scene tree.  connects signals.
-## @return void
 func _ready() -> void:
+	super._ready()
 
-	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
-	if EventBusGame.has_signal("turn_complete"):
-		EventBusGame.turn_complete.connect(update_view)
+	#################
+	# TODO - remove
+	# DEBUG
+	var timer: Timer = Timer.new()
+	add_child(timer)
+	timer.start(2)
+	timer.timeout.connect(update_view)
+	###############
 
-	# Attempt to get sim if already registered
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
-	if sim_ref:
-		_set_sim(sim_ref)
+	# clear down the demo scenes
+	# demo_person_details_entry.queue_free()  # FIXME: errors as null
+	pass
 
-	# N.B. Do not call update_view immediately; wait for sim_initialised or turn_complete
+func _create_person_details_entry(person: Person) -> PanelContainer:
+	var entry = SCENE_PERSON_DETAILS.instantiate()
+
+	# refs
+	var lbl_name: Label = entry.get_node("VBoxContainer/HBoxContainer/LblName")
+	assert(lbl_name != null, "lbl_name node not found in panel instance!")
+
+	# add info from person
 
 
-## Handles updates from the ReferenceRegistry.
-## @param key (int): The reference key.
-## @param value (Object): The reference value.
-## @return void
-func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
-		_set_sim(value)
+	return entry
 
-## Sets the sim reference and updates info.
-## @param sim_ref (Sim): The simulation reference.
-## @return void
-func _set_sim(sim_ref: Sim) -> void:
-	_sim = sim_ref
-	update_view()
-
-## Handles Population button press to refresh the people list.
-## @return void
-func _on_population_pressed() -> void:
-	update_view()
-
-## Creates a row of labels for person data.
-## @param values (Array): The values to display in the row.
-## @param is_header (bool): Whether this row is a header row.
-## @return HBoxContainer: The constructed row container.
-func _create_person_row(values: Array, is_header: bool = false) -> HBoxContainer:
-	var row = HBoxContainer.new()
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for value in values:
-		var label = Label.new()
-		label.text = str(value)
-		if is_header:
-			label.add_theme_font_size_override("font_size", 16)
-			label.add_theme_color_override("font_color", Color(0.7, 0.7, 1.0))
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		row.add_child(label)
-	return row
 
 ## Creates a panel displaying a person's details.
 ## @param person (Person): The person whose details to display.
