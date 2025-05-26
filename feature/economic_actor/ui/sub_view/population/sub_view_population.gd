@@ -157,7 +157,6 @@ func _select_person_by_index(index: int) -> void:
 
 	# Update right sidebar
 	_update_right_sidebar()
-	# (Sidebar update will be handled in a later step)
 
 func _update_right_sidebar() -> void:
 	if _selected_index < 0 or _selected_index >= _people_list.size():

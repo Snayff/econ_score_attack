@@ -41,6 +41,7 @@ var job: String = ""
 ## goods held
 var stockpile: Dictionary = {}
 var consumer: ComponentConsumer
+var last_turn_decisions: Array = []
 
 #endregion
 
@@ -200,5 +201,22 @@ static func from_data_person(data_person: DataPerson, starting_goods: Dictionary
 		data_person.needs.get("job", "unemployed"),
 		goods_dict
 	)
+
+## Logs a decision made by the person in the last turn.
+## @param action (String): The action taken (e.g., 'Purchased 3 grain from Bob').
+## @param inputs (Dictionary): The input factors considered.
+## @param reasoning (String): The reasoning or utility calculation.
+## @param alternatives (Array): Array of alternative actions considered, each as a Dictionary.
+func log_decision(action: String, inputs: Dictionary, reasoning: String, alternatives: Array) -> void:
+	last_turn_decisions.append({
+		"action": action,
+		"inputs": inputs,
+		"reasoning": reasoning,
+		"alternatives": alternatives
+	})
+
+## Clears the last turn's decision log.
+func clear_last_turn_decisions() -> void:
+	last_turn_decisions.clear()
 
 #endregion

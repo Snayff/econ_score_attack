@@ -34,13 +34,6 @@ signal right_info_requested(info_id: int)
 
 #region EXPORTS
 @export var sub_view_key: Constants.SUB_VIEW_KEY
-@export var sidebar_width: int = _DEFAULT_SIDEBAR_WIDTH:
-	set(value):
-		sidebar_width = value
-		if not is_node_ready():
-			return
-		_update_sidebar_widths()
-
 @export var show_right_sidebar: bool = true:
 	set(value):
 		show_right_sidebar = value
@@ -63,6 +56,12 @@ signal right_info_requested(info_id: int)
 var _sim: Sim
 ## nodes to be deleted when `_free_to_clear_list` is called. used during refresh.
 var to_clear_list: Array = []
+var sidebar_width: int = _DEFAULT_SIDEBAR_WIDTH:
+	set(value):
+		sidebar_width = value
+		if not is_node_ready():
+			return
+		_update_sidebar_widths()
 #endregion
 
 #region PUBLIC FUNCTIONS

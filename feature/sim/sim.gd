@@ -98,6 +98,9 @@ func _ready() -> void:
 ## Handles production, consumption, and market operations
 func resolve_turn() -> void:
 	_turn_transactions.clear()
+	# Clear last turn decisions for all people
+	for person in demesne.get_people():
+		person.clear_last_turn_decisions()
 	var saleable_goods: Dictionary = {}  # { good: { person: { amount: 123, money_made: 123 } } }
 	var desired_goods: Dictionary = {}  # { good: { person: { amount: 123 } } }
 
@@ -186,6 +189,22 @@ func resolve_turn() -> void:
 
 				# Record the transaction
 				_record_transaction(good, amount_to_buy, good_prices.get(good, 0), buyer.f_name, seller.f_name)
+
+				# Log the decision for the buyer
+				var action = "Purchased %d %s from %s" % [amount_to_buy, good, seller.f_name]
+				var inputs = {
+					"money": buyer.stockpile.get("money", 0),
+					"grain_needed": desired_goods[good].get(buyer, 0),
+					"price": good_prices.get(good, 0),
+					"tax": tax_amount
+				}
+				var reasoning = "Chose to buy because utility gain exceeded cost."
+				# Example alternatives: buy less, buy nothing
+				var alternatives = [
+					{"action": "Buy 0 %s" % good, "utility": 0},
+					{"action": "Buy %d %s" % [amount_to_buy, good], "utility": amount_to_buy * 2} # Dummy utility
+				]
+				buyer.log_decision(action, inputs, reasoning, alternatives)
 
 				# buyer doesnt want anything, move to next buyer
 				if amount_to_buy == 0:

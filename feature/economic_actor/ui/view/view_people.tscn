@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ddcy3mhwj4kj6"]
+[gd_scene load_steps=4 format=3 uid="uid://ddcy3mhwj4kj6"]
 
 [ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/view_sub_view_selector.tscn" id="1_11uxu"]
 [ext_resource type="PackedScene" uid="uid://sjxilocw52iy" path="res://feature/economic_actor/ui/sub_view/population/sub_view_population.tscn" id="2_ye5nf"]
+[ext_resource type="PackedScene" uid="uid://cqewe3icxi1t7" path="res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions.tscn" id="3_rxp08"]
 
 [node name="ViewPeople" type="Control"]
 layout_mode = 3
@@ -23,5 +24,9 @@ anchor_bottom = 0.0
 
 [node name="SubViewPopulation" parent="View_SubViewSelector/View_SubViewContainer" index="0" instance=ExtResource("2_ye5nf")]
 unique_name_in_owner = true
+
+[node name="SubViewDecisions" parent="View_SubViewSelector/View_SubViewContainer" index="1" instance=ExtResource("3_rxp08")]
+unique_name_in_owner = true
+layout_mode = 1
 
 [editable path="View_SubViewSelector"]
