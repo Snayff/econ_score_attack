@@ -24,6 +24,9 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 #region ON READY
 @onready var vbx_people_details: VBoxContainer = %VBxPeopleDetails
 @onready var demo_person_details_entry: PanelContainer = %PersonDetailsEntry
+@onready var lbl_culture: Label = %LblCulture
+@onready var lbl_ancestry: Label = %LblAncestry
+
 
 
 #endregion
@@ -160,39 +163,29 @@ func _update_right_sidebar() -> void:
 	if _selected_index < 0 or _selected_index >= _people_list.size():
 		set_right_sidebar_content([])
 		return
-	var person = _people_list[_selected_index]
+	var person: Person = _people_list[_selected_index]
 	var controls: Array[Control] = []
 
 	# Culture
 	var culture = Library.get_culture_by_id(person.culture_id)
 	if culture:
-		controls.append(UIFactory.create_viewport_sidebar_header_label("Culture") as Control)
-		var lbl_culture: Label = Label.new()
 		lbl_culture.text = culture.id.capitalize()
-		controls.append(lbl_culture)
 
 	# Ancestry
 	var ancestry = Library.get_ancestry_by_id(person.ancestry_id)
 	if ancestry:
-		controls.append(UIFactory.create_viewport_sidebar_header_label("Ancestry") as Control)
-		var lbl_ancestry: Label = Label.new()
 		lbl_ancestry.text = ancestry.id.capitalize()
-		controls.append(lbl_ancestry)
 
 	# Stockpile
-	controls.append(UIFactory.create_viewport_sidebar_header_label("Stockpile") as Control)
-	for good in Library.get_all_goods_data():
-		var hbox: HBoxContainer = HBoxContainer.new()
-		var icon_lbl: Label = Label.new()
-		icon_lbl.text = good.icon
-		hbox.add_child(icon_lbl)
-		var name_lbl: Label = Label.new()
-		name_lbl.text = good.f_name.capitalize()
-		hbox.add_child(name_lbl)
-		var amount_lbl: Label = Label.new()
-		amount_lbl.text = str(person.stockpile.get(good.id, 0))
-		hbox.add_child(amount_lbl)
-		controls.append(hbox)
+	for good in person.stockpile:
+		var lbl_good: Label = Label.new()
+		var amount: int = person.stockpile.get(good)
+		if amount > 0:
+			lbl_good.text = str(person.stockpile.get(good), Library.get_good_icon(good))
+			controls.append(lbl_good)
+
+		# make sure it is deleted on refresh
+		_add_to_clear_list(lbl_good)
 
 	set_right_sidebar_content(controls)
 
