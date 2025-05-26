@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="PackedScene" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id=1]
-
-[node name="SubViewPopulation" parent="." instance=ExtResource(1)] 

@@ -1,6 +1,5 @@
 ## SubViewSelector: Manages sub view selection and switching for a main view.
 ## Usage:
-##   Call set_view_name("people") to load sub views for the People view.
 ##   Listens for button presses in the top bar to switch sub views.
 ##   Emits sub_view_changed(sub_view_id: String) when the active sub view changes.
 ## Last Updated: 2025-05-24
@@ -11,26 +10,28 @@ signal sub_view_changed(sub_view_id: String)
 #endregion
 
 #region ON READY
-@onready var top_bar: HBoxContainer = $TopBar
-@onready var sub_view_container: Control = $SubViewContainer
+@onready var top_bar: HBoxContainer = %View_TopBar
+@onready var sub_view_container: Control = %View_SubViewContainer
 #endregion
 
 #region VARS
-var _view_name: String = ""
+## the name of the view. To be set in the editor when  creating a new View.
+## this determines what sub views to load.
+@export var _view_name: String = ""
 var _sub_views: Array = []
 var _sub_view_nodes: Dictionary = {}
 var _active_sub_view_id: String = ""
 #endregion
 
 #region PUBLIC FUNCTIONS
-## Sets the current view name and loads sub views for it.
-func set_view_name(view_name: String) -> void:
-	_view_name = view_name
-	_load_sub_views()
-
 #endregion
 
 #region PRIVATE FUNCTIONS
+func _ready() -> void:
+	assert(_view_name != "", "view name must be set in the editor for SubViewSelector to work.")
+
+	_load_sub_views()
+
 func _load_sub_views() -> void:
 	# Clear previous buttons and sub view nodes
 	for child in top_bar.get_children():

@@ -18,6 +18,9 @@ size_flags_vertical = 3
 [node name="View_SubViewSelector" parent="." instance=ExtResource("1_11uxu")]
 layout_mode = 0
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+_view_name = "people"
 
 [node name="SubViewPopulation" parent="View_SubViewSelector/View_SubViewContainer" index="0" instance=ExtResource("2_ye5nf")]
 unique_name_in_owner = true
