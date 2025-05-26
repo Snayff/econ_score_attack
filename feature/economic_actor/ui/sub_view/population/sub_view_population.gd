@@ -82,7 +82,7 @@ func update_view() -> void:
 		var btn_select: Button = entry.get_node("BtnSelect")
 		btn_select.pressed.connect(_on_person_entry_pressed.bind(i))
 		vbx_people_details.add_child(entry)
-		_add_to_clear_list(entry)
+		_add_to_clear_list(entry, "centre")
 		_person_entry_nodes.append(entry)
 
 	# Automatically select the correct person (persisted or first)
@@ -97,7 +97,7 @@ func update_view() -> void:
 func _ready() -> void:
 	super._ready()
 
-	_add_to_clear_list(demo_person_details_entry)
+	_add_to_clear_list(demo_person_details_entry, "centre")
 
 func _create_person_details_entry(person: Person) -> PanelContainer:
 	var entry = SCENE_PERSON_DETAILS.instantiate()
@@ -184,7 +184,7 @@ func _update_right_sidebar() -> void:
 			controls.append(lbl_good)
 
 		# make sure it is deleted on refresh
-		_add_to_clear_list(lbl_good)
+		_add_to_clear_list(lbl_good, "right")
 
 	set_right_sidebar_content(controls)
 

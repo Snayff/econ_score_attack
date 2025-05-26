@@ -225,14 +225,27 @@ func _check_and_show_empty_states() -> void:
 	if centre_panel.get_child_count() == 0:
 		_show_empty_message("centre")
 
+## add node to the list of items to be cleared when `_free_to_clear_list` is called.
+## @param node (Node): The node to clear.
+## @param section (String): The section this node belongs to ("left", "right", "centre").
+func _add_to_clear_list(node: Node, section: String) -> void:
+	to_clear_list.append({"node": node, "section": section})
+
 ## frees all items in `to_clear_list`.
 func _free_to_clear_list() -> void:
-	for node in to_clear_list:
-		node.queue_free()
+	for entry in to_clear_list:
+		entry["node"].queue_free()
 	to_clear_list.clear()
 
-## add node to the list of items to be cleared when `_free_to_clear_list` is called.
-func _add_to_clear_list(node: Node) -> void:
-	to_clear_list.append(node)
+## Frees all items in `to_clear_list` that belong to a specific section.
+## @param section (String): The section to clear ("left", "right", "centre").
+func _free_section_from_clear_list(section: String) -> void:
+	var remaining: Array = []
+	for entry in to_clear_list:
+		if entry["section"] == section:
+			entry["node"].queue_free()
+		else:
+			remaining.append(entry)
+	to_clear_list = remaining
 
 #endregion

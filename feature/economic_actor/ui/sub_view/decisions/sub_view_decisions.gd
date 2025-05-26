@@ -36,10 +36,15 @@ func update_view() -> void:
 		var btn = UIFactory.create_button("%s: %s" % [decision["person"].f_name, decision["action"]])
 		btn.pressed.connect(_on_decision_entry_pressed.bind(i))
 		centre_controls.append(btn)
-		_add_to_clear_list(btn)
+		_add_to_clear_list(btn, "centre")
 		_decision_entry_nodes.append(btn)
 
-	set_centre_content(centre_controls)
+	# Wrap buttons in a VBoxContainer
+	var vbox = VBoxContainer.new()
+	for btn in centre_controls:
+		vbox.add_child(btn)
+	_add_to_clear_list(vbox, "centre")
+	set_centre_content([vbox])
 
 	# Auto-select first if any
 	if _decision_list.size() > 0:
@@ -65,8 +70,10 @@ func _select_decision_by_index(index: int) -> void:
 	_update_right_sidebar()
 
 func _update_right_sidebar() -> void:
+	# Always clear the right sidebar before adding new content
+	_free_section_from_clear_list("right")
+	set_right_sidebar_content([])
 	if _selected_index < 0 or _selected_index >= _decision_list.size():
-		set_right_sidebar_content([])
 		return
 	var decision = _decision_list[_selected_index]
 	var controls: Array[Control] = []
@@ -106,7 +113,7 @@ func _update_right_sidebar() -> void:
 		controls.append(lbl_alt)
 
 	for c in controls:
-		_add_to_clear_list(c)
+		_add_to_clear_list(c, "right")
 
 	set_right_sidebar_content(controls)
 #endregion
