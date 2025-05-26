@@ -30,6 +30,7 @@ func update_view() -> void:
 		set_right_sidebar_content([])
 		return
 
+
 	# Gather all decisions from all people
 	for person in _sim.demesne.get_people():
 		for decision in person.last_turn_decisions:
@@ -38,27 +39,39 @@ func update_view() -> void:
 			entry["person"] = person
 			_decision_list.append(entry)
 
+	if _decision_list.size() == 0:
+		show_section_content("centre", false)
+		show_section_content("right", false)
+
+		set_empty_message("centre", "No decisions were made last turn.")
+		set_empty_message("centre", "No decision details to show.")
+		return
+
+
+	show_section_content("centre", true)
+	show_section_content("right", true)
+
+	# create button per decision
 	var centre_controls: Array[Control] = []
+	var vbx = VBoxContainer.new()
+	centre_panel.add_child(vbx)
+	_add_to_clear_list(vbx, "centre")
 	for i in range(_decision_list.size()):
 		var decision = _decision_list[i]
 		var btn = UIFactory.create_button("%s: %s" % [decision["person"].f_name, decision["action"]])
+
+		# add to relevant places
+		vbx.add_child(btn)
 		btn.pressed.connect(_on_decision_entry_pressed.bind(i))
 		centre_controls.append(btn)
+
+		# list for clearing on refresh
 		_add_to_clear_list(btn, "centre")
+
 		_decision_entry_nodes.append(btn)
 
-	# Wrap buttons in a VBoxContainer
-	var vbox = VBoxContainer.new()
-	for btn in centre_controls:
-		vbox.add_child(btn)
-	_add_to_clear_list(vbox, "centre")
-	set_centre_content([vbox])
+	_select_decision_by_index(0)
 
-	# Auto-select first if any
-	if _decision_list.size() > 0:
-		_select_decision_by_index(0)
-	else:
-		set_right_sidebar_content([])
 #endregion
 
 #region PRIVATE FUNCTIONS

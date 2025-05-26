@@ -26,10 +26,15 @@ signal right_info_requested(info_id: int)
 #region ON READY
 @onready var left_sidebar: VBoxContainer = %TemplateSubView/%LeftSidebar
 @onready var left_sidebar_bg: ColorRect = %TemplateSubView/%BGLeftSidebarDebug
+@onready var lbl_left_side_bar_empty: Label = %TemplateSubView/%LblLeftSideBarEmpty
 @onready var right_sidebar: VBoxContainer = %TemplateSubView/%RightSidebar
 @onready var right_sidebar_bg: ColorRect = %TemplateSubView/%BGRightSidebarDebug
+@onready var lbl_right_side_bar_empty: Label = %TemplateSubView/%LblRightSideBarEmpty
 @onready var centre_panel: PanelContainer = %TemplateSubView/%CentrePanel
 @onready var centre_panel_bg: ColorRect = %TemplateSubView/%BGCentrePanelDebug
+@onready var lbl_centre_empty: Label = %TemplateSubView/%LblCentreEmpty
+
+
 #endregion
 
 #region EXPORTS
@@ -97,7 +102,6 @@ func set_right_sidebar_visible(visible_: bool) -> void:
 func refresh() -> void:
 	_free_to_clear_list()
 	update_view()
-	_check_and_show_empty_states()
 
 ## Abstract method to be implemented by subclasses. Should populate all regions.
 ## @virtual
@@ -110,6 +114,51 @@ func update_view() -> void:
 	offset_right = 0
 
 	_create_debug_backgrounds()
+
+## Sets the empty message for a specified section ("left", "right", "centre").
+## @param region (String): The section to update.
+## @param message (String): The message to display.
+func set_empty_message(region: String, message: String) -> void:
+	match region:
+		"left":
+			lbl_left_side_bar_empty.text = message
+		"right":
+			lbl_right_side_bar_empty.text = message
+		"centre":
+			lbl_centre_empty.text = message
+
+## Shows or hides content in a section, displaying either only the empty message label or the content.
+## @param region (String): The section to update.
+## @param show_content (bool): If true, show content and hide empty label; if false, show only empty label.
+func show_section_content(region: String, show_content: bool) -> void:
+	var container: Node = null
+	var empty_label: Label = null
+	match region:
+		"left":
+			container = left_sidebar
+			empty_label = lbl_left_side_bar_empty
+		"right":
+			container = right_sidebar
+			empty_label = lbl_right_side_bar_empty
+		"centre":
+			container = centre_panel
+			empty_label = lbl_centre_empty
+		_:
+			return
+	if not container or not empty_label:
+		return
+
+	if show_content:
+		empty_label.visible = false
+		for child in container.get_children():
+			if child != empty_label:
+				child.visible = true
+	else:
+		empty_label.visible = true
+		for child in container.get_children():
+			if child != empty_label:
+				child.visible = false
+
 #endregion
 
 #region PRIVATE FUNCTIONS
@@ -199,32 +248,6 @@ func _create_debug_backgrounds() -> void:
 		right_sidebar_bg = bg
 		right_sidebar.add_child(bg, true)
 
-## Shows a standard empty message in the specified region if it is empty.
-## @param region (String): "left", "right", or "centre".
-## @return void
-func _show_empty_message(region: String) -> void:
-	var label := Label.new()
-	label.text = "No information available."
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	match region:
-		"left":
-			left_sidebar.add_child(label)
-		"right":
-			right_sidebar.add_child(label)
-		"centre":
-			centre_panel.add_child(label)
-
-## Checks each region and shows an empty message if it is empty.
-## @return void
-func _check_and_show_empty_states() -> void:
-	# FIXME: this will never work as child count will always be at leats 1 due to debug backgrounds
-	if left_sidebar.get_child_count() == 0:
-		_show_empty_message("left")
-	if right_sidebar.visible and right_sidebar.get_child_count() == 0:
-		_show_empty_message("right")
-	if centre_panel.get_child_count() == 0:
-		_show_empty_message("centre")
-
 ## add node to the list of items to be cleared when `_free_to_clear_list` is called.
 ## @param node (Node): The node to clear.
 ## @param section (String): The section this node belongs to ("left", "right", "centre").
@@ -247,5 +270,3 @@ func _free_section_from_clear_list(section: String) -> void:
 		else:
 			remaining.append(entry)
 	to_clear_list = remaining
-
-#endregion

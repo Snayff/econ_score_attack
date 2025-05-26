@@ -19,6 +19,12 @@ layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.6, 0.7, 1, 0.5)
 
+[node name="LblLeftSideBarEmpty" type="Label" parent="LeftSidebar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Section empty"
+
 [node name="CentrePanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(600, 200)
@@ -28,6 +34,12 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 color = Color(0.481108, 0.604288, 0.999997, 0.501961)
+
+[node name="LblCentreEmpty" type="Label" parent="CentrePanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Section empty"
 
 [node name="RightSidebar" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
@@ -39,3 +51,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.475396, 0.59936, 0.999997, 0.501961)
+
+[node name="LblRightSideBarEmpty" type="Label" parent="RightSidebar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Section empty"
