@@ -30,6 +30,7 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 
 #region VARS
 var _people_list: Array = []
+var _person_entry_nodes: Array = []
 var _selected_index: int = -1
 var _selected_person_id: String = ""
 #endregion
@@ -42,6 +43,7 @@ func update_view() -> void:
 	super.update_view()
 
 	_people_list.clear()
+	_person_entry_nodes.clear()
 	_selected_index = -1
 
 	# check we have sim ref
@@ -78,6 +80,7 @@ func update_view() -> void:
 		btn_select.pressed.connect(_on_person_entry_pressed.bind(i))
 		vbx_people_details.add_child(entry)
 		_add_to_clear_list(entry)
+		_person_entry_nodes.append(entry)
 
 	# Automatically select the correct person (persisted or first)
 	if _people_list.size() > 0:
@@ -138,17 +141,18 @@ func _select_person_by_index(index: int) -> void:
 		return
 	_selected_index = index
 	_selected_person_id = _people_list[index].id
-	# Update visual feedback
-	for i in range(vbx_people_details.get_child_count()):
-		var entry = vbx_people_details.get_child(i)
-		if not entry is PanelContainer:
-			continue
 
-		var selected_style_box = preload("res://shared/resource/style_box_selected_button.tres")
-		var unselected_style_box = preload("res://shared/resource/style_box_unselected_button.tres")
+
+	# Update visual feedback using _person_entry_nodes
+	var selected_style_box = preload("res://shared/resource/style_box_selected_button.tres")
+	var unselected_style_box = preload("res://shared/resource/style_box_unselected_button.tres")
+	for i in range(_person_entry_nodes.size()):
+		var entry = _person_entry_nodes[i]
+
 		if i == _selected_index:
 			entry.add_theme_stylebox_override("panel", selected_style_box)
 		else:
 			entry.add_theme_stylebox_override("panel", unselected_style_box)
+	# (Sidebar update will be handled in a later step)
 
 #endregion
