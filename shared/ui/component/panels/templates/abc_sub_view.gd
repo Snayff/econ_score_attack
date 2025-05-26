@@ -24,12 +24,12 @@ signal right_info_requested(info_id: int)
 #endregion
 
 #region ON READY
-@onready var left_sidebar: VBoxContainer = %LeftSidebar
-@onready var left_sidebar_bg: ColorRect = %BGLeftSidebarDebug
-@onready var right_sidebar: VBoxContainer = %RightSidebar
-@onready var right_sidebar_bg: ColorRect = %BGRightSidebarDebug
-@onready var centre_panel: PanelContainer = %CentrePanel
-@onready var centre_panel_bg: ColorRect = %BGCentrePanelDebug
+@onready var left_sidebar: VBoxContainer = %TemplateSubView/%LeftSidebar
+@onready var left_sidebar_bg: ColorRect = %TemplateSubView/%BGLeftSidebarDebug
+@onready var right_sidebar: VBoxContainer = %TemplateSubView/%RightSidebar
+@onready var right_sidebar_bg: ColorRect = %TemplateSubView/%BGRightSidebarDebug
+@onready var centre_panel: PanelContainer = %TemplateSubView/%CentrePanel
+@onready var centre_panel_bg: ColorRect = %TemplateSubView/%BGCentrePanelDebug
 #endregion
 
 #region EXPORTS
@@ -60,12 +60,8 @@ signal right_info_requested(info_id: int)
 #region VARS
 ## simulation node, where most data will reside
 var _sim: Sim
-## nodes to be ignored when clearing all children in `_clear_all_children`
-var clear_children_ignore_list: Array = [
-	left_sidebar_bg,
-	right_sidebar_bg,
-	centre_panel_bg
-]
+## nodes to be deleted when `_free_to_clear_list` is called. used during refresh.
+var to_clear_list: Array = []
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -73,7 +69,6 @@ var clear_children_ignore_list: Array = [
 ## @param content (Array[Control]): The array of Controls to display in the centre panel.
 ## @return void
 func set_centre_content(content: Array[Control]) -> void:
-	_clear_all_children(centre_panel)
 	for c in content:
 		centre_panel.add_child(c)
 
@@ -81,7 +76,6 @@ func set_centre_content(content: Array[Control]) -> void:
 ## @param content (Array[Control]): The array of Controls to display in the left sidebar.
 ## @return void
 func set_left_sidebar_content(content: Array[Control]) -> void:
-	_clear_all_children(left_sidebar)
 	for c in content:
 		left_sidebar.add_child(c)
 
@@ -89,7 +83,6 @@ func set_left_sidebar_content(content: Array[Control]) -> void:
 ## @param content (Array[Control]): The array of Controls to display in the right sidebar.
 ## @return void
 func set_right_sidebar_content(content: Array[Control]) -> void:
-	_clear_all_children(right_sidebar)
 	for c in content:
 		right_sidebar.add_child(c)
 
@@ -102,9 +95,7 @@ func set_right_sidebar_visible(visible_: bool) -> void:
 ## Standard refresh pattern: clears all regions, calls update_view, then fills empty regions with a default message.
 ## @return void
 func refresh() -> void:
-	_clear_all_children(left_sidebar, false)
-	_clear_all_children(right_sidebar_bg, false)
-	_clear_all_children(centre_panel, false)
+	_free_to_clear_list()
 	update_view()
 	_check_and_show_empty_states()
 
@@ -136,7 +127,7 @@ func _ready() -> void:
 
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	if EventBusGame.has_signal("turn_complete"):
-		EventBusGame.turn_complete.connect(update_view)
+		EventBusGame.turn_complete.connect(_on_turn_complete)
 
 	# Attempt to get sim if already registered
 	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
@@ -144,6 +135,9 @@ func _ready() -> void:
 		_set_sim(sim_ref)
 
 	# N.B. Do not call update_view immediately; wait for sim_initialised or turn_complete
+
+func _on_turn_complete() -> void:
+	refresh()
 
 ## Handles updates from the ReferenceRegistry.
 ## @param key (int): The reference key.
@@ -158,7 +152,7 @@ func _on_reference_registered(key: int, value: Object) -> void:
 ## @return void
 func _set_sim(sim_ref: Sim) -> void:
 	_sim = sim_ref
-	update_view()
+	refresh()
 
 ## Updates the minimum width of the sidebars to match the sidebar_width property.
 ## @return void
@@ -223,6 +217,7 @@ func _show_empty_message(region: String) -> void:
 ## Checks each region and shows an empty message if it is empty.
 ## @return void
 func _check_and_show_empty_states() -> void:
+	# FIXME: this will never work as child count will always be at leats 1 due to debug backgrounds
 	if left_sidebar.get_child_count() == 0:
 		_show_empty_message("left")
 	if right_sidebar.visible and right_sidebar.get_child_count() == 0:
@@ -230,19 +225,14 @@ func _check_and_show_empty_states() -> void:
 	if centre_panel.get_child_count() == 0:
 		_show_empty_message("centre")
 
-## Removes and frees all children from the given container, optionally skipping ignored items.
-## @param container (Node): The container whose children will be removed and freed.
-## @param include_ignore_list (bool): If true, items in ignore list will be freed. Defaults to false.
-## @return void
-func _clear_all_children(container: Node, include_ignore_list: bool = false) -> void:
-	for child in container.get_children():
-		if include_ignore_list and child in clear_children_ignore_list:
-			continue
-		container.remove_child(child)
-		child.queue_free()
+## frees all items in `to_clear_list`.
+func _free_to_clear_list() -> void:
+	for node in to_clear_list:
+		node.queue_free()
+	to_clear_list.clear()
 
-## add nodes to the `clear_children_ignore_list`
-func _add_to_ignore_list(node: Node) -> void:
-	clear_children_ignore_list.append(node)
+## add node to the list of items to be cleared when `_free_to_clear_list` is called.
+func _add_to_clear_list(node: Node) -> void:
+	to_clear_list.append(node)
 
 #endregion

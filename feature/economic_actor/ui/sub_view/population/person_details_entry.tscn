@@ -13,25 +13,25 @@ size_flags_horizontal = 3
 [node name="LblName" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "carlos"
+text = "name"
 horizontal_alignment = 1
 
 [node name="LblJob" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "water collector"
+text = "job"
 horizontal_alignment = 1
 
 [node name="LblHealth" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "3❤️"
+text = "X❤️"
 horizontal_alignment = 1
 
 [node name="LblHappiness" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "5🙂"
+text = "X🙂"
 horizontal_alignment = 1
 
 [node name="Stockpile" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
@@ -40,20 +40,15 @@ size_flags_horizontal = 3
 
 [node name="LblGrain" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
-text = "🌾 grain: 3.0"
+text = "X🌾"
 horizontal_alignment = 1
 
 [node name="LblWater" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
-text = "💧 water: 3.0"
-horizontal_alignment = 1
-
-[node name="LblWood" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
-layout_mode = 2
-text = "🪵 wood: 0.0"
+text = "X💧 "
 horizontal_alignment = 1
 
 [node name="LblMoney" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
 layout_mode = 2
-text = "🪙 money: 100.0"
+text = "X🪙 "
 horizontal_alignment = 1
