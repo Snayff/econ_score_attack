@@ -5,6 +5,14 @@
 class_name  SubViewDecisions
 extends ABCSubView
 
+@onready var lbl_person: Label = %LblPerson
+@onready var lbl_decision: Label = %LblDecision
+@onready var lbl_rationale: Label = %LblRationale
+@onready var lbl_input: Label = %LblInput
+@onready var lbl_alternatives: Label = %LblAlternatives
+
+
+
 #region VARS
 var _decision_list: Array = []
 var _decision_entry_nodes: Array = []
@@ -72,48 +80,34 @@ func _select_decision_by_index(index: int) -> void:
 func _update_right_sidebar() -> void:
 	# Always clear the right sidebar before adding new content
 	_free_section_from_clear_list("right")
-	set_right_sidebar_content([])
+	lbl_person.text = ""
+	lbl_decision.text = ""
+	lbl_input.text = ""
+	lbl_alternatives.text = ""
+
+
 	if _selected_index < 0 or _selected_index >= _decision_list.size():
 		return
 	var decision = _decision_list[_selected_index]
 	var controls: Array[Control] = []
 
-	# Header
-	controls.append(UIFactory.create_viewport_sidebar_header_label("Decision Details"))
 
 	# Person
-	var lbl_person = Label.new()
-	lbl_person.text = "Person: %s" % decision["person"].f_name
-	controls.append(lbl_person)
-	var lbl_action = Label.new()
-	lbl_action.text = "Action: %s" % decision["action"]
-	controls.append(lbl_action)
+	lbl_person.text = decision["person"].f_name
+
+	# Decision
+	lbl_decision.text = decision["action"]
+
+	# Rationale
+	lbl_rationale.text = decision["reasoning"]
 
 	# Inputs
-	var lbl_inputs = Label.new()
-	lbl_inputs.text = "Inputs:"
-	controls.append(lbl_inputs)
 	for k in decision["inputs"]:
-		var lbl_input = Label.new()
 		lbl_input.text = "  %s: %s" % [k, str(decision["inputs"][k])]
-		controls.append(lbl_input)
-
-	# Reasoning
-	var lbl_reasoning = Label.new()
-	lbl_reasoning.text = "Reasoning: %s" % decision["reasoning"]
-	controls.append(lbl_reasoning)
 
 	# Alternatives
-	var lbl_alts = Label.new()
-	lbl_alts.text = "Alternatives considered:"
-	controls.append(lbl_alts)
 	for alt in decision["alternatives"]:
-		var lbl_alt = Label.new()
-		lbl_alt.text = "  %s (utility: %s)" % [alt.get("action", ""), str(alt.get("utility", ""))]
-		controls.append(lbl_alt)
-
-	for c in controls:
-		_add_to_clear_list(c, "right")
+		lbl_alternatives.text = "  %s (utility: %s)" % [alt.get("action", ""), str(alt.get("utility", ""))]
 
 	set_right_sidebar_content(controls)
 #endregion

@@ -18,4 +18,80 @@ unique_name_in_owner = true
 layout_mode = 0
 anchors_preset = 0
 
+[node name="LblPersonHeader" type="Label" parent="TemplateSubView/RightSidebar" index="1"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+text = "Person"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblPerson" type="Label" parent="TemplateSubView/RightSidebar" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Sally"
+autowrap_mode = 3
+
+[node name="LblDecisionHeader" type="Label" parent="TemplateSubView/RightSidebar" index="3"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+text = "Decision"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblDecision" type="Label" parent="TemplateSubView/RightSidebar" index="4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Purchased X water from YYY"
+autowrap_mode = 3
+
+[node name="LblRationaleHeader" type="Label" parent="TemplateSubView/RightSidebar" index="5"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+text = "Rationale"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblRationale" type="Label" parent="TemplateSubView/RightSidebar" index="6"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Chose to buy because utility gain exceeded cost."
+autowrap_mode = 3
+
+[node name="LblInputHeader" type="Label" parent="TemplateSubView/RightSidebar" index="7"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+text = "Inputs"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblInput" type="Label" parent="TemplateSubView/RightSidebar" index="8"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "good: YYY
+good: XXX"
+autowrap_mode = 3
+
+[node name="LblAlternativesHeader" type="Label" parent="TemplateSubView/RightSidebar" index="9"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+text = "Alternatives"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblAlternatives" type="Label" parent="TemplateSubView/RightSidebar" index="10"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Buy XX water (utility: YYY)"
+autowrap_mode = 3
+
 [editable path="TemplateSubView"]
