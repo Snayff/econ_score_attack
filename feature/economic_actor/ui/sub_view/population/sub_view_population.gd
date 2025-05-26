@@ -29,7 +29,9 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 #endregion
 
 #region VARS
-var _selected_person_id: int = -1
+var _people_list: Array = []
+var _selected_index: int = -1
+var _selected_person_id: String = ""
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -38,6 +40,9 @@ var _selected_person_id: int = -1
 ## @return void
 func update_view() -> void:
 	super.update_view()
+
+	_people_list.clear()
+	_selected_index = -1
 
 	# check we have sim ref
 	if not _sim:
@@ -56,21 +61,27 @@ func update_view() -> void:
 		set_centre_content([])
 		return
 
+	_people_list = living_people.duplicate()
+
 	# Person rows
-	var first_person_id: int = -1
-	for i in range(living_people.size()):
-		var person = living_people[i]
+	var select_index: int = 0
+	if _selected_person_id != "":
+		for i in range(_people_list.size()):
+			if _people_list[i].id == _selected_person_id:
+				select_index = i
+				break
+
+	for i in range(_people_list.size()):
+		var person = _people_list[i]
 		var entry = _create_person_details_entry(person)
 		var btn_select: Button = entry.get_node("BtnSelect")
-		btn_select.pressed.connect(_on_person_entry_pressed.bind(person.id))
+		btn_select.pressed.connect(_on_person_entry_pressed.bind(i))
 		vbx_people_details.add_child(entry)
 		_add_to_clear_list(entry)
-		if i == 0:
-			first_person_id = person.id
 
-	# Automatically select the first person if any
-	if first_person_id != -1:
-		_select_person(first_person_id)
+	# Automatically select the correct person (persisted or first)
+	if _people_list.size() > 0:
+		_select_person_by_index(select_index)
 
 	set_centre_content([])
 
@@ -117,13 +128,27 @@ func _create_person_details_entry(person: Person) -> PanelContainer:
 
 	return entry
 
-func _on_person_entry_pressed(person_id: int) -> void:
-	_select_person(person_id)
+func _on_person_entry_pressed(index: int) -> void:
+	_select_person_by_index(index)
 
-func _select_person(person_id: int) -> void:
-	if _selected_person_id == person_id:
+func _select_person_by_index(index: int) -> void:
+	if index < 0 or index >= _people_list.size():
 		return
-	_selected_person_id = person_id
-	# (Visual indication and sidebar update will be handled in a later step)
+	if _selected_index == index:
+		return
+	_selected_index = index
+	_selected_person_id = _people_list[index].id
+	# Update visual feedback
+	for i in range(vbx_people_details.get_child_count()):
+		var entry = vbx_people_details.get_child(i)
+		if not entry is PanelContainer:
+			continue
+
+		var selected_style_box = preload("res://shared/resource/style_box_selected_button.tres")
+		var unselected_style_box = preload("res://shared/resource/style_box_unselected_button.tres")
+		if i == _selected_index:
+			entry.add_theme_stylebox_override("panel", selected_style_box)
+		else:
+			entry.add_theme_stylebox_override("panel", unselected_style_box)
 
 #endregion
