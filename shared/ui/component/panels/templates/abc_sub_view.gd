@@ -33,6 +33,7 @@ signal right_info_requested(info_id: int)
 #endregion
 
 #region EXPORTS
+@export var sub_view_key: Constants.SubView
 @export var sidebar_width: int = _DEFAULT_SIDEBAR_WIDTH:
 	set(value):
 		sidebar_width = value

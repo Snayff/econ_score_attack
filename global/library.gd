@@ -43,7 +43,8 @@ const _DATA_FILES: Dictionary = {
 	"laws": "res://feature/law/data/laws.json",
 	"land": "res://feature/world/data/land_config.json",
 	"land_aspects": "res://feature/world/data/land_aspects.json",
-	"terrain": "res://feature/world/data/terrain.json"
+	"terrain": "res://feature/world/data/terrain.json",
+	"people_sub_views": "res://feature/economic_actor/data/people_sub_views.json"
 }
 
 ## Default values by data type
@@ -470,12 +471,17 @@ func get_all_sub_views_data(view_name: String) -> Array[DataSubView]:
 		if not entry.has("id") or not entry.has("label") or not entry.has("icon") or not entry.has("tooltip") or not entry.has("scene_path"):
 			push_error("Invalid sub view entry: %s" % str(entry))
 			continue
+		var sub_view_key = Constants.SUB_VIEW_KEY_TO_ENUM.get(entry["id"], null)
+		if sub_view_key == null:
+			push_error("No enum mapping for sub view id: %s" % entry["id"])
+			sub_view_key = -1
 		sub_views.append(DataSubView.new(
 			entry["id"],
 			entry["label"],
 			entry["icon"],
 			entry["tooltip"],
-			entry["scene_path"]
+			entry["scene_path"],
+			sub_view_key
 		))
 	_books[cache_key] = sub_views
 	return sub_views

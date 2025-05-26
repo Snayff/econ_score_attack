@@ -23,6 +23,7 @@ var label: String
 var icon: String
 var tooltip: String
 var scene_path: String
+var sub_view_key: int # SubView enum value, used for robust identification
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -32,12 +33,14 @@ var scene_path: String
 ## @param icon (String): Path to the icon resource.
 ## @param tooltip (String): Tooltip text for the sub view button.
 ## @param scene_path (String): Path to the sub view scene.
-func _init(id_: String, label_: String, icon_: String, tooltip_: String, scene_path_: String) -> void:
+## @param sub_view_key (int): SubView enum value for robust identification.
+func _init(id_: String, label_: String, icon_: String, tooltip_: String, scene_path_: String, sub_view_key_: int) -> void:
 	id = id_
 	label = label_
 	icon = icon_
 	tooltip = tooltip_
 	scene_path = scene_path_
+	sub_view_key = sub_view_key_
 #endregion
 
 #region PRIVATE FUNCTIONS

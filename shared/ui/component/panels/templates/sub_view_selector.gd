@@ -20,7 +20,7 @@ signal sub_view_changed(sub_view_id: String)
 @export var _view_name: String = ""
 var _sub_views: Array = []
 var _sub_view_nodes: Dictionary = {}
-var _active_sub_view_id: String = ""
+var _active_sub_view_key: int = -1
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -33,44 +33,43 @@ func _ready() -> void:
 	_load_sub_views()
 
 func _load_sub_views() -> void:
-	# Clear previous buttons and sub view nodes
+	# Clear previous buttons
 	for child in top_bar.get_children():
 		top_bar.remove_child(child)
-		child.queue_free()
-	for child in sub_view_container.get_children():
-		sub_view_container.remove_child(child)
 		child.queue_free()
 	_sub_views = Library.get_all_sub_views_data(_view_name)
 	_sub_view_nodes.clear()
 	if _sub_views.is_empty():
 		return
-	# Instance all sub view scenes, but only show the active one
+	# Map sub view keys to existing children in sub_view_container
 	for sub_view in _sub_views:
-		var scene = load(sub_view.scene_path)
-		if not scene:
-			push_error("Failed to load sub view scene: %s" % sub_view.scene_path)
-			continue
-		var node = scene.instantiate()
-		node.visible = false
-		sub_view_container.add_child(node)
-		_sub_view_nodes[sub_view.id] = node
+		var node = null
+		for child in sub_view_container.get_children():
+			if "sub_view_key" in child:
+				if child.sub_view_key == sub_view.sub_view_key:
+					node = child
+					break
+		if node:
+			_sub_view_nodes[sub_view.sub_view_key] = node
+		else:
+			push_error("Sub view node not found for sub_view_key: %s" % Constants.SUB_VIEW_ENUM_TO_KEY[sub_view.sub_view_key])
 	# Create buttons in the top bar
 	for sub_view in _sub_views:
 		var btn = UIFactory.create_button(sub_view.label)
 		btn.icon = load(sub_view.icon)
 		btn.tooltip_text = sub_view.tooltip
-		btn.pressed.connect(_on_sub_view_button_pressed.bind(sub_view.id))
+		btn.pressed.connect(_on_sub_view_button_pressed.bind(sub_view.sub_view_key))
 		top_bar.add_child(btn)
 	# Show the first sub view by default, or last selected if available
-	var default_id = _active_sub_view_id if _active_sub_view_id in _sub_view_nodes else _sub_views[0].id
-	_set_active_sub_view(default_id)
+	var default_key = _active_sub_view_key if _active_sub_view_key in _sub_view_nodes else _sub_views[0].sub_view_key
+	_set_active_sub_view(default_key)
 
-func _on_sub_view_button_pressed(sub_view_id: String) -> void:
-	_set_active_sub_view(sub_view_id)
+func _on_sub_view_button_pressed(sub_view_key: int) -> void:
+	_set_active_sub_view(sub_view_key)
 
-func _set_active_sub_view(sub_view_id: String) -> void:
-	for id in _sub_view_nodes.keys():
-		_sub_view_nodes[id].visible = (id == sub_view_id)
-	_active_sub_view_id = sub_view_id
-	emit_signal("sub_view_changed", sub_view_id)
+func _set_active_sub_view(sub_view_key: int) -> void:
+	for key in _sub_view_nodes.keys():
+		_sub_view_nodes[key].visible = (key == sub_view_key)
+	_active_sub_view_key = sub_view_key
+	emit_signal("sub_view_changed", sub_view_key)
 #endregion
