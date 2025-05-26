@@ -142,17 +142,58 @@ func _select_person_by_index(index: int) -> void:
 	_selected_index = index
 	_selected_person_id = _people_list[index].id
 
-
 	# Update visual feedback using _person_entry_nodes
 	var selected_style_box = preload("res://shared/resource/style_box_selected_button.tres")
 	var unselected_style_box = preload("res://shared/resource/style_box_unselected_button.tres")
 	for i in range(_person_entry_nodes.size()):
 		var entry = _person_entry_nodes[i]
-
 		if i == _selected_index:
 			entry.add_theme_stylebox_override("panel", selected_style_box)
 		else:
 			entry.add_theme_stylebox_override("panel", unselected_style_box)
+
+	# Update right sidebar
+	_update_right_sidebar()
 	# (Sidebar update will be handled in a later step)
+
+func _update_right_sidebar() -> void:
+	if _selected_index < 0 or _selected_index >= _people_list.size():
+		set_right_sidebar_content([])
+		return
+	var person = _people_list[_selected_index]
+	var controls: Array[Control] = []
+
+	# Culture
+	var culture = Library.get_culture_by_id(person.culture_id)
+	if culture:
+		controls.append(UIFactory.create_viewport_sidebar_header_label("Culture") as Control)
+		var lbl_culture: Label = Label.new()
+		lbl_culture.text = culture.id.capitalize()
+		controls.append(lbl_culture)
+
+	# Ancestry
+	var ancestry = Library.get_ancestry_by_id(person.ancestry_id)
+	if ancestry:
+		controls.append(UIFactory.create_viewport_sidebar_header_label("Ancestry") as Control)
+		var lbl_ancestry: Label = Label.new()
+		lbl_ancestry.text = ancestry.id.capitalize()
+		controls.append(lbl_ancestry)
+
+	# Stockpile
+	controls.append(UIFactory.create_viewport_sidebar_header_label("Stockpile") as Control)
+	for good in Library.get_all_goods_data():
+		var hbox: HBoxContainer = HBoxContainer.new()
+		var icon_lbl: Label = Label.new()
+		icon_lbl.text = good.icon
+		hbox.add_child(icon_lbl)
+		var name_lbl: Label = Label.new()
+		name_lbl.text = good.f_name.capitalize()
+		hbox.add_child(name_lbl)
+		var amount_lbl: Label = Label.new()
+		amount_lbl.text = str(person.stockpile.get(good.id, 0))
+		hbox.add_child(amount_lbl)
+		controls.append(hbox)
+
+	set_right_sidebar_content(controls)
 
 #endregion
