@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8gnvvs000ko"
-path="res://.godot/imported/icon_druid_0_32x32.png-e26fa4edb08b20c2700b6cbf957e764b.ctex"
+uid="uid://dbvdk5ysdqoha"
+path="res://.godot/imported/DwarvesDwellings3.png-f966415844ecb3433d99a9cbb3235541.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://shared/asset/icons/people/icon_druid_0_32x32.png"
-dest_files=["res://.godot/imported/icon_druid_0_32x32.png-e26fa4edb08b20c2700b6cbf957e764b.ctex"]
+source_file="res://shared/asset/building/DwarvesDwellings3.png"
+dest_files=["res://.godot/imported/DwarvesDwellings3.png-f966415844ecb3433d99a9cbb3235541.ctex"]
 
 [params]
 
