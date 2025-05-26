@@ -37,6 +37,7 @@ window/stretch/mode="canvas_items"
 [file_customization]
 
 folder_colors={
+"res://_media_licenses/": "gray",
 "res://dev/": "gray",
 "res://dev_tool/": "purple",
 "res://feature/economy/market/data/goods.json": "gray"
