@@ -53,13 +53,13 @@ func update_view() -> void:
 func _ready() -> void:
 	ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 	EventBusGame.turn_complete.connect(update_view)
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	var sim_ref = ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
 	update_view()
 
 func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
+	if key == Constants.REFERENCE_KEY.SIM:
 		_set_sim(value)
 
 func _set_sim(sim_ref: Sim) -> void:

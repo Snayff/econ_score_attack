@@ -1,7 +1,7 @@
 ##
 ## ReferenceRegistry: Holds references to key game objects for decoupled access.
-## Usage: ReferenceRegistry.register_reference(Constants.ReferenceKey.SIM, sim_instance)
-##        ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+## Usage: ReferenceRegistry.register_reference(Constants.REFERENCE_KEY.SIM, sim_instance)
+##        ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 ##        ReferenceRegistry.reference_registered.connect(_on_reference_registered)
 ## Last Updated: 2024-06-09
 ##
@@ -25,17 +25,17 @@ var _references: Dictionary = {}
 #endregion
 
 #region PUBLIC FUNCTIONS
-## Register a reference with a given key (from Constants.ReferenceKey enum).
+## Register a reference with a given key (from Constants.REFERENCE_KEY enum).
 ## Arguments:
-##   key (int): Enum value from Constants.ReferenceKey.
+##   key (int): Enum value from Constants.REFERENCE_KEY.
 ##   value (Object): The object to register.
 func register_reference(key: int, value: Object) -> void:
     _references[key] = value
     emit_signal("reference_registered", key, value)
 
-## Retrieve a reference by key (from Constants.ReferenceKey enum).
+## Retrieve a reference by key (from Constants.REFERENCE_KEY enum).
 ## Arguments:
-##   key (int): Enum value from Constants.ReferenceKey.
+##   key (int): Enum value from Constants.REFERENCE_KEY.
 ## Returns:
 ##   Object or null if not found.
 func get_reference(key: int) -> Object:

@@ -176,7 +176,7 @@ func _ready() -> void:
 	if EventBusGame.has_signal("turn_complete"):
 		EventBusGame.turn_complete.connect(update_view)
 	# Attempt to get sim if already registered
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	var sim_ref = ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
 	update_view()
@@ -186,7 +186,7 @@ func _ready() -> void:
 ## @param value (Object): The reference value.
 ## @return void
 func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
+	if key == Constants.REFERENCE_KEY.SIM:
 		_set_sim(value)
 
 ## Sets the sim reference and connects law signals.

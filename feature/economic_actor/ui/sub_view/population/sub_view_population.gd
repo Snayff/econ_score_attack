@@ -29,6 +29,7 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 #endregion
 
 #region VARS
+var _selected_person_id: int = -1
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -55,14 +56,23 @@ func update_view() -> void:
 		set_centre_content([])
 		return
 
-
 	# Person rows
-	for person in living_people:
+	var first_person_id: int = -1
+	for i in range(living_people.size()):
+		var person = living_people[i]
 		var entry = _create_person_details_entry(person)
+		var btn_select: Button = entry.get_node("BtnSelect")
+		btn_select.pressed.connect(_on_person_entry_pressed.bind(person.id))
 		vbx_people_details.add_child(entry)
 		_add_to_clear_list(entry)
-	set_centre_content([])
+		if i == 0:
+			first_person_id = person.id
 
+	# Automatically select the first person if any
+	if first_person_id != -1:
+		_select_person(first_person_id)
+
+	set_centre_content([])
 
 #endregion
 
@@ -106,5 +116,14 @@ func _create_person_details_entry(person: Person) -> PanelContainer:
 
 
 	return entry
+
+func _on_person_entry_pressed(person_id: int) -> void:
+	_select_person(person_id)
+
+func _select_person(person_id: int) -> void:
+	if _selected_person_id == person_id:
+		return
+	_selected_person_id = person_id
+	# (Visual indication and sidebar update will be handled in a later step)
 
 #endregion

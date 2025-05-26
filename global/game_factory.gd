@@ -97,7 +97,7 @@ static func _create_person(cultures: Array, ancestries: Array, people_data: Dict
 	var disposable_income: float = 0.0
 
 	var data_person = DataPerson.new(
-		IDGenerator.generate_id("ACT"),
+		IDGenerator.generate_id(Constants.ID_PREFIX.keys().find("ACT")),
 		f_name,
 		culture_id,
 		ancestry_id,

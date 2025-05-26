@@ -27,7 +27,7 @@ func _ready() -> void:
 	fit_content = true
 
 	# Attempt to get _sim if already registered
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	var sim_ref = ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
 
@@ -62,7 +62,7 @@ func _on_stockpile_changed(_good_id: String, _new_amount: int) -> void:
 
 ## Handles updates from the ReferenceRegistry
 func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
+	if key == Constants.REFERENCE_KEY.SIM:
 		_set_sim(value)
 
 ## Sets the _sim reference and connects to demesne signals

@@ -298,7 +298,7 @@ func _on_survey_button_pressed(coords: Vector2i) -> void:
 ## @param value (Object): The reference value.
 ## @return void
 func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
+	if key == Constants.REFERENCE_KEY.SIM:
 		_update_sim_and_demesne()
 		update_view()
 
@@ -312,7 +312,7 @@ func _on_world_grid_updated() -> void:
 
 func _update_sim_and_demesne() -> void:
 	_disconnect_demesne_survey_signals()
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	var sim_ref = ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 	if sim_ref:
 		_sim = sim_ref
 		_demesne = _sim.demesne

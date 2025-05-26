@@ -10,7 +10,7 @@ func test_get_all_sub_views_data_people() -> void:
 	assert(first.id == "population", "First sub view id should be 'population'")
 	assert(first.label == "Population", "First sub view label should be 'Population'")
 	assert(first.icon == "res://shared/asset/icons/population.svg", "First sub view icon should match")
-	assert(first.tooltip == "View population details", "First sub view tooltip should match")
+	assert(first.tooltip == "VIEW_KEY population details", "First sub view tooltip should match")
 	assert(first.scene_path == "res://feature/economic_actor/people/ui/sub_view_population.tscn", "First sub view scene_path should match")
 
 	var second = sub_views[1]

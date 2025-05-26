@@ -33,7 +33,7 @@ signal right_info_requested(info_id: int)
 #endregion
 
 #region EXPORTS
-@export var sub_view_key: Constants.SubView
+@export var sub_view_key: Constants.SUB_VIEW_KEY
 @export var sidebar_width: int = _DEFAULT_SIDEBAR_WIDTH:
 	set(value):
 		sidebar_width = value
@@ -131,7 +131,7 @@ func _ready() -> void:
 		EventBusGame.turn_complete.connect(_on_turn_complete)
 
 	# Attempt to get sim if already registered
-	var sim_ref = ReferenceRegistry.get_reference(Constants.ReferenceKey.SIM)
+	var sim_ref = ReferenceRegistry.get_reference(Constants.REFERENCE_KEY.SIM)
 	if sim_ref:
 		_set_sim(sim_ref)
 
@@ -145,7 +145,7 @@ func _on_turn_complete() -> void:
 ## @param value (Object): The reference value.
 ## @return void
 func _on_reference_registered(key: int, value: Object) -> void:
-	if key == Constants.ReferenceKey.SIM:
+	if key == Constants.REFERENCE_KEY.SIM:
 		_set_sim(value)
 
 ## Sets the sim reference and updates info.

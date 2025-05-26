@@ -456,18 +456,22 @@ func get_all_terrain_type_data() -> Dictionary:
 	return {}
 
 ## Loads and returns all sub view definitions for a given feature.
-## @param view_name (String): The main view's name (e.g., "people").
+## @param view_key (Constants.VIEW_KEY): The main view's enum key (e.g., Constants.VIEW_KEY.PEOPLE).
 ## @return Array[DataSubView]: Array of DataSubView instances for the feature, or empty array on error.
-func get_all_sub_views_data(view_name: String) -> Array[DataSubView]:
-	var cache_key = "sub_views_data_%s" % view_name
+func get_all_sub_views_data(view_key: int) -> Array[DataSubView]:
+	var view_key_str = Constants.VIEW_KEY_ENUM_TO_KEY.get(view_key, null)
+	if view_key_str == null:
+		push_error("Invalid VIEW_KEY enum value: %s" % str(view_key))
+		return []
+	var cache_key = "sub_views_data_%s" % view_key_str
 	if _books.has(cache_key):
 		return _books[cache_key]
 	var sub_views: Array[DataSubView] = []
-	var config: Dictionary = _get_data("%s_sub_views" % view_name)
-	if not config.has(view_name):
-		push_error("Sub views config missing '%s' key." % view_name)
+	var config: Dictionary = _get_data("%s_sub_views" % view_key_str)
+	if not config.has(view_key_str):
+		push_error("Sub views config missing '%s' key." % view_key_str)
 		return sub_views
-	for entry in config[view_name]:
+	for entry in config[view_key_str]:
 		if not entry.has("id") or not entry.has("label") or not entry.has("icon") or not entry.has("tooltip") or not entry.has("scene_path"):
 			push_error("Invalid sub view entry: %s" % str(entry))
 			continue

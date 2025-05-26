@@ -1,7 +1,7 @@
 ## A person in the simulation that can produce and consume goods
 ##
 ## Person nodes must always be instantiated using the constructor:
-##   Person.new(f_name: String, job: String, starting_goods: Dictionary)
+##   Person.new(id: String, f_name: String, culture_id: String, ancestry_id: String, needs: Dictionary, savings_rate: float, disposable_income: float, decision_profile: String, job: String, starting_goods: Dictionary)
 ## The job must never be empty or null. This is validated in _ready().
 #@icon("")
 class_name Person
@@ -26,7 +26,14 @@ extends Node
 
 
 #region VARS
+var id: String = ""
 var f_name: String = ""
+var culture_id: String = ""
+var ancestry_id: String = ""
+var needs: Dictionary = {}
+var savings_rate: float = 0.0
+var disposable_income: float = 0.0
+var decision_profile: String = ""
 var is_alive: bool = true
 var health: int = 3
 var happiness: int = 5
@@ -39,8 +46,37 @@ var consumer: ComponentConsumer
 
 
 #region FUNCS
-func _init(f_name_: String, job_: String, starting_goods: Dictionary) -> void:
+## Constructs a new Person node.
+## @param id_: Unique string ID for the person. If empty, a unique id will be generated.
+## @param f_name_: Friendly name for person.
+## @param culture_id_: The culture ID this person belongs to.
+## @param ancestry_id_: The ancestry ID this person belongs to.
+## @param needs_: Dictionary of needs (e.g., hunger, comfort).
+## @param savings_rate_: Proportion of income reserved as savings.
+## @param disposable_income_: Money available for spending.
+## @param decision_profile_: String describing decision logic profile.
+## @param job_: The job assigned to the person.
+## @param starting_goods: Dictionary of starting goods.
+func _init(
+	id_: String = "",
+	f_name_: String = "",
+	culture_id_: String = "",
+	ancestry_id_: String = "",
+	needs_: Dictionary = {},
+	savings_rate_: float = 0.0,
+	disposable_income_: float = 0.0,
+	decision_profile_: String = "",
+	job_: String = "",
+	starting_goods: Dictionary = {}
+) -> void:
+	id = id_ if id_ != "" else IDGenerator.generate_id(Constants.ID_PREFIX.ACT)
 	f_name = f_name_
+	culture_id = culture_id_
+	ancestry_id = ancestry_id_
+	needs = needs_
+	savings_rate = savings_rate_
+	disposable_income = disposable_income_
+	decision_profile = decision_profile_
 	job = job_
 
 	# Initialise stockpile with all possible goods set to 0
@@ -144,17 +180,25 @@ func get_goods_to_buy() -> Dictionary:
 
 	return goods_to_buy
 
+## Creates a Person node from a DataPerson data class.
+## Args:
+##   data_person (DataPerson): The data class instance to convert.
+##   starting_goods (Dictionary): The starting goods for the person.
+## Returns:
+##   Person: A new Person node with fields mapped from the DataPerson.
 static func from_data_person(data_person: DataPerson, starting_goods: Dictionary = {}) -> Person:
-	## Creates a Person node from a DataPerson data class.
-	## Args:
-	##   data_person (DataPerson): The data class instance to convert.
-	##   starting_goods (Dictionary): The starting goods for the person.
-	## Returns:
-	##   Person: A new Person node with fields mapped from the DataPerson.
-	var job_ = data_person.needs.get("job", "unemployed") if data_person.needs.has("job") else "unemployed"
-	var goods_dict = starting_goods.duplicate() if starting_goods.size() > 0 else {"money": data_person.disposable_income}
-	var person = Person.new(data_person.f_name, job_, goods_dict)
-	# Optionally, map other needs or fields as required
-	return person
+	var goods_dict = starting_goods if starting_goods.size() > 0 else {"money": data_person.disposable_income}
+	return Person.new(
+		data_person.id,
+		data_person.f_name,
+		data_person.culture_id,
+		data_person.ancestry_id,
+		data_person.needs,
+		data_person.savings_rate,
+		data_person.disposable_income,
+		data_person.decision_profile,
+		data_person.needs.get("job", "unemployed"),
+		goods_dict
+	)
 
 #endregion

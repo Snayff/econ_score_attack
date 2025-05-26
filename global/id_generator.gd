@@ -4,12 +4,12 @@
 ## Each ID consists of a type prefix and a UUID, ensuring uniqueness and debuggability.
 ##
 ## Usage Example:
-##     var id = IDGenerator.generate_id("ACT")
+##     var id = IDGenerator.generate_id(Constants.ID_PREFIX.keys().find("ACT"))
 ##     if IDGenerator.validate_id(id):
 ##         var prefix = IDGenerator.get_prefix(id)
 ##         var uuid = IDGenerator.get_uuid(id)
 ##
-## Prefixes should be chosen from the PREFIXES constant.
+## Prefixes should be chosen from the ID_PREFIX constant in Constants.
 ##
 ## This class should be registered as an autoload singleton named 'IDGenerator'.
 
@@ -17,12 +17,7 @@ extends Node
 
 #region CONSTANTS
 
-const PREFIXES: Dictionary = {
-	"ACT": "Actor",
-	"BLD": "Building",
-	"JOB": "Job",
-	# Add more as needed
-}
+const Constants = preload("res://global/constants.gd")
 
 #endregion
 
@@ -44,12 +39,13 @@ const PREFIXES: Dictionary = {
 
 #region PUBLIC FUNCTIONS
 
-## Generates a new unique identifier with a prefix.
-## @param prefix String - The type prefix (e.g., "ACT").
+## Generates a new unique identifier with a prefix from Constants.ID_PREFIX.
+## @param prefix_key int - The key for the prefix in Constants.ID_PREFIX (e.g., Constants.ID_PREFIX.keys().find("ACT")).
 ## @return String - A unique identifier in the format PREFIX_UUID.
-static func generate_id(prefix: String) -> String:
-	## Ensure the prefix is valid before generating the ID.
-	assert(PREFIXES.has(prefix), "Invalid prefix for ID generation.")
+static func generate_id(prefix_key: int) -> String:
+	## Ensure the prefix_key is valid before generating the ID.
+	assert(Constants.ID_PREFIX.values().size() > prefix_key && prefix_key >= 0, "Invalid prefix key for ID generation.")
+	var prefix: String = Constants.ID_PREFIX.keys()[prefix_key]
 	var uuid: String = _generate_uuid_v4()
 	return "%s_%s" % [prefix, uuid]
 
@@ -63,7 +59,7 @@ static func validate_id(id: String) -> bool:
 		return false
 	var prefix: String = parts[0]
 	var uuid: String = parts[1]
-	if not PREFIXES.has(prefix):
+	if not Constants.ID_PREFIX.has(prefix):
 		return false
 	var uuid_regex := RegEx.new()
 	uuid_regex.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")

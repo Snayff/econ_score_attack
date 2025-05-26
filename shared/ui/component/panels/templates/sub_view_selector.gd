@@ -17,7 +17,7 @@ signal sub_view_changed(sub_view_id: String)
 #region VARS
 ## the name of the view. To be set in the editor when  creating a new View.
 ## this determines what sub views to load.
-@export var _view_name: String = ""
+@export var _view_key: Constants.VIEW_KEY
 var _sub_views: Array = []
 var _sub_view_nodes: Dictionary = {}
 var _active_sub_view_key: int = -1
@@ -28,8 +28,6 @@ var _active_sub_view_key: int = -1
 
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
-	assert(_view_name != "", "view name must be set in the editor for SubViewSelector to work.")
-
 	_load_sub_views()
 
 func _load_sub_views() -> void:
@@ -37,7 +35,7 @@ func _load_sub_views() -> void:
 	for child in top_bar.get_children():
 		top_bar.remove_child(child)
 		child.queue_free()
-	_sub_views = Library.get_all_sub_views_data(_view_name)
+	_sub_views = Library.get_all_sub_views_data(_view_key)
 	_sub_view_nodes.clear()
 	if _sub_views.is_empty():
 		return

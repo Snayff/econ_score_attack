@@ -1,6 +1,6 @@
 ## DataSubView: Data class for sub view metadata for People feature.
 ## Usage:
-##   var sub_view = DataSubView.new("population", "Population", "res://shared/asset/icons/population.svg", "View population details", "res://feature/people/ui/sub_view_population.tscn")
+##   var sub_view = DataSubView.new("population", "Population", "res://shared/asset/icons/population.svg", "VIEW_KEY population details", "res://feature/people/ui/sub_view_population.tscn")
 ## Last Updated: 2025-05-24
 class_name DataSubView
 extends RefCounted

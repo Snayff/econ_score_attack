@@ -92,7 +92,7 @@ func _ready() -> void:
 
 	emit_signal("sim_initialised")
 	EventBusGame.emit_signal("sim_initialised", self)
-	ReferenceRegistry.register_reference(Constants.ReferenceKey.SIM, self)
+	ReferenceRegistry.register_reference(Constants.REFERENCE_KEY.SIM, self)
 
 ## Resolves a single turn of the simulation
 ## Handles production, consumption, and market operations
