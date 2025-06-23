@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2wyi1klcyllt"]
+
+[ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="1_v33b5"]
+
+[node name="SubViewCodex" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="TemplateSubView" parent="." instance=ExtResource("1_v33b5")]
+unique_name_in_owner = true
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+
+[node name="LblLawNameHeader" type="Label" parent="TemplateSubView/LeftSidebar" index="1"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Law Details"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LblLawName" type="Label" parent="TemplateSubView/LeftSidebar" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Law Name"
+
+[node name="ActionsContainer" type="HBoxContainer" parent="TemplateSubView/LeftSidebar" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblParametersHeader" type="Label" parent="TemplateSubView/LeftSidebar" index="4"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Parameters"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ParametersContainer" type="VBoxContainer" parent="TemplateSubView/LeftSidebar" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBxLawsContainer" type="VBoxContainer" parent="TemplateSubView/CentrePanel" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LawsTableHeader" type="HBoxContainer" parent="TemplateSubView/CentrePanel/VBxLawsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="_Label_1" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Laws"
+horizontal_alignment = 1
+
+[editable path="TemplateSubView"]

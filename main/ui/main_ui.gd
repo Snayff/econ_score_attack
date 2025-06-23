@@ -26,15 +26,15 @@ extends Control
 func _ready() -> void:
 	assert(_sidebar != null, "Sidebar not found")
 	assert(_view_people != null, "People view not found")
-#	assert(_view_laws != null, "Laws view not found")
+	assert(_view_laws != null, "Laws view not found")
 #	assert(_view_land != null, "Land view not found")
 #	assert(_view_economy != null, "Economy view not found")
 	assert(_panel_header != null, "Panel header not found")
 
-	EventBusUI.sidebar_people_pressed.connect(func(): _switch_view(Constants.Constants.VIEW_KEY.PEOPLE))
-	EventBusUI.sidebar_laws_pressed.connect(func(): _switch_view(Constants.Constants.VIEW_KEY.LAWS))
-	EventBusUI.sidebar_land_pressed.connect(func(): _switch_view(Constants.Constants.VIEW_KEY.LAND))
-	EventBusUI.sidebar_economy_pressed.connect(func(): _switch_view(Constants.Constants.VIEW_KEY.ECONOMY))
+	EventBusUI.sidebar_people_pressed.connect(func(): _switch_view(Constants.VIEW_KEY.PEOPLE))
+	EventBusUI.sidebar_laws_pressed.connect(func(): _switch_view(Constants.VIEW_KEY.LAW))
+	EventBusUI.sidebar_land_pressed.connect(func(): _switch_view(Constants.VIEW_KEY.LAND))
+	EventBusUI.sidebar_economy_pressed.connect(func(): _switch_view(Constants.VIEW_KEY.ECONOMY))
 
 	# Start with people view
 	_switch_view(Constants.VIEW_KEY.PEOPLE)

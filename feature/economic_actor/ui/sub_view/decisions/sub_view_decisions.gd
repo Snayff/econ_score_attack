@@ -1,24 +1,41 @@
 ## SubViewDecisions: Shows all decisions made by people in the last turn.
 ## Displays a list of decision outputs in the centre panel. Selecting one shows details in the right sidebar.
 ## Usage: Inherits from ABCSubView. Populates centre panel with decision summaries, right sidebar with details.
+## 
+## Last Updated: 2025-06-23
+##
 class_name  SubViewDecisions
 extends ABCSubView
 
+#region CONSTANTS
+#endregion
+
+#region SIGNALS
+#endregion
+
+#region EXPORTS
+#endregion
+
+#region ON READY
 @onready var lbl_person: Label = %LblPerson
 @onready var lbl_decision: Label = %LblDecision
 @onready var lbl_rationale: Label = %LblRationale
 @onready var lbl_input: Label = %LblInput
 @onready var lbl_alternatives: Label = %LblAlternatives
+#endregion
 
 
 
 #region VARS
 var _decision_list: Array = []
-var _decision_entry_nodes: Array = []
+var _decision_entry_nodes: Array[Button] = []
 var _selected_index: int = -1
 #endregion
 
 #region PUBLIC FUNCTIONS
+## Updates the displayed information in the centre panel.
+## Populates the centre panel with a list of decisions made in the last turn.
+## @return void
 func update_view() -> void:
 	_decision_list.clear()
 	_decision_entry_nodes.clear()

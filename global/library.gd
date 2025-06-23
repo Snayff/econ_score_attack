@@ -44,7 +44,8 @@ const _DATA_FILES: Dictionary = {
 	"land": "res://feature/world/data/land_config.json",
 	"land_aspects": "res://feature/world/data/land_aspects.json",
 	"terrain": "res://feature/world/data/terrain.json",
-	"people_sub_views": "res://feature/economic_actor/data/people_sub_views.json"
+	"people_sub_views": "res://feature/economic_actor/data/people_sub_views.json",
+	"law_sub_views": "res://feature/law/data/law_sub_views.json",
 }
 
 ## Default values by data type

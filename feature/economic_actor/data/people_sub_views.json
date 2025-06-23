@@ -5,14 +5,14 @@
 	  "label": "Population",
 	  "icon": "res://shared/asset/icons/population.svg",
 	  "tooltip": "View population details",
-	  "scene_path": "res://feature/economic_actor/people/ui/sub_view_population.tscn"
+	  "scene_path": "res://feature/economic_actor/ui/sub_view/population/sub_view_population.tscn"
 	},
 	{
 	  "id": "decisions",
 	  "label": "Decisions",
 	  "icon": "res://shared/asset/icons/decisions.svg",
 	  "tooltip": "Make decisions",
-	  "scene_path": "res://feature/economic_actor/people/ui/sub_view_decisions.tscn"
+	  "scene_path": "res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions.tscn"
 	}
   ]
 }

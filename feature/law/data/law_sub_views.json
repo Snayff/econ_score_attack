@@ -1,0 +1,11 @@
+{
+  "laws": [
+	{
+	  "id": "codex",
+	  "label": "Law Codex",
+	  "icon": "res://shared/asset/icons/law.svg",
+	  "tooltip": "View available laws",
+	  "scene_path": "res://feature/law/ui/sub_view/codex/sub_view_codex.tscn"
+	}
+  ]
+}

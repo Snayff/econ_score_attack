@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5c6kvs07wync"]
+[gd_scene load_steps=3 format=3 uid="uid://b6i61t0r2rfen"]
 
 [ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/view_sub_view_selector.tscn" id="1_otbmm"]
+[ext_resource type="PackedScene" uid="uid://d2wyi1klcyllt" path="res://feature/law/ui/sub_view/codex/sub_view_codex.tscn" id="2_yvnxs"]
 
 [node name="ViewLaws" type="Control"]
 layout_mode = 3
@@ -13,8 +14,8 @@ grow_vertical = 2
 [node name="View_SubViewSelector" parent="." instance=ExtResource("1_otbmm")]
 layout_mode = 0
 anchors_preset = 0
-offset_right = -1280.0
-offset_bottom = -696.0
 _view_key = 2
+
+[node name="SubViewCodex" parent="View_SubViewSelector/View_SubViewContainer" index="0" instance=ExtResource("2_yvnxs")]
 
 [editable path="View_SubViewSelector"]

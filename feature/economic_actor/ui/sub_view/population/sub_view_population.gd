@@ -32,8 +32,8 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 #endregion
 
 #region VARS
-var _people_list: Array = []
-var _person_entry_nodes: Array = []
+var _people_list: Array[Person] = []
+var _person_entry_nodes: Array[PanelContainer] = []
 var _selected_index: int = -1
 var _selected_person_id: String = ""
 #endregion
@@ -100,6 +100,9 @@ func _ready() -> void:
 	_add_to_clear_list(demo_person_details_entry, "centre")
 	refresh()
 
+## Creates a UI entry for a person's details.
+## @param person The person to create an entry for
+## @return The created panel container
 func _create_person_details_entry(person: Person) -> PanelContainer:
 	var entry = SCENE_PERSON_DETAILS.instantiate()
 
@@ -135,9 +138,16 @@ func _create_person_details_entry(person: Person) -> PanelContainer:
 
 	return entry
 
+## Handles when a person entry is pressed.
+## @param index The index of the pressed entry
+## @return void
 func _on_person_entry_pressed(index: int) -> void:
 	_select_person_by_index(index)
 
+## Selects a person by their index in the people list.
+## Updates visual feedback and the right sidebar.
+## @param index The index of the person to select
+## @return void
 func _select_person_by_index(index: int) -> void:
 	if index < 0 or index >= _people_list.size():
 		return
@@ -159,6 +169,8 @@ func _select_person_by_index(index: int) -> void:
 	# Update right sidebar
 	_update_right_sidebar()
 
+## Updates the right sidebar with the selected person's details.
+## @return void
 func _update_right_sidebar() -> void:
 	_free_section_from_clear_list("right")
 

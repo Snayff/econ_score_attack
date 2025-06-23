@@ -2,7 +2,6 @@
 ## Usage:
 ##   Listens for button presses in the top bar to switch sub views.
 ##   Emits sub_view_changed(sub_view_id: String) when the active sub view changes.
-## Last Updated: 2025-05-24
 extends VBoxContainer
 
 #region SIGNALS
