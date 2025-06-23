@@ -8,7 +8,7 @@
 ##  UIFactory is available as a global autoload; if your linter complains, suppress or ignore the warning.
 ##
 ## See: dev/docs/docs/systems/ui.md
-## Last Updated: 2025-05-13
+
 extends ABCView
 
 

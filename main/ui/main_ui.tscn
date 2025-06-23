@@ -125,5 +125,4 @@ layout_mode = 2
 script = ExtResource("5_oxwcw")
 
 [node name="NotificationSystem" parent="." instance=ExtResource("11_notify")]
-visible = false
 layout_mode = 1

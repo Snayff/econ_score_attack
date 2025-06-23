@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5c6kvs07wync"]
+
+[ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/view_sub_view_selector.tscn" id="1_otbmm"]
+
+[node name="ViewLaws" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="View_SubViewSelector" parent="." instance=ExtResource("1_otbmm")]
+layout_mode = 0
+anchors_preset = 0
+offset_right = -1280.0
+offset_bottom = -696.0
+_view_key = 2
+
+[editable path="View_SubViewSelector"]
