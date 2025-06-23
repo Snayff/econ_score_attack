@@ -304,4 +304,3 @@
 - Keep information density appropriate
 - Provide clear feedback for all actions
 - Progressive complexity in tutorial flow
-- Regular playtesting for intuitive use 

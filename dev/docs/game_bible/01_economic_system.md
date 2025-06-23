@@ -1,9 +1,114 @@
 # Economic System
 
+## Executive Summary
+The Economic System is the central gameplay mechanic that simulates a realistic, closed-loop economy where all resources must be produced within the demesne. It encompasses currency management, market dynamics, banking, and trade systems that interact to create emergent economic behaviors. Players must master these systems to extract maximum personal wealth while maintaining economic stability.
+
+**Key Features:**
+- Fully simulated closed-loop economy with no external resources
+- Dynamic pricing based on supply and demand
+- Banking system with loans, interest rates, and financial institutions
+- Market manipulation mechanics with consequences
+- Multiple wealth extraction methods
+- Detailed economic indicators and analysis tools
+
 ## Overview
 The economic system forms the core of gameplay, implementing a closed-loop economy where all resources and goods must be produced within the demesne. No external resources can enter the system, creating a carefully balanced economic ecosystem.
 
+## Key Concepts
+
+### Closed-Loop Economy
+A self-contained economic system where all resources must be produced within the demesne. No external resources can enter the system, creating a carefully balanced ecosystem where every economic decision has ripple effects throughout the entire economy.
+
+### Supply and Demand
+The fundamental market force that determines prices based on resource availability and population needs. When supply exceeds demand, prices fall; when demand exceeds supply, prices rise. Different goods have different elasticity, affecting how dramatically prices change in response to supply/demand imbalances.
+
+### Market Equilibrium
+The theoretical point where supply and demand are balanced, resulting in stable prices. Market equilibrium is constantly shifting due to production changes, population needs, and player interventions.
+
+### Monetary Policy
+The set of tools available to control currency value, including interest rates, money supply, and banking regulations. Effective monetary policy maintains currency stability while enabling economic growth.
+
+### Wealth Extraction
+The primary player goal - converting the demesne's economic activity into personal wealth. This can be accomplished through taxation, market manipulation, ownership of production, banking profits, and resource licensing.
+
+### Economic Indicators
+Metrics that measure economic health and activity, including GDP, employment rates, price indices, and market stability. These indicators help players understand the current state of their economy and predict future trends.
+
 ## Core Components
+
+## System Architecture
+
+### Class Diagram
+```
++----------------+       +----------------+
+|    Currency    |<----->|     Market     |
++----------------+       +----------------+
+| - baseValue    |       | - goods        |
+| - inflation    |       | - transactions |
+| - stability    |       | - prices       |
++----------------+       +----------------+
+        ^                        ^
+        |                        |
+        v                        v
++----------------+       +----------------+
+|     Banking    |<----->|     Trade      |
++----------------+       +----------------+
+| - loans        |       | - routes       |
+| - accounts     |       | - logistics    |
+| - interest     |       | - costs        |
++----------------+       +----------------+
+```
+
+### Flow Diagram: Closed-Loop Economy
+```
+                 +-------------+
+                 | Resources   |
+                 +-------------+
+                        |
+                        v
++-----------+    +-------------+    +-----------+
+| Labor     |--->| Production  |--->| Goods     |
++-----------+    +-------------+    +-----------+
+      ^                                   |
+      |                                   v
+      |           +-------------+    +-----------+
+      +-----------| Consumption |<---| Market    |
+                  +-------------+    +-----------+
+                        |                 ^
+                        v                 |
+                  +-------------+         |
+                  | Currency    |---------+
+                  +-------------+
+```
+
+### Sequence Diagram: Market Transaction
+```
++--------+          +--------+          +--------+
+| Buyer  |          | Market |          | Seller |
++--------+          +--------+          +--------+
+    |                   |                   |
+    |---Request Buy---->|                   |
+    |                   |---Check Price---->|
+    |                   |<--Confirm Price---|
+    |<--Price Quote-----|                   |
+    |---Confirm Buy---->|                   |
+    |                   |---Transfer Item-->|
+    |                   |---Transfer Money->|
+    |<--Transaction-----|                   |
+    |  Confirmation     |                   |
+    |                   |                   |
+```
+
+### State Diagram: Market Conditions
+```
++-------------+         +-------------+         +-------------+
+|   Stable    |-------->|  Volatile   |-------->|  Collapsed  |
++-------------+         +-------------+         +-------------+
+      ^                       |                        |
+      |                       |                        |
+      +-----------------------+------------------------+
+                 Recovery Measures
+```
 
 ### Currency System
 - **Base Currency**: Demesne-specific currency used for all transactions
@@ -284,6 +389,125 @@ The economic system forms the core of gameplay, implementing a closed-loop econo
 - Regular validation of information density
 - Accessibility options for all features 
 
+## Implementation Priorities
+
+This section outlines the recommended implementation order for the Economic System, focusing on establishing core functionality first before adding complexity.
+
+### Phase 1: Foundation (MVP)
+1. **Basic Resource System**
+   - Simple resource types with fixed properties
+   - Manual resource production and consumption
+   - Static pricing without dynamic market forces
+   - Basic currency system with simple transactions
+
+2. **Simple Market**
+   - Supply and demand calculations for essential goods
+   - Basic price fluctuation based on availability
+   - Manual trading interface for player transactions
+   - Simple economic indicators (prices, supply levels)
+
+3. **Core Player Tools**
+   - Basic wealth extraction through direct taxation
+   - Simple market analysis showing current prices
+   - Basic policy controls for essential resources
+
+### Phase 2: Core Economic Simulation
+1. **Dynamic Market System**
+   - Full supply and demand calculations for all goods
+   - Price elasticity implementation
+   - Market equilibrium mechanics
+   - Black market emergence for price-controlled goods
+
+2. **Banking System**
+   - Basic loans and interest rates
+   - Population savings accounts
+   - Simple banking interface
+   - Bank stability mechanics
+
+3. **Trade System**
+   - Internal trade between regions
+   - Basic transport costs and logistics
+   - Simple trade route optimization
+   - Market access limitations
+
+### Phase 3: Advanced Features
+1. **Complex Market Manipulation**
+   - Strategic resource hoarding mechanics
+   - Market cornering implementation
+   - Advanced trade regulations
+   - Detailed consequences for manipulation
+
+2. **Advanced Banking**
+   - Multiple bank types and specializations
+   - Complex loan types and conditions
+   - Credit rating system
+   - Bank runs and financial crises
+
+3. **Economic Forecasting**
+   - Predictive modeling tools
+   - Risk assessment systems
+   - Long-term trend analysis
+   - Economic advisor AI
+
+### Phase 4: Integration and Polish
+1. **Cross-System Integration**
+   - Deep integration with Population System
+   - Environmental impact on economy
+   - Technology advancement effects
+   - Governance system economic policies
+
+2. **UI/UX Refinement**
+   - Advanced visualization tools
+   - Streamlined trading interfaces
+   - Crisis management controls
+   - Comprehensive economic dashboards
+
+## Performance Considerations
+
+### Optimization Strategies
+- **Market Simulation Optimization**
+  - Use batch processing for price updates rather than updating each good individually
+  - Implement price update frequency based on good importance (essential goods update more frequently)
+  - Cache market state calculations and only recalculate when significant changes occur
+  - Use spatial partitioning for regional markets to limit calculation scope
+
+### Memory Management
+- **Transaction History**
+  - Implement rolling history with aggregation of older data
+  - Store only summary data for transactions older than a configurable threshold
+  - Use compressed data structures for historical price data
+  - Implement memory pools for frequently created/destroyed transaction objects
+
+### Scaling Considerations
+- **Population Scaling**
+  - Design market algorithms to handle 100-10,000 economic actors efficiently
+  - Use representative sampling for very large populations
+  - Implement level-of-detail simulation based on player focus
+  - Group similar transactions to reduce individual calculations
+
+### Data Structure Selection
+- **Price Calculation**
+  - Use spatial hash tables for regional price variations
+  - Implement quad-tree structures for geographic price distribution
+  - Use specialized containers optimized for frequent insertions/removals for active markets
+  - Consider lock-free concurrent data structures for market operations
+
+### Update Frequency
+- **Tiered Update System**
+  - Critical economic indicators: Every turn
+  - Market prices for essential goods: Every 1-3 turns
+  - Secondary market prices: Every 5-10 turns
+  - Long-term economic trends: Every 20+ turns
+  - Adjust dynamically based on market volatility
+
+### Bottleneck Identification
+- **Common Performance Issues**
+  - Market price recalculation with many goods
+  - Actor decision-making with large populations
+  - Supply chain calculations with complex production networks
+  - Banking system with many loans and accounts
+  - Trade route optimization with many possible paths
+
 
 ## Actor Generation System
 
@@ -331,11 +555,11 @@ The Actor Generation System is responsible for creating the population of econom
 
 ### Save/Load Considerations
 - When implementing save/load functionality, ensure that actor string IDs are serialised and deserialised correctly.
-- Actor generation should be deterministic if you require reproducibility (e.g., for testing or replays).
+- Actor generation should be deterministic if you require reproducibility for consistent gameplay experiences.
 
 ### Documentation
 - This system replaces the previous approach of loading a static list of actors from configuration files.
-- All relevant UI, tests, and systems have been updated to use the new approach.
+- All relevant UI and systems have been updated to use the new approach.
 
 ## Last Updated
-2024-06-09 
+2024-06-09
