@@ -1,7 +1,6 @@
 ## SubViewDecisions: Shows all decisions made by people in the last turn.
 ## Displays a list of decision outputs in the centre panel. Selecting one shows details in the right sidebar.
 ## Usage: Inherits from ABCSubView. Populates centre panel with decision summaries, right sidebar with details.
-## Last Updated: 2025-05-24
 class_name  SubViewDecisions
 extends ABCSubView
 
@@ -95,11 +94,9 @@ func _select_decision_by_index(index: int) -> void:
 	_update_right_sidebar()
 
 func _update_right_sidebar() -> void:
-	# Always clear the right sidebar before adding new content except the empty label
 	_free_section_from_clear_list("right")
-	for child in right_sidebar.get_children():
-		if child != lbl_right_side_bar_empty:
-			child.queue_free()
+
+	# clear content
 	lbl_person.text = ""
 	lbl_decision.text = ""
 	lbl_input.text = ""
@@ -107,22 +104,17 @@ func _update_right_sidebar() -> void:
 
 	if _selected_index < 0 or _selected_index >= _decision_list.size():
 		return
+
+	# get decision data
 	var decision = _decision_list[_selected_index]
 
-	# Person
+	# add content
 	lbl_person.text = decision["person"].f_name
-
-	# Decision
 	lbl_decision.text = decision["action"]
-
-	# Rationale
 	lbl_rationale.text = decision["reasoning"]
-
-	# Inputs
 	for k in decision["inputs"]:
 		lbl_input.text = "  %s: %s" % [k, str(decision["inputs"][k])]
-
-	# Alternatives
 	for alt in decision["alternatives"]:
 		lbl_alternatives.text = "  %s (utility: %s)" % [alt.get("action", ""), str(alt.get("utility", ""))]
+
 #endregion
