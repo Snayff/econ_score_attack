@@ -306,3 +306,49 @@ The `DataLandParcel` class encapsulates all data for a single parcel:
 - `pollution_level`: The pollution level of the parcel
 - `is_surveyed`: Whether the parcel has been surveyed
 - `resource_generation_rate`: The rate at which resources are generated on the parcel
+
+---
+
+## Documentation Maintenance
+
+When updating this documentation as the Land System evolves, follow these guidelines to ensure consistency and completeness:
+
+### Adding New Features
+
+1. **Update Core Concepts**: When adding new land-related features, update the Core Concepts section to reflect the new functionality.
+
+2. **Add Feature Details**: Add detailed information about the new feature, including:
+   - Feature description and purpose
+   - Key components and data structures
+   - Integration with other systems
+   - Usage examples with code snippets
+
+3. **Update Architecture Diagrams**: If the new feature changes the system architecture, update the relevant diagrams to reflect the new structure.
+
+4. **Document Signal Changes**: If the feature introduces new signals or modifies existing ones, update the Signals section with the new signal details.
+
+### Documenting Land Components
+
+1. **Component Properties**: When adding new properties to land-related classes, document their purpose and constraints.
+
+2. **Dependency Injection**: Clearly document any new dependency injection patterns used in land components.
+
+3. **Example Usage**: Provide updated examples showing how to use the components with the new features.
+
+### Documenting Survey System Changes
+
+1. **Survey Process Updates**: If the survey system mechanics change, update the Survey System section with the new process details.
+
+2. **Signal Changes**: Document any changes to survey-related signals.
+
+3. **Integration Points**: Update information about how the survey system integrates with other systems.
+
+### Documentation Style Guidelines
+
+1. **Consistency**: Maintain consistent formatting and structure with the rest of the documentation.
+
+2. **Code Examples**: Always include practical code examples for new features or components.
+
+3. **ASCII Diagrams**: Use ASCII diagrams to illustrate complex concepts or workflows.
+
+4. **Last Updated**: Update the "Last Updated" date at the top of the document whenever significant changes are made.

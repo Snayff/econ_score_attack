@@ -391,10 +391,9 @@ When debugging issues that span multiple systems, focus on these key integration
 
 The following core systems currently lack dedicated documentation and should be prioritized for documentation:
 
-1. **Market System**: How prices are determined, goods are traded, and supply/demand is calculated
-2. **Building System**: How buildings are created, placed, and interact with land and production
-3. **Job System**: How jobs are created, assigned, and affect production and population
-4. **Law System**: How laws are created, enacted, and affect other systems
+1. **Building System**: How buildings are created, placed, and interact with land and production
+2. **Job System**: How jobs are created, assigned, and affect production and population
+3. **Law System**: How laws are created, enacted, and affect other systems
 
 ---
 
@@ -409,6 +408,11 @@ For detailed information on individual systems, refer to:
 - [Land System](land_system.md)
 - [Library](library.md)
 - [Logger](logger.md)
+- [Market System](market_system.md)
 - [Tester](tester.md)
 - [UI Layout](ui_layout.md)
 - [World](world.md)
+
+For guidance on maintaining system documentation, refer to:
+
+- [System Documentation Guide](systems_documentation_guide.md)

@@ -56,4 +56,44 @@ This document describes the system for economic actor decision-making in the sim
   - **Actor Inspector:** UI panel to select an actor and view their needs, preferences, current utility calculations, savings rate, disposable income, and recent decisions.
   - **Event Timeline:** Visualises economic shocks and their impact on actor behaviour.
 - **Debug Overlays:** In-game overlays to highlight actors making decisions, their current state, and market activity.
-- **Toggleable Tools:** All debugging and visualisation tools are toggleable and only active in development builds. 
+- **Toggleable Tools:** All debugging and visualisation tools are toggleable and only active in development builds.
+
+---
+
+## Documentation Maintenance
+
+When updating this documentation as the Economic Actor Decision System evolves, follow these guidelines to ensure consistency and completeness:
+
+### Adding New Features
+
+1. **Update the Phase Information**: When implementing a new phase or feature, update the relevant phase section or add a new one if needed.
+
+2. **Add Feature Details**: Add detailed information about the new feature, including:
+   - Feature description and purpose
+   - Key components and data structures
+   - Integration with other systems
+   - Usage examples with code snippets
+
+3. **Update JSON Schema**: If the new feature introduces changes to JSON configuration files, document the updated schema with examples.
+
+4. **Add Debug UI Information**: If the feature includes new debug UI components, document how to access and use them.
+
+5. **Update Unit Tests**: Document any new unit tests that validate the feature's functionality.
+
+### Documenting Data Classes
+
+1. **Class Properties**: When adding new properties to data classes, document their purpose and constraints.
+
+2. **Validation Rules**: Clearly document any validation rules for data class properties.
+
+3. **Example Usage**: Provide updated examples showing how to use the data classes with the new properties.
+
+### Documentation Style Guidelines
+
+1. **Consistency**: Maintain consistent formatting and structure with the rest of the documentation.
+
+2. **Code Examples**: Always include practical code examples for new features or data structures.
+
+3. **Phase Organization**: Keep the phased implementation approach clear, with each phase building on the previous ones.
+
+4. **Last Updated**: Update the "Last Updated" date at the top of the document whenever significant changes are made.

@@ -105,5 +105,41 @@ EventBusUI.emit_signal("show_visual_feedback", "Action complete!", Vector2(100, 
 - `global/event_bus_game.gd` (autoload singleton)
 - `global/event_bus_ui.gd` (autoload singleton)
 
+## Documentation Maintenance
+
+When updating this documentation as the Event Buses System evolves, follow these guidelines to ensure consistency and completeness:
+
+### Adding New Signals
+
+1. **Signal Documentation**: When adding new signals to either event bus, document them in this file with:
+   - Signal name and parameters
+   - Purpose and when it's emitted
+   - Which systems should listen for it
+   - Example usage code
+
+2. **Signal Categorization**: Group related signals together in the documentation for clarity.
+
+3. **Update Architecture Diagrams**: If the new signals create significant new communication patterns, update the architecture diagrams to reflect these changes.
+
+4. **Cross-Reference**: If the signal is related to another system, add a cross-reference to that system's documentation.
+
+### Documenting Signal Changes
+
+1. **Deprecation Notices**: When deprecating a signal, clearly mark it as deprecated and provide the recommended alternative.
+
+2. **Breaking Changes**: Clearly document any breaking changes to signal signatures (parameter changes) and provide migration guidance.
+
+3. **Version Information**: Include version information for new signals to help developers understand when they were introduced.
+
+### Documentation Style Guidelines
+
+1. **Consistency**: Maintain consistent formatting and structure with the rest of the documentation.
+
+2. **Code Examples**: Always include practical code examples for new signals showing both emission and connection.
+
+3. **Signal Naming**: Document the signal naming conventions to help developers create consistent new signals.
+
+4. **Last Updated**: Update the "Last Updated" date at the top of the document whenever significant changes are made.
+
 ## Last Updated
-2025-05-04 
+2025-06-23
