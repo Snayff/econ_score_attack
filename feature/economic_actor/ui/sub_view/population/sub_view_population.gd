@@ -98,6 +98,7 @@ func _ready() -> void:
 	super._ready()
 
 	_add_to_clear_list(demo_person_details_entry, "centre")
+	refresh()
 
 func _create_person_details_entry(person: Person) -> PanelContainer:
 	var entry = SCENE_PERSON_DETAILS.instantiate()
@@ -159,6 +160,8 @@ func _select_person_by_index(index: int) -> void:
 	_update_right_sidebar()
 
 func _update_right_sidebar() -> void:
+	_free_section_from_clear_list("right")
+
 	if _selected_index < 0 or _selected_index >= _people_list.size():
 		set_right_sidebar_content([])
 		return

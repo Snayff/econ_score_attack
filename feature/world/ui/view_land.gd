@@ -38,13 +38,20 @@ func update_view() -> void:
 	super.update_view()
 
 	_tile_panels.clear()
+	# Clear previous content from centre_panel except the empty label
+	for child in centre_panel.get_children():
+		if child != lbl_centre_empty:
+			child.queue_free()
+
 	if not _demesne or _grid_dims == Vector2i.ZERO:
-		set_centre_content([])
+		show_section_content("centre", false)
+		set_empty_message("centre", "No land to show.")
 		return
 	var grid_width: int = _grid_dims.x
 	var grid_height: int = _grid_dims.y
 	if grid_width == 0 or grid_height == 0:
-		set_centre_content([])
+		show_section_content("centre", false)
+		set_empty_message("centre", "No land to show.")
 		return
 	# Create a grid container for tiles
 	var grid = GridContainer.new()
@@ -59,7 +66,8 @@ func update_view() -> void:
 			var tile_btn = _create_tile_panel(tile_data, coords)
 			_tile_panels[coords] = tile_btn
 			grid.add_child(tile_btn)
-	set_centre_content([grid])
+	centre_panel.add_child(grid)
+	show_section_content("centre", true)
 	# Select the centre tile by default if none selected
 	if _selected_tile_coords == Vector2i.ZERO:
 		_selected_tile_coords = Vector2i(grid_width / 2, grid_height / 2)
@@ -132,20 +140,27 @@ func _on_tile_panel_selected(coords: Vector2i) -> void:
 ## @param coords (Vector2i): The tile's coordinates.
 ## @return void
 func _update_left_sidebar(coords: Vector2i) -> void:
+	# Clear previous content from left_sidebar except the empty label
+	for child in left_sidebar.get_children():
+		if child != lbl_left_side_bar_empty:
+			child.queue_free()
+
 	var sidebar_content: Array[Control] = []
 	if not _demesne:
-		set_left_sidebar_content([])
+		show_section_content("left", false)
+		set_empty_message("left", "No tile selected.")
 		return
 	var tile_data = _demesne.get_parcel(coords.x, coords.y)
 	if not tile_data:
-		set_left_sidebar_content([])
+		show_section_content("left", false)
+		set_empty_message("left", "No tile selected.")
 		return
 	var sidebar_width = self.sidebar_width
 	var name_label: Label = UIFactory.create_viewport_sidebar_header_label("Tile (" + str(coords.x) + ", " + str(coords.y) + ")")
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.custom_minimum_size.x = sidebar_width
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sidebar_content.append(name_label)
+	left_sidebar.add_child(name_label)
 	# Check if this tile is currently being surveyed (demesne-level)
 	var progress = _demesne.get_survey_progress(coords.x, coords.y)
 	if progress >= 0.0 and progress < 1.0:
@@ -164,9 +179,9 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 		progress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		progress_label.custom_minimum_size.x = sidebar_width
 		progress_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sidebar_content.append(progress_label)
-		sidebar_content.append(progress_bar)
-		set_left_sidebar_content(sidebar_content)
+		left_sidebar.add_child(progress_label)
+		left_sidebar.add_child(progress_bar)
+		show_section_content("left", true)
 		return
 	# If not surveyed, show survey button
 	var has_action := false
@@ -174,7 +189,7 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 		var survey_btn = UIFactory.create_button("Survey", _on_survey_button_pressed.bind(coords))
 		survey_btn.custom_minimum_size.x = sidebar_width
 		survey_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sidebar_content.append(survey_btn)
+		left_sidebar.add_child(survey_btn)
 		has_action = true
 	# If no possible actions, show message
 	if not has_action:
@@ -183,20 +198,27 @@ func _update_left_sidebar(coords: Vector2i) -> void:
 		no_actions_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		no_actions_label.custom_minimum_size.x = sidebar_width
 		no_actions_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sidebar_content.append(no_actions_label)
-	set_left_sidebar_content(sidebar_content)
+		left_sidebar.add_child(no_actions_label)
+	show_section_content("left", true)
 
 ## Updates the right sidebar with tile terrain and aspect details.
 ## @param coords (Vector2i): The tile's coordinates.
 ## @return void
 func _update_right_sidebar(coords: Vector2i) -> void:
+	# Clear previous content from right_sidebar except the empty label
+	for child in right_sidebar.get_children():
+		if child != lbl_right_side_bar_empty:
+			child.queue_free()
+
 	var right_content: Array[Control] = []
 	if not _demesne:
-		set_right_sidebar_content([])
+		show_section_content("right", false)
+		set_empty_message("right", "No tile selected.")
 		return
 	var tile_data = _demesne.get_parcel(coords.x, coords.y)
 	if not tile_data:
-		set_right_sidebar_content([])
+		show_section_content("right", false)
+		set_empty_message("right", "No tile selected.")
 		return
 	var sidebar_width = self.sidebar_width
 	# If not surveyed, show only 'Undiscovered'
@@ -206,26 +228,26 @@ func _update_right_sidebar(coords: Vector2i) -> void:
 		undiscovered_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		undiscovered_label.custom_minimum_size.x = sidebar_width
 		undiscovered_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		right_content.append(undiscovered_label)
-		set_right_sidebar_content(right_content)
+		right_sidebar.add_child(undiscovered_label)
+		show_section_content("right", true)
 		return
 	# Otherwise, show terrain, buildings, aspects as before
 	# Terrain header
 	var terrain_header = UIFactory.create_viewport_sidebar_header_label("Terrain")
 	terrain_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	terrain_header.custom_minimum_size.x = sidebar_width
-	right_content.append(terrain_header)
+	right_sidebar.add_child(terrain_header)
 	# Terrain type
 	var terrain_type_label = Label.new()
 	terrain_type_label.text = tile_data.terrain_type.capitalize()
 	terrain_type_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	terrain_type_label.custom_minimum_size.x = sidebar_width
-	right_content.append(terrain_type_label)
+	right_sidebar.add_child(terrain_type_label)
 	# Buildings header
 	var buildings_header = UIFactory.create_viewport_sidebar_header_label("Buildings")
 	buildings_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	buildings_header.custom_minimum_size.x = sidebar_width
-	right_content.append(buildings_header)
+	right_sidebar.add_child(buildings_header)
 	# Placeholder for buildings (simulate with a list)
 	var building_counts = {"Place": 2, "Holder": 1} # Placeholder, replace with real data when available
 	if building_counts.size() > 0:
@@ -236,19 +258,19 @@ func _update_right_sidebar(coords: Vector2i) -> void:
 			building_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			building_label.custom_minimum_size.x = sidebar_width
 			building_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			right_content.append(building_label)
+			right_sidebar.add_child(building_label)
 	else:
 		var no_buildings_label = Label.new()
 		no_buildings_label.text = "No buildings."
 		no_buildings_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		no_buildings_label.custom_minimum_size.x = sidebar_width
 		no_buildings_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		right_content.append(no_buildings_label)
+		right_sidebar.add_child(no_buildings_label)
 	# Aspects header
 	var aspects_header = UIFactory.create_viewport_sidebar_header_label("Aspects")
 	aspects_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	aspects_header.custom_minimum_size.x = sidebar_width
-	right_content.append(aspects_header)
+	right_sidebar.add_child(aspects_header)
 	var aspects = tile_data.get_discovered_aspects()
 	if aspects.size() > 0:
 		for aspect_id in aspects.keys():
@@ -271,16 +293,15 @@ func _update_right_sidebar(coords: Vector2i) -> void:
 			aspect_label.text = "%s: %s" % [aspect_name, amount_str]
 			aspect_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			aspect_label.custom_minimum_size.x = sidebar_width
-			aspect_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			right_content.append(aspect_label)
+			right_sidebar.add_child(aspect_label)
 	else:
 		var no_aspects_label = Label.new()
 		no_aspects_label.text = "No discovered aspects."
 		no_aspects_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		no_aspects_label.custom_minimum_size.x = sidebar_width
 		no_aspects_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		right_content.append(no_aspects_label)
-	set_right_sidebar_content(right_content)
+		right_sidebar.add_child(no_aspects_label)
+	show_section_content("right", true)
 
 ## Handles survey button press for a tile.
 ## @param coords (Vector2i): The tile's coordinates.

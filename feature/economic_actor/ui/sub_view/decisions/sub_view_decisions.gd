@@ -25,11 +25,17 @@ func update_view() -> void:
 	_decision_entry_nodes.clear()
 	_selected_index = -1
 
-	if not _sim or not _sim.demesne:
-		set_centre_content([])
-		set_right_sidebar_content([])
-		return
+	# Clear previous content from centre_panel except the empty label
+	for child in centre_panel.get_children():
+		if child != lbl_centre_empty:
+			child.queue_free()
 
+	if not _sim or not _sim.demesne:
+		show_section_content("centre", false)
+		show_section_content("right", false)
+		set_empty_message("centre", "No decisions were made last turn.")
+		set_empty_message("right", "No decision details to show.")
+		return
 
 	# Gather all decisions from all people
 	for person in _sim.demesne.get_people():
@@ -42,11 +48,9 @@ func update_view() -> void:
 	if _decision_list.size() == 0:
 		show_section_content("centre", false)
 		show_section_content("right", false)
-
 		set_empty_message("centre", "No decisions were made last turn.")
-		set_empty_message("centre", "No decision details to show.")
+		set_empty_message("right", "No decision details to show.")
 		return
-
 
 	show_section_content("centre", true)
 	show_section_content("right", true)
@@ -91,19 +95,19 @@ func _select_decision_by_index(index: int) -> void:
 	_update_right_sidebar()
 
 func _update_right_sidebar() -> void:
-	# Always clear the right sidebar before adding new content
+	# Always clear the right sidebar before adding new content except the empty label
 	_free_section_from_clear_list("right")
+	for child in right_sidebar.get_children():
+		if child != lbl_right_side_bar_empty:
+			child.queue_free()
 	lbl_person.text = ""
 	lbl_decision.text = ""
 	lbl_input.text = ""
 	lbl_alternatives.text = ""
 
-
 	if _selected_index < 0 or _selected_index >= _decision_list.size():
 		return
 	var decision = _decision_list[_selected_index]
-	var controls: Array[Control] = []
-
 
 	# Person
 	lbl_person.text = decision["person"].f_name
@@ -121,6 +125,4 @@ func _update_right_sidebar() -> void:
 	# Alternatives
 	for alt in decision["alternatives"]:
 		lbl_alternatives.text = "  %s (utility: %s)" % [alt.get("action", ""), str(alt.get("utility", ""))]
-
-	set_right_sidebar_content(controls)
 #endregion
