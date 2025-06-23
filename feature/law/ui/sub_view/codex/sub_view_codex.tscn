@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2wyi1klcyllt"]
+[gd_scene load_steps=3 format=3 uid="uid://d2wyi1klcyllt"]
 
 [ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="1_v33b5"]
+[ext_resource type="Script" uid="uid://clbc5hckcdh1n" path="res://feature/law/ui/sub_view/codex/sub_view_codex.gd" id="2_script"]
 
 [node name="SubViewCodex" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+script = ExtResource("2_script")
+sub_view_key = 3
 
 [node name="TemplateSubView" parent="." instance=ExtResource("1_v33b5")]
 unique_name_in_owner = true

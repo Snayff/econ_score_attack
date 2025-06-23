@@ -31,6 +31,13 @@ func _register_default_laws() -> void:
 func register_law_type(law_id: String, law_class: GDScript) -> void:
 	_law_types[law_id] = law_class
 
+## Gets all available law IDs in this registry
+## @return: Array of law IDs that can be created by this registry
+func get_available_law_ids() -> Array[String]:
+	var keys: Array[String] = []
+	keys.assign(_law_types.keys())
+	return keys
+
 ## Creates a new law instance
 ## @param law_id: ID of the law type to create
 ## @return: New law instance or null if creation failed

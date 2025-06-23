@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqx8y2n3m4k5l"]
+
+[ext_resource type="Script" uid="uid://bxeddoxjjvnno" path="res://feature/law/ui/sub_view/codex/law_entry.gd" id="1_script"]
+
+[node name="LawEntry" type="PanelContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BtnSelect" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select"
+
+[node name="LblName" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Law Name"
+
+[node name="LblCategory" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Category"
+
+[node name="LblStatus" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Status"
+
+[node name="LblDescription" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Law description will appear here"
+autowrap_mode = 3

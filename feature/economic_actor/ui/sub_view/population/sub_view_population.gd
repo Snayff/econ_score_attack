@@ -6,7 +6,6 @@
 ##  Error and empty state handling is managed by the base class.
 ##
 ## See: dev/docs/docs/systems/ui.md
-## Last Updated: 2025-05-13
 ##
 class_name  SubViewPopulation
 extends ABCSubView
