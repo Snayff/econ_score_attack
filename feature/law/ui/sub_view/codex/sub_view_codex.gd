@@ -13,7 +13,7 @@ class_name SubViewCodex
 extends ABCSubView
 
 #region CONSTANTS
-const SCENE_LAW_ENTRY: PackedScene = preload("res://feature/law/ui/sub_view/codex/law_entry.tscn")
+const SCENE_CODEX_ENTRY: PackedScene = preload("res://feature/law/ui/sub_view/codex/codex_entry.tscn")
 #endregion
 
 #region SIGNALS
@@ -27,6 +27,7 @@ const SCENE_LAW_ENTRY: PackedScene = preload("res://feature/law/ui/sub_view/code
 @onready var lbl_law_name: Label = %LblLawName
 @onready var actions_container: HBoxContainer = %ActionsContainer
 @onready var parameters_container: VBoxContainer = %ParametersContainer
+@onready var demo_entry: PanelContainer = %DemoLawEntry ## used for design. delete on init.
 #endregion
 
 #region VARS
@@ -97,13 +98,15 @@ func update_view() -> void:
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
 	super._ready()
+
+	_add_to_clear_list(demo_entry, "centre")
 	refresh()
 
 ## Creates a UI entry for a law's details.
 ## @param law_data The law data to create an entry for
 ## @return The created panel container
 func _create_law_entry(law_data: DataLaw) -> PanelContainer:
-	var entry = SCENE_LAW_ENTRY.instantiate()
+	var entry = SCENE_CODEX_ENTRY.instantiate()
 
 	# Name
 	var lbl_name: Label = entry.get_node("VBoxContainer/HBoxContainer/LblName")
@@ -122,13 +125,6 @@ func _create_law_entry(law_data: DataLaw) -> PanelContainer:
 	else:
 		lbl_status.text = "Inactive"
 		lbl_status.add_theme_color_override("font_color", Color(0.8, 0.2, 0.2))
-
-	# Description (truncated)
-	var lbl_description: Label = entry.get_node("VBoxContainer/LblDescription")
-	var description: String = law_data.description
-	if description.length() > 80:
-		description = description.substr(0, 77) + "..."
-	lbl_description.text = description
 
 	return entry
 

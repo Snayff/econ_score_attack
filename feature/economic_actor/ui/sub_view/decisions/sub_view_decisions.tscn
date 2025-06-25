@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cqewe3icxi1t7"]
+[gd_scene load_steps=4 format=3 uid="uid://qk0fd8lk41d2"]
 
-[ext_resource type="Script" uid="uid://dcq7afxqc3cd2" path="res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions.gd" id="1_p2sy3"]
-[ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="2_jxl0d"]
+[ext_resource type="Script" uid="uid://dk65vw4qn52es" path="res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="2_template"]
+[ext_resource type="PackedScene" uid="uid://djfwdsap8pdun" path="res://feature/economic_actor/ui/sub_view/decisions/decision_entry.tscn" id="3_5o1c6"]
 
 [node name="SubViewDecisions" type="Control"]
 layout_mode = 3
@@ -10,15 +11,50 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_p2sy3")
+script = ExtResource("1_script")
 sub_view_key = 1
 
-[node name="TemplateSubView" parent="." instance=ExtResource("2_jxl0d")]
+[node name="TemplateSubView" parent="." instance=ExtResource("2_template")]
 unique_name_in_owner = true
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
+
+[node name="VBxDecisionsContainer" type="VBoxContainer" parent="TemplateSubView/CentrePanel" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TableHeader" type="HBoxContainer" parent="TemplateSubView/CentrePanel/VBxDecisionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="_Label_8" type="Label" parent="TemplateSubView/CentrePanel/VBxDecisionsContainer/TableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="_Label_13" type="Label" parent="TemplateSubView/CentrePanel/VBxDecisionsContainer/TableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Name"
+horizontal_alignment = 1
+
+[node name="_Label_11" type="Label" parent="TemplateSubView/CentrePanel/VBxDecisionsContainer/TableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Decision"
+horizontal_alignment = 1
+
+[node name="DemoDecisionEntry" parent="TemplateSubView/CentrePanel/VBxDecisionsContainer" instance=ExtResource("3_5o1c6")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="LblPersonHeader" type="Label" parent="TemplateSubView/RightSidebar" index="1"]
 custom_minimum_size = Vector2(180, 0)

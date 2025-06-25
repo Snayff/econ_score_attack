@@ -6,17 +6,18 @@
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("1_e7yah")
 
-[node name="BtnSelect" type="Button" parent="."]
-z_index = 1
-layout_mode = 2
-mouse_filter = 1
-
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="BtnSelect" type="Button" parent="VBoxContainer/HBoxContainer"]
+z_index = 1
+layout_mode = 2
+mouse_filter = 1
+text = "Select"
 
 [node name="LblName" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -42,21 +43,17 @@ size_flags_horizontal = 3
 text = "X🙂"
 horizontal_alignment = 1
 
-[node name="Stockpile" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="LblGrain" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
+[node name="LblGrain" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "X🌾"
 horizontal_alignment = 1
 
-[node name="LblWater" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
+[node name="LblWater" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "X💧 "
 horizontal_alignment = 1
 
-[node name="LblMoney" type="Label" parent="VBoxContainer/HBoxContainer/Stockpile"]
+[node name="LblMoney" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "X🪙 "
 horizontal_alignment = 1

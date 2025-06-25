@@ -1,13 +1,15 @@
 ## SubViewDecisions: Shows all decisions made by people in the last turn.
-## Displays a list of decision outputs in the centre panel. Selecting one shows details in the right sidebar.
+## Displays a list of decision outputs in the centre panel using pre-built scene templates.
+## Selecting one shows details in the right sidebar.
 ## Usage: Inherits from ABCSubView. Populates centre panel with decision summaries, right sidebar with details.
 ##
-## Last Updated: 2025-06-23
+## Last Updated: 2025-01-27
 ##
-class_name  SubViewDecisions
+class_name SubViewDecisionsCodexStyle
 extends ABCSubView
 
 #region CONSTANTS
+const SCENE_DECISION_ENTRY: PackedScene = preload("res://feature/economic_actor/ui/sub_view/decisions/decision_entry.tscn")
 #endregion
 
 #region SIGNALS
@@ -17,19 +19,21 @@ extends ABCSubView
 #endregion
 
 #region ON READY
+@onready var vbx_decisions_container: VBoxContainer = %VBxDecisionsContainer
 @onready var lbl_person: Label = %LblPerson
 @onready var lbl_decision: Label = %LblDecision
 @onready var lbl_rationale: Label = %LblRationale
 @onready var lbl_input: Label = %LblInput
 @onready var lbl_alternatives: Label = %LblAlternatives
+@onready var demo_entry: PanelContainer = %DemoDecisionEntry ## used for design. delete on init.
+
 #endregion
-
-
 
 #region VARS
 var _decision_list: Array = []
-var _decision_entry_nodes: Array[Button] = []
+var _decision_entry_nodes: Array[PanelContainer] = []
 var _selected_index: int = -1
+var _selected_decision_id: String = ""
 #endregion
 
 #region PUBLIC FUNCTIONS
@@ -37,20 +41,18 @@ var _selected_index: int = -1
 ## Populates the centre panel with a list of decisions made in the last turn.
 ## @return void
 func update_view() -> void:
+	super.update_view()
+
 	_decision_list.clear()
 	_decision_entry_nodes.clear()
 	_selected_index = -1
 
-	# Clear previous content from centre_panel except the empty label
-	for child in centre_panel.get_children():
-		if child != lbl_centre_empty:
-			child.queue_free()
-
-	if not _sim or not _sim.demesne:
-		show_section_content("centre", false)
-		show_section_content("right", false)
-		set_empty_message("centre", "No decisions were made last turn.")
-		set_empty_message("right", "No decision details to show.")
+	# Check we have sim ref
+	if not _sim:
+		set_centre_content([])
+		return
+	if not _sim.demesne:
+		set_centre_content([])
 		return
 
 	# Gather all decisions from all people
@@ -59,79 +61,127 @@ func update_view() -> void:
 			# Attach person reference for display
 			var entry = decision.duplicate()
 			entry["person"] = person
+			entry["decision_id"] = person.id + "_" + str(decision.hash())  # Create unique ID
 			_decision_list.append(entry)
 
-	if _decision_list.size() == 0:
-		show_section_content("centre", false)
-		show_section_content("right", false)
-		set_empty_message("centre", "No decisions were made last turn.")
-		set_empty_message("right", "No decision details to show.")
+	if _decision_list.is_empty():
+		set_centre_content([])
 		return
 
-	show_section_content("centre", true)
-	show_section_content("right", true)
+	# Create decision entries
+	var select_index: int = 0
+	if _selected_decision_id != "":
+		for i in range(_decision_list.size()):
+			if _decision_list[i]["decision_id"] == _selected_decision_id:
+				select_index = i
+				break
 
-	# create button per decision
-	var centre_controls: Array[Control] = []
-	var vbx = VBoxContainer.new()
-	centre_panel.add_child(vbx)
-	_add_to_clear_list(vbx, "centre")
 	for i in range(_decision_list.size()):
 		var decision = _decision_list[i]
-		var btn = UIFactory.create_button("%s: %s" % [decision["person"].f_name, decision["action"]])
+		var entry = _create_decision_entry(decision)
+		var btn_select: Button = entry.get_node("VBoxContainer/HBoxContainer/BtnSelect")
+		if btn_select:
+			btn_select.pressed.connect(_on_decision_entry_pressed.bind(i))
+		vbx_decisions_container.add_child(entry)
+		_add_to_clear_list(entry, "centre")
+		_decision_entry_nodes.append(entry)
 
-		# add to relevant places
-		vbx.add_child(btn)
-		btn.pressed.connect(_on_decision_entry_pressed.bind(i))
-		centre_controls.append(btn)
+	# Automatically select the correct decision (persisted or first)
+	if _decision_list.size() > 0:
+		_select_decision_by_index(select_index)
 
-		# list for clearing on refresh
-		_add_to_clear_list(btn, "centre")
-
-		_decision_entry_nodes.append(btn)
-
-	_select_decision_by_index(0)
-
+	set_centre_content([])
 #endregion
 
 #region PRIVATE FUNCTIONS
+func _ready() -> void:
+	super._ready()
+
+	_add_to_clear_list(demo_entry, "centre")
+	refresh()
+
+## Creates a UI entry for a decision's details.
+## @param decision The decision data to create an entry for
+## @return The created panel container
+func _create_decision_entry(decision: Dictionary) -> PanelContainer:
+	var entry = SCENE_DECISION_ENTRY.instantiate()
+
+	# Person name
+	var lbl_person: Label = entry.get_node("VBoxContainer/HBoxContainer/LblPerson")
+	lbl_person.text = decision["person"].f_name
+
+	# Action
+	var lbl_action: Label = entry.get_node("VBoxContainer/HBoxContainer/LblAction")
+	lbl_action.text = decision["action"]
+
+	return entry
+
+## Handles when a decision entry is pressed.
+## @param index The index of the pressed entry
+## @return void
 func _on_decision_entry_pressed(index: int) -> void:
 	_select_decision_by_index(index)
 
+## Selects a decision by their index in the decisions list.
+## Updates visual feedback and the right sidebar.
+## @param index The index of the decision to select
+## @return void
 func _select_decision_by_index(index: int) -> void:
 	if index < 0 or index >= _decision_list.size():
 		return
+	if _selected_index == index:
+		return
 	_selected_index = index
+	_selected_decision_id = _decision_list[index]["decision_id"]
 
-	# Visual feedback (optional: highlight selected button)
+	# Update visual feedback using _decision_entry_nodes
+	var selected_style_box = preload("res://shared/resource/style_box_selected_button.tres")
+	var unselected_style_box = preload("res://shared/resource/style_box_unselected_button.tres")
 	for i in range(_decision_entry_nodes.size()):
-		var btn = _decision_entry_nodes[i]
-		btn.disabled = (i == _selected_index)
+		var entry = _decision_entry_nodes[i]
+		if i == _selected_index:
+			entry.add_theme_stylebox_override("panel", selected_style_box)
+		else:
+			entry.add_theme_stylebox_override("panel", unselected_style_box)
 
+	# Update right sidebar
 	_update_right_sidebar()
 
+## Updates the right sidebar with the selected decision's details.
+## @return void
 func _update_right_sidebar() -> void:
 	_free_section_from_clear_list("right")
 
-	# clear content
+	# Clear content
 	lbl_person.text = ""
 	lbl_decision.text = ""
+	lbl_rationale.text = ""
 	lbl_input.text = ""
 	lbl_alternatives.text = ""
 
 	if _selected_index < 0 or _selected_index >= _decision_list.size():
+		set_right_sidebar_content([])
 		return
 
-	# get decision data
+	# Get decision data
 	var decision = _decision_list[_selected_index]
 
-	# add content
+	# Add content
 	lbl_person.text = decision["person"].f_name
 	lbl_decision.text = decision["action"]
 	lbl_rationale.text = decision["reasoning"]
-	for k in decision["inputs"]:
-		lbl_input.text = "  %s: %s" % [k, str(decision["inputs"][k])]
-	for alt in decision["alternatives"]:
-		lbl_alternatives.text = "  %s (utility: %s)" % [alt.get("action", ""), str(alt.get("utility", ""))]
 
+	# Format inputs
+	var input_text: String = ""
+	for k in decision["inputs"]:
+		input_text += "  %s: %s\n" % [k, str(decision["inputs"][k])]
+	lbl_input.text = input_text.strip_edges()
+
+	# Format alternatives
+	var alt_text: String = ""
+	for alt in decision["alternatives"]:
+		alt_text += "  %s (utility: %s)\n" % [alt.get("action", ""), str(alt.get("utility", ""))]
+	lbl_alternatives.text = alt_text.strip_edges()
+
+	set_right_sidebar_content([])
 #endregion

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2wyi1klcyllt"]
+[gd_scene load_steps=4 format=3 uid="uid://d2wyi1klcyllt"]
 
 [ext_resource type="PackedScene" uid="uid://coxuw81ls2x1" path="res://shared/ui/component/panels/templates/template_sub_view.tscn" id="1_v33b5"]
 [ext_resource type="Script" uid="uid://clbc5hckcdh1n" path="res://feature/law/ui/sub_view/codex/sub_view_codex.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://bqx8y2n3m4k5l" path="res://feature/law/ui/sub_view/codex/codex_entry.tscn" id="3_agfu2"]
 
 [node name="SubViewCodex" type="Control"]
 layout_mode = 3
@@ -55,12 +56,39 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="_Label_1" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
+[node name="_Label_8" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
 theme_override_font_sizes/font_size = 16
-text = "Laws"
 horizontal_alignment = 1
+
+[node name="_Label_13" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Name"
+horizontal_alignment = 1
+
+[node name="_Label_11" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Category"
+horizontal_alignment = 1
+
+[node name="_Label_12" type="Label" parent="TemplateSubView/CentrePanel/VBxLawsContainer/LawsTableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Status"
+horizontal_alignment = 1
+
+[node name="DemoLawEntry" parent="TemplateSubView/CentrePanel/VBxLawsContainer" instance=ExtResource("3_agfu2")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [editable path="TemplateSubView"]

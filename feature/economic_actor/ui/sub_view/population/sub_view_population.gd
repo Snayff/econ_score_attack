@@ -22,12 +22,9 @@ const SCENE_PERSON_DETAILS: PackedScene = preload("res://feature/economic_actor/
 
 #region ON READY
 @onready var vbx_people_details: VBoxContainer = %VBxPeopleDetails
-@onready var demo_person_details_entry: PanelContainer = %PersonDetailsEntry
+@onready var demo_entry: PanelContainer = %PersonDetailsEntry  ## used for design. delete on init.
 @onready var lbl_culture: Label = %LblCulture
 @onready var lbl_ancestry: Label = %LblAncestry
-
-
-
 #endregion
 
 #region VARS
@@ -48,7 +45,7 @@ func update_view() -> void:
 	_person_entry_nodes.clear()
 	_selected_index = -1
 
-	# check we have sim ref
+	# Check we have sim ref
 	if not _sim:
 		set_centre_content([])
 		return
@@ -56,7 +53,7 @@ func update_view() -> void:
 		set_centre_content([])
 		return
 
-	# get living people to show
+	# Get living people to show
 	var living_people: Array[Person] = []
 	for person in _sim.demesne.get_people():
 		if person.is_alive:
@@ -67,7 +64,7 @@ func update_view() -> void:
 
 	_people_list = living_people.duplicate()
 
-	# Person rows
+	# Create person entries
 	var select_index: int = 0
 	if _selected_person_id != "":
 		for i in range(_people_list.size()):
@@ -78,8 +75,9 @@ func update_view() -> void:
 	for i in range(_people_list.size()):
 		var person = _people_list[i]
 		var entry = _create_person_details_entry(person)
-		var btn_select: Button = entry.get_node("BtnSelect")
-		btn_select.pressed.connect(_on_person_entry_pressed.bind(i))
+		var btn_select: Button = entry.get_node("VBoxContainer/HBoxContainer/BtnSelect")
+		if btn_select:
+			btn_select.pressed.connect(_on_person_entry_pressed.bind(i))
 		vbx_people_details.add_child(entry)
 		_add_to_clear_list(entry, "centre")
 		_person_entry_nodes.append(entry)
@@ -89,14 +87,13 @@ func update_view() -> void:
 		_select_person_by_index(select_index)
 
 	set_centre_content([])
-
 #endregion
 
 #region PRIVATE FUNCTIONS
 func _ready() -> void:
 	super._ready()
 
-	_add_to_clear_list(demo_person_details_entry, "centre")
+	_add_to_clear_list(demo_entry, "centre")
 	refresh()
 
 ## Creates a UI entry for a person's details.
@@ -105,35 +102,34 @@ func _ready() -> void:
 func _create_person_details_entry(person: Person) -> PanelContainer:
 	var entry = SCENE_PERSON_DETAILS.instantiate()
 
-	# name
+	# Name
 	var lbl_name: Label = entry.get_node("VBoxContainer/HBoxContainer/LblName")
 	lbl_name.text = person.f_name
 
-	# job
+	# Job
 	var lbl_job: Label = entry.get_node("VBoxContainer/HBoxContainer/LblJob")
 	lbl_job.text = person.job
 
-	# health
+	# Health
 	var lbl_health: Label = entry.get_node("VBoxContainer/HBoxContainer/LblHealth")
 	lbl_health.text = str(person.health, "❤️")
 
-	# happiness
+	# Happiness
 	var lbl_happiness: Label = entry.get_node("VBoxContainer/HBoxContainer/LblHappiness")
 	lbl_happiness.text = str(person.happiness, "🙂")
 
-	# stockpile
-	# grain
-	var lbl_grain: Label = entry.get_node("VBoxContainer/HBoxContainer/Stockpile/LblGrain")
+	# Stockpile
+	# Grain
+	var lbl_grain: Label = entry.get_node("VBoxContainer/HBoxContainer/LblGrain")
 	lbl_grain.text = str(person.stockpile["grain"], Library.get_good_icon("grain"))
 
-	# money
-	var lbl_money: Label = entry.get_node("VBoxContainer/HBoxContainer/Stockpile/LblMoney")
+	# Money
+	var lbl_money: Label = entry.get_node("VBoxContainer/HBoxContainer/LblMoney")
 	lbl_money.text = str(person.stockpile["money"], Library.get_good_icon("money"))
 
-	# water
-	var lbl_water: Label = entry.get_node("VBoxContainer/HBoxContainer/Stockpile/LblWater")
+	# Water
+	var lbl_water: Label = entry.get_node("VBoxContainer/HBoxContainer/LblWater")
 	lbl_water.text = str(person.stockpile["water"], Library.get_good_icon("water"))
-
 
 	return entry
 
@@ -201,5 +197,4 @@ func _update_right_sidebar() -> void:
 		_add_to_clear_list(lbl_good, "right")
 
 	set_right_sidebar_content(controls)
-
 #endregion

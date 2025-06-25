@@ -29,6 +29,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
 theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="_Label_13" type="Label" parent="TemplateSubView/CentrePanel/VBxPeopleDetails/PopulationTableHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 16
 text = "Name"
 horizontal_alignment = 1
 
