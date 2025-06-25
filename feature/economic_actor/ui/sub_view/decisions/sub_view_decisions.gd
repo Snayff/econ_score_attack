@@ -1,7 +1,7 @@
 ## SubViewDecisions: Shows all decisions made by people in the last turn.
 ## Displays a list of decision outputs in the centre panel. Selecting one shows details in the right sidebar.
 ## Usage: Inherits from ABCSubView. Populates centre panel with decision summaries, right sidebar with details.
-## 
+##
 ## Last Updated: 2025-06-23
 ##
 class_name  SubViewDecisions

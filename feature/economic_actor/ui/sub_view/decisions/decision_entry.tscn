@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://decision_entry_template"]
+
+[ext_resource type="Script" path="res://feature/economic_actor/ui/sub_view/decisions/decision_entry.gd" id="1_script"]
+
+[node name="DecisionEntry" type="PanelContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BtnSelect" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select"
+
+[node name="LblPerson" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+text = "Person Name"
+
+[node name="LblAction" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Action Description"
+
+[node name="LblTime" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Turn 1"
+
+[node name="LblSummary" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Brief summary of the decision and its outcome"
+autowrap_mode = 3 

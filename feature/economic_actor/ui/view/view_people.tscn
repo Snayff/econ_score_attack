@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dfies1uk7ujnf" path="res://shared/ui/component/panels/templates/view_sub_view_selector.tscn" id="1_11uxu"]
 [ext_resource type="PackedScene" uid="uid://sjxilocw52iy" path="res://feature/economic_actor/ui/sub_view/population/sub_view_population.tscn" id="2_ye5nf"]
-[ext_resource type="PackedScene" uid="uid://cqewe3icxi1t7" path="res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions.tscn" id="3_rxp08"]
+[ext_resource type="PackedScene" path="res://feature/economic_actor/ui/sub_view/decisions/sub_view_decisions_codex_style.tscn" id="3_rxp08"]
 
 [node name="ViewPeople" type="Control"]
 layout_mode = 3
